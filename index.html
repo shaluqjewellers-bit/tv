@@ -7,856 +7,352 @@
 <title>Shaluq TV | Bullion Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
 <style>
-:root {
-  --gold:#e6bd64;
-  --border:#66502c;
-  --text:#f6eddb;
-  --muted:#b5a587;
-}
-* { box-sizing:border-box }
-html,body {
-  margin:0;width:100%;height:100%;
-  background:#080a0d;color:var(--text);
-  font-family:Manrope,Arial,sans-serif;
-  overflow:hidden;
-}
-.screen {
-  height:100vh;height:100dvh;
-  display:grid;
-  grid-template-rows:94px minmax(0,1fr) 49px;
-  background:radial-gradient(ellipse at 30% 10%,#292015,#080a0d 65%);
-}
-header {
-  display:grid;
-  grid-template-columns:1fr 1.15fr 1fr;
-  align-items:center;gap:12px;
-  padding:8px 25px;
-  border-bottom:1px solid var(--border);
-}
-.logo {
-  width:285px;max-width:100%;max-height:72px;
-  object-fit:contain;object-position:left center;
-}
+:root{--gold:#e6bd64;--border:#66502c;--text:#f6eddb;--muted:#b5a587}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;background:#080a0d;color:var(--text);font-family:Manrope,Arial,sans-serif;overflow:hidden}
+.screen{height:100vh;height:100dvh;display:grid;grid-template-rows:94px minmax(0,1fr) 49px;background:radial-gradient(ellipse at 30% 10%,#292015,#080a0d 65%)}
+header{display:grid;grid-template-columns:1fr 1.15fr 1fr;align-items:center;gap:12px;padding:8px 25px;border-bottom:1px solid var(--border)}
+.logo{width:285px;max-width:100%;max-height:72px;object-fit:contain;object-position:left center}
 .header-center{text-align:center;min-width:0}
-.market-heading {
-  color:var(--gold);
-  font-family:Cinzel,Georgia,serif;
-  font-size:clamp(11px,1.15vw,16px);
-  letter-spacing:1.5px;font-weight:600;
-}
-.market-status {
-  display:flex;justify-content:center;
-  align-items:center;gap:8px;margin-top:5px;
-  font-size:clamp(12px,1.25vw,18px);
-  font-weight:800;
-}
-.status-dot {
-  width:9px;height:9px;border-radius:50%;
-  background:#999;flex-shrink:0;
-}
-.status-dot.open {
-  background:#49d98a;
-  box-shadow:0 0 11px #49d98a77;
-  animation:dotPulse 2s infinite;
-}
+.market-heading{color:var(--gold);font-family:Cinzel,Georgia,serif;font-size:clamp(11px,1.15vw,16px);letter-spacing:1.5px;font-weight:600}
+.market-status{display:flex;justify-content:center;align-items:center;gap:8px;margin-top:5px;font-size:clamp(12px,1.25vw,18px);font-weight:800}
+.status-dot{width:9px;height:9px;border-radius:50%;background:#999;flex-shrink:0}
+.status-dot.open{background:#49d98a;box-shadow:0 0 11px #49d98a77;animation:dotPulse 2s infinite}
 .status-dot.closed{background:#e5a650}
-.status-subtitle {
-  margin-top:3px;color:#b7a98c;font-size:10px;
-}
-.header-line {
-  height:2px;width:70%;margin:7px auto 0;
-  background:linear-gradient(90deg,transparent,#9a743a,transparent);
-}
+.status-subtitle{margin-top:3px;color:#b7a98c;font-size:10px}
+.header-line{height:2px;width:70%;margin:7px auto 0;background:linear-gradient(90deg,transparent,#9a743a,transparent)}
 .clock{text-align:right}
-.time {
-  font-size:clamp(25px,2.6vw,39px);
-  font-weight:800;
-  font-variant-numeric:tabular-nums;
-  white-space:nowrap;
-}
+.time{font-size:clamp(25px,2.6vw,39px);font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap}
 .date{font-size:13px;color:var(--gold)}
-.hijri-header {
-  margin-top:3px;font-size:11px;color:#c4b391;
-}
-.body {
-  min-height:0;display:grid;
-  grid-template-columns:minmax(0,1fr) 345px;
-  gap:12px;padding:12px;
-}
-.left {
-  min-height:0;display:grid;
-  grid-template-rows:minmax(0,3fr) minmax(0,2fr);
-  gap:12px;
-}
-.panel {
-  min-height:0;overflow:hidden;
-  border:1px solid #59482b;
-  border-radius:15px;background:#101115;
-}
+.hijri-header{margin-top:3px;font-size:11px;color:#c4b391}
+.body{min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 345px;gap:12px;padding:12px}
+.left{min-height:0;display:grid;grid-template-rows:minmax(0,3fr) minmax(0,2fr);gap:12px}
+.panel{min-height:0;overflow:hidden;border:1px solid #59482b;border-radius:15px;background:#101115}
 .stage{position:relative}
-.slide {
-  position:absolute;inset:0;display:none;
-  align-items:center;justify-content:center;
-  flex-direction:column;text-align:center;
-  padding:25px;
-  background:radial-gradient(circle,#2d2111,#090a0d 75%);
-}
+.slide{position:absolute;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:25px;background:radial-gradient(circle,#2d2111,#090a0d 75%)}
 .slide.active{display:flex}
 .slide.video{padding:0;background:#000}
-.slide video {
-  width:100%;height:100%;
-  object-fit:contain;background:#000;
-}
-.mini-logo {
-  width:min(48%,370px);
-  max-height:110px;object-fit:contain;
-}
-.eyebrow {
-  font-family:Cinzel,Georgia,serif;
-  color:var(--gold);font-size:16px;
-  letter-spacing:3px;font-weight:600;
-}
-.headline {
-  font-family:Cinzel,Georgia,serif;
-  font-size:clamp(28px,3.1vw,57px);
-  line-height:1.16;font-weight:600;
-  margin:15px 0;color:#fff1cf;
-}
+.slide video{width:100%;height:100%;object-fit:contain;background:#000}
+.mini-logo{width:min(48%,370px);max-height:110px;object-fit:contain}
+.eyebrow{font-family:Cinzel,Georgia,serif;color:var(--gold);font-size:16px;letter-spacing:3px;font-weight:600}
+.headline{font-family:Cinzel,Georgia,serif;font-size:clamp(28px,3.1vw,57px);line-height:1.16;font-weight:600;margin:15px 0;color:#fff1cf}
 .highlight{color:var(--gold)}
-.sub {
-  font-size:clamp(15px,1.5vw,24px);
-  line-height:1.5;color:#e4d2aa;
-}
-.controls {
-  position:absolute;top:10px;left:10px;
-  z-index:5;opacity:0;
-}
-.stage:hover .controls,
-.controls:focus-within{opacity:1}
-button {
-  background:#a7803e;border:0;border-radius:6px;
-  color:#111;padding:7px 12px;
-  cursor:pointer;font-weight:700;
-}
+.sub{font-size:clamp(15px,1.5vw,24px);line-height:1.5;color:#e4d2aa}
+.controls{position:absolute;top:10px;left:10px;z-index:5;opacity:0}
+.stage:hover .controls,.controls:focus-within{opacity:1}
+button{background:#a7803e;border:0;border-radius:6px;color:#111;padding:7px 12px;cursor:pointer;font-weight:700}
 
-/* FIVE CINEMATIC AZAN BACKGROUNDS */
-.azan-overlay {
-  position:absolute;inset:0;z-index:15;
-  display:none;overflow:hidden;
-  align-items:center;justify-content:center;
-  background:#080d14;
-}
+/* EXISTING CINEMATIC AZAN DISPLAY */
+.azan-overlay{position:absolute;inset:0;z-index:15;display:none;align-items:center;justify-content:center;overflow:hidden;background:#080d14}
 .azan-overlay.active{display:flex}
+.azan-background{position:absolute;inset:0;background-size:cover;background-position:center;background-repeat:no-repeat;transform:scale(1);opacity:0}
+.azan-overlay.active .azan-background{animation:prayerFadeIn 2.4s ease-out forwards,prayerSlowZoom 110s ease-in-out forwards}
+.azan-overlay.ending .azan-background{animation:prayerFadeOut .85s ease-in forwards}
+.azan-overlay::after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(0deg,rgba(0,0,0,.20),transparent 35%);pointer-events:none}
+.azan-live-label{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:2;background:rgba(5,9,14,.64);border:1px solid rgba(230,189,100,.55);border-radius:30px;padding:8px 24px;color:#ffe5b1;font:700 clamp(12px,1.1vw,18px) Manrope,Arial,sans-serif;white-space:nowrap;text-shadow:0 1px 5px #000;letter-spacing:.5px}
+.azan-fallback{display:none;flex-direction:column;align-items:center;justify-content:center;position:absolute;inset:0;background:radial-gradient(circle,#352817,#090b10)}
+.azan-overlay.image-missing .azan-fallback{display:flex}
+.azan-overlay.image-missing .azan-background{display:none}
+@keyframes prayerFadeIn{from{opacity:0}to{opacity:1}}
+@keyframes prayerSlowZoom{from{transform:scale(1)}to{transform:scale(1.09)}}
+@keyframes prayerFadeOut{from{opacity:1}to{opacity:0}}
+.azan-symbol{font-size:clamp(36px,5vw,70px);color:var(--gold);animation:azanPulse 3s ease-in-out infinite}
+@keyframes azanPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08);text-shadow:0 0 35px #ffe0a0aa}}
+.azan-title{font-family:Cinzel,Georgia,serif;font-size:clamp(30px,4vw,64px);color:#ffe4a5;font-weight:700;margin:14px 0}
+.azan-prayer{font-size:clamp(23px,2.7vw,43px);font-weight:800;color:#fff5dc}
+.azan-message{color:#d4bd8b;font-size:clamp(13px,1.3vw,20px);margin-top:16px}
+.azan-animation{display:flex;align-items:end;justify-content:center;gap:6px;height:35px;margin-top:22px}
+.azan-animation span{width:5px;background:var(--gold);border-radius:4px;animation:azanWave 1s ease-in-out infinite alternate}
+.azan-animation span:nth-child(1){height:12px}
+.azan-animation span:nth-child(2){height:26px;animation-delay:.2s}
+.azan-animation span:nth-child(3){height:35px;animation-delay:.4s}
+.azan-animation span:nth-child(4){height:22px;animation-delay:.6s}
+.azan-animation span:nth-child(5){height:14px;animation-delay:.8s}
+@keyframes azanWave{to{height:5px;opacity:.5}}
+@media(prefers-reduced-motion:reduce){.azan-overlay.active .azan-background{animation:none;opacity:1}}
 
-.azan-background {
-  position:absolute;inset:0;
-  background-position:center center;
-  background-repeat:no-repeat;
-  background-size:cover;
-  opacity:0;
-  transform:scale(1);
-  will-change:transform,opacity;
-}
-.azan-overlay.active .azan-background {
-  animation:
-    prayerFadeIn 2.5s ease-out forwards,
-    prayerCamera 95s ease-in-out forwards;
-}
-.azan-overlay.ending .azan-background {
-  animation:prayerFadeOut .85s ease-in forwards;
-}
-@keyframes prayerFadeIn {
-  from{opacity:0}
-  to{opacity:1}
-}
-@keyframes prayerCamera {
-  from{transform:scale(1) translate(0,0)}
-  to{transform:scale(1.085) translate(-.7%,-.5%)}
-}
-@keyframes prayerFadeOut {
-  from{opacity:1}
-  to{opacity:0}
-}
-.azan-shade {
-  position:absolute;inset:0;
-  pointer-events:none;
-  background:linear-gradient(
-    180deg,
-    rgba(0,0,0,.06) 0%,
-    transparent 35%,
-    rgba(0,0,0,.12) 100%
-  );
-}
-.azan-overlay.image-missing .azan-background {
-  display:none;
-}
-.azan-fallback {
-  display:none;
-  position:absolute;inset:0;
-  align-items:center;justify-content:center;
-  flex-direction:column;text-align:center;
-  background:radial-gradient(circle,#4a3419,#100e0b 75%);
-}
-.azan-overlay.image-missing .azan-fallback {
-  display:flex;
-}
-.azan-fallback-symbol {
-  font-size:60px;color:var(--gold);
-}
-.azan-fallback-name {
-  margin-top:15px;
-  font-family:Cinzel,Georgia,serif;
-  font-size:clamp(24px,3vw,45px);
-  color:#ffe4a5;
-}
-.azan-test-label {
-  position:absolute;left:50%;bottom:13px;
-  transform:translateX(-50%);
-  padding:6px 15px;
-  border:1px solid #c5a16b;
-  border-radius:20px;
-  background:rgba(0,0,0,.72);
-  color:#ffe4a5;
-  font-size:11px;
-  letter-spacing:1.5px;
-  display:none;
-  white-space:nowrap;
-}
-.azan-overlay.testing .azan-test-label {
-  display:block;
-}
-
-/* AZAN CONTROLS */
-.audio-controls {
-  position:fixed;bottom:54px;right:12px;
-  z-index:100;display:flex;gap:5px;
-  align-items:center;
-}
-.audio-controls button {
-  height:30px;padding:4px 9px;
-  border-radius:7px;
-  border:1px solid #b99551;
-  background:#183727;color:#d6f0d8;
-  font:800 11px Manrope,Arial,sans-serif;
-  white-space:nowrap;cursor:pointer;
-  box-shadow:0 3px 12px #0008;
-}
-.audio-controls .off {
-  background:#412020;color:#ffc7c7;
-  border-color:#b45b5b;
-}
-.audio-controls .blocked {
-  background:#51351c;color:#ffe1a3;
-  border-color:#d2a45a;
-}
-.audio-controls .test {
-  background:#302719;color:#ffe0a0;
-}
-.audio-controls .stop {
-  background:#502323;color:#ffd4d4;
-  border-color:#bd6767;
-}
-.audio-controls button:focus {
-  outline:2px solid #ffe1a0;
-  outline-offset:2px;
-}
-.azan-notice {
-  position:fixed;left:50%;top:105px;
-  transform:translateX(-50%);z-index:101;
-  max-width:90vw;background:#2b2116;
-  color:#ffe2a0;border:1px solid #ab8246;
-  border-radius:10px;padding:12px 20px;
-  font-size:13px;display:none;text-align:center;
-}
+/* AZAN BUTTONS — UNCHANGED */
+.audio-controls{position:fixed;bottom:54px;right:12px;z-index:100;display:flex;gap:5px;align-items:center}
+.audio-controls button{height:30px;padding:4px 9px;border-radius:7px;border:1px solid #b99551;background:#183727;color:#d6f0d8;font:800 11px Manrope,Arial,sans-serif;white-space:nowrap;cursor:pointer;box-shadow:0 3px 12px #0008}
+.audio-controls .off{background:#412020;color:#ffc7c7;border-color:#b45b5b}
+.audio-controls .blocked{background:#51351c;color:#ffe1a3;border-color:#d2a45a}
+.audio-controls .test{background:#302719;color:#ffe0a0}
+.audio-controls .stop{background:#502323;color:#ffd4d4;border-color:#bd6767}
+.audio-controls button:focus{outline:2px solid #ffe1a0;outline-offset:2px}
+.azan-notice{position:fixed;left:50%;top:105px;transform:translateX(-50%);z-index:101;max-width:90vw;background:#2b2116;color:#ffe2a0;border:1px solid #ab8246;border-radius:10px;padding:12px 20px;font-size:13px;display:none;text-align:center}
 .azan-notice.show{display:block}
 
-/* NEWS AND MARKET */
-.bottom-panels {
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:12px;min-height:0;
-}
-.mini-panel {
-  display:flex;flex-direction:column;min-height:0;
-}
-.panel-heading {
-  display:flex;align-items:center;
-  justify-content:space-between;
-  padding:11px 14px;background:#1d1a15;
-  border-bottom:1px solid #473922;
-  min-height:43px;
-}
-.panel-title {
-  color:var(--gold);font-size:14px;
-  font-weight:800;letter-spacing:1px;
-}
+/* NEWS AND MARKET — UNCHANGED */
+.bottom-panels{display:grid;grid-template-columns:1fr 1fr;gap:12px;min-height:0}
+.mini-panel{display:flex;flex-direction:column;min-height:0}
+.panel-heading{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;background:#1d1a15;border-bottom:1px solid #473922;min-height:43px}
+.panel-title{color:var(--gold);font-size:14px;font-weight:800;letter-spacing:1px}
 .panel-tag{color:#c4b395;font-size:11px}
-.live-dot {
-  display:inline-block;width:7px;height:7px;
-  border-radius:50%;background:#f04444;
-  margin-right:5px;animation:dotPulse 2s infinite;
-}
+.live-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#f04444;margin-right:5px;animation:dotPulse 2s infinite}
 @keyframes dotPulse{50%{opacity:.35}}
-.news-area {
-  flex:1;min-height:0;display:flex;
-  flex-direction:column;justify-content:center;
-  padding:18px 24px;
-  background:radial-gradient(
-    ellipse at top right,#30271a,#0b0e12 75%
-  );
-}
-.news-category {
-  color:var(--gold);
-  font-size:clamp(14px,1.05vw,19px);
-  letter-spacing:1.6px;font-weight:800;
-  margin-bottom:15px;
-}
-.news-headline {
-  color:#fff5e4;
-  font-size:clamp(22px,1.75vw,32px);
-  line-height:1.36;font-weight:800;
-  overflow:hidden;
-  display:-webkit-box;
-  -webkit-line-clamp:4;
-  -webkit-box-orient:vertical;
-}
-.news-meta {
-  display:flex;justify-content:space-between;
-  gap:8px;margin-top:17px;
-  font-size:clamp(12px,.85vw,16px);
-  color:#d2b781;
-}
-.news-progress {
-  height:4px;background:#443722;
-  margin-top:15px;overflow:hidden;
-  border-radius:4px;
-}
-.news-progress-inner {
-  height:100%;width:0;
-  background:linear-gradient(90deg,#a77b37,#ffe1a0);
-}
+.news-area{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;padding:18px 24px;background:radial-gradient(ellipse at top right,#30271a,#0b0e12 75%)}
+.news-category{color:var(--gold);font-size:clamp(14px,1.05vw,19px);letter-spacing:1.6px;font-weight:800;margin-bottom:15px}
+.news-headline{color:#fff5e4;font-size:clamp(22px,1.75vw,32px);line-height:1.36;font-weight:800;overflow:hidden;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical}
+.news-meta{display:flex;justify-content:space-between;gap:8px;margin-top:17px;font-size:clamp(12px,.85vw,16px);color:#d2b781}
+.news-progress{height:4px;background:#443722;margin-top:15px;overflow:hidden;border-radius:4px}
+.news-progress-inner{height:100%;width:0;background:linear-gradient(90deg,#a77b37,#ffe1a0)}
 .news-area.fade{animation:newsFade .5s ease}
-@keyframes newsFade {
-  from{opacity:.3;transform:translateY(4px)}
-  to{opacity:1;transform:translateY(0)}
-}
-.market-area {
-  display:grid;
-  grid-template-rows:minmax(0,1fr) minmax(0,1fr);
-  flex:1;min-height:0;gap:8px;padding:9px;
-  background:linear-gradient(145deg,#121417,#1b1711);
-}
-.market-item {
-  position:relative;min-height:0;min-width:0;
-  overflow:hidden;display:flex;align-items:stretch;
-  border:1px solid #5b4728;
-  border-radius:10px;background:#0d0e10;
-}
-.market-item:before {
-  content:"";position:absolute;
-  left:0;top:0;bottom:0;width:3px;
-  background:linear-gradient(#ffe2a0,#a47a36);
-  z-index:2;pointer-events:none;
-}
-.market-item .tradingview-widget-container {
-  width:100%;height:100%;
-  min-width:0;min-height:0;
-  flex:1 1 auto;overflow:hidden;
-}
-.market-item .tradingview-widget-container__widget {
-  width:100%;height:100%;min-height:0;
-}
-.market-item iframe {
-  width:100%;max-width:100%;
-  border:0;display:block;
-}
+@keyframes newsFade{from{opacity:.3;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.market-area{display:grid;grid-template-rows:minmax(0,1fr) minmax(0,1fr);flex:1;min-height:0;gap:8px;padding:9px;background:linear-gradient(145deg,#121417,#1b1711)}
+.market-item{position:relative;min-height:0;min-width:0;overflow:hidden;display:flex;align-items:stretch;border:1px solid #5b4728;border-radius:10px;background:#0d0e10}
+.market-item:before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(#ffe2a0,#a47a36);z-index:2;pointer-events:none}
+.market-item .tradingview-widget-container{width:100%;height:100%;min-width:0;min-height:0;transform:none;flex:1 1 auto;overflow:hidden}
+.market-item .tradingview-widget-container__widget{width:100%;height:100%;min-height:0}
+.market-item iframe{width:100%;max-width:100%;border:0;display:block}
 
-/* PRAYER PANEL */
-.prayers {
-  padding:12px 15px;
-  display:flex;flex-direction:column;
-  background:linear-gradient(150deg,#1d1b17,#0c0e12);
-}
-.prayer-header {
-  display:flex;align-items:flex-start;
-  justify-content:space-between;gap:8px;
-}
-.prayers h2 {
-  font-family:Cinzel,Georgia,serif;
-  font-size:22px;margin:0 0 4px;
-  color:var(--gold);
-}
-.prayer-icon {
-  color:var(--gold);font-size:25px;line-height:1;
-}
+/* PRAYER PANEL — UNCHANGED */
+.prayers{padding:12px 15px;display:flex;flex-direction:column;background:linear-gradient(150deg,#1d1b17,#0c0e12)}
+.prayer-header{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.prayers h2{font-family:Cinzel,Georgia,serif;font-size:22px;margin:0 0 4px;color:var(--gold)}
+.prayer-icon{color:var(--gold);font-size:25px;line-height:1}
 .location{font-size:11px;color:var(--muted)}
-.hijri-panel {
-  color:#d6bd8c;font-size:11px;
-  margin-top:5px;margin-bottom:9px;
+.hijri-panel{color:#d6bd8c;font-size:11px;margin-top:5px;margin-bottom:9px}
+.current-card{border:1px solid #8b6c36;border-radius:10px;background:linear-gradient(120deg,#342819,#201b15);padding:10px 12px;margin-bottom:8px}
+.current-card.pulse{animation:prayerTransition 2.5s ease}
+@keyframes prayerTransition{0%{box-shadow:0 0 0 transparent}35%{box-shadow:0 0 22px #e6bd6490;background:#59431e}100%{box-shadow:0 0 0 transparent}}
+.current-caption{font-size:10px;font-weight:800;color:var(--gold);letter-spacing:1.3px;display:flex;justify-content:space-between}
+.current-content{display:flex;align-items:center;justify-content:space-between;margin-top:5px;gap:8px}
+.current-name{font-size:22px;font-weight:800;color:#ffe2a0}
+.current-time{font-size:21px;font-weight:800;color:#ffe2a0;font-variant-numeric:tabular-nums}
+.prayer-row{display:flex;justify-content:space-between;align-items:center;gap:5px;border-bottom:1px solid #3e362a;padding:clamp(5px,1.1vh,11px) 8px;font-size:clamp(14px,1.1vw,18px)}
+.prayer-row strong{font-weight:800;font-variant-numeric:tabular-nums}
+.prayer-row.current{border:1px solid #b68a42;border-radius:8px;color:#ffe2a0;animation:prayerGlow 3.5s ease-in-out infinite}
+@keyframes prayerGlow{0%,100%{background:#332819;box-shadow:0 0 0 transparent}50%{background:#4c3a20;box-shadow:0 0 9px #e6bd642b}}
+.next-box{margin-top:auto;flex-shrink:0;border-radius:13px;background:linear-gradient(145deg,#332919,#211b13);border:1px solid #80653a;padding:12px 14px;text-align:center}
+.next-label{font-family:Cinzel,Georgia,serif;color:var(--gold);font-size:12px;letter-spacing:1.5px}
+.next-name{font-size:25px;font-weight:700;margin:5px 0 2px}
+.next-time{color:#f4d99b;font-size:37px;font-weight:800;line-height:1.15;font-variant-numeric:tabular-nums;margin:5px 0 8px}
+.remaining-label{font-size:10px;letter-spacing:2px;color:var(--muted)}
+.countdown{font-size:18px;font-weight:600;margin-top:5px;font-variant-numeric:tabular-nums}
+.progress-track{width:100%;height:5px;border-radius:20px;overflow:hidden;background:#54432a;margin-top:12px}
+.progress-fill{width:0%;height:100%;border-radius:20px;background:linear-gradient(90deg,#99713b,#ffe1a0);transition:width 1s linear}
+.progress-caption{display:flex;justify-content:space-between;margin-top:5px;color:#a99a7c;font-size:9px}
+.source{text-align:center;font-size:10px;color:#a89c85;margin-top:7px}
+.notice{font-size:13px;color:#c3b393;margin-top:10px}
+.ticker{display:flex;align-items:center;overflow:hidden;white-space:nowrap;border-top:1px solid var(--border);background:#18140f}
+.ticker span{display:inline-block;padding-left:100%;animation:scroll 42s linear infinite;font-size:17px;color:#e7cf9c}
+@keyframes scroll{to{transform:translateX(-100%)}}
+@media(max-width:1100px){
+.body{grid-template-columns:minmax(0,1fr) 285px}
+.prayers{padding:9px}.prayers h2{font-size:18px}
+.prayer-row{font-size:14px;padding:7px 5px}
+.current-name{font-size:19px}.current-time{font-size:17px}
+.next-time{font-size:30px}.next-name{font-size:22px}
+.panel-title{font-size:11px}.news-headline{font-size:20px}
+.news-category{font-size:12px}.news-area{padding:13px 15px}
+header{padding:8px 15px}
 }
-.current-card {
-  border:1px solid #8b6c36;
-  border-radius:10px;
-  background:linear-gradient(120deg,#342819,#201b15);
-  padding:10px 12px;margin-bottom:8px;
+@media(max-height:750px){
+.screen{grid-template-rows:78px minmax(0,1fr) 38px}
+.audio-controls{bottom:43px}.prayer-row{padding:5px 8px}
+.current-card{padding:7px 9px}.next-box{padding:8px}
+.next-time{font-size:30px}.time{font-size:30px}
+.hijri-panel{margin-bottom:5px}.progress-track{margin-top:7px}
+.news-area{padding:10px 15px}
+.news-headline{font-size:clamp(17px,1.45vw,25px)}
+.news-category{margin-bottom:7px}.news-meta{margin-top:8px}
+.news-progress{margin-top:8px}.market-area{gap:4px;padding:5px}
 }
-.current-card.pulse {
-  animation:prayerTransition 2.5s ease;
+@media(max-height:600px){
+.prayers{padding:7px}.prayers h2{font-size:16px}
+.current-card{margin-bottom:4px}.current-name{font-size:17px}
+.current-time{font-size:16px}.prayer-row{padding:3px 5px;font-size:13px}
+.next-name{font-size:18px}.next-time{font-size:26px}
+.countdown{font-size:15px}.source{font-size:9px}
 }
-@keyframes prayerTransition {
-  0%{box-shadow:0 0 0 transparent}
-  35%{
-    box-shadow:0 0 22px #e6bd6490;
-    background:#59431e;
-  }
-  100%{box-shadow:0 0 0 transparent}
-}
-.current-caption {
-  font-size:10px;font-weight:800;
-  color:var(--gold);letter-spacing:1.3px;
-  display:flex;justify-content:space-between;
-}
-.current-content {
-  display:flex;align-items:center;
-  justify-content:space-between;
-  margin-top:5px;gap:8px;
-}
-.current-name {
-  font-size:22px;font-weight:800;color:#ffe2a0;
-}
-.current-time {
-  font-size:21px;font-weight:800;
-  color:#ffe2a0;
-  font-variant-numeric:tabular-nums;
-}
-.prayer-row {
-  display:flex;justify-content:space-between;
-  align-items:center;gap:5px;
-  border-bottom:1px solid #3e362a;
-  padding:clamp(5px,1.1vh,11px) 8px;
-  font-size:clamp(14px,1.1vw,18px);
-}
-.prayer-row strong {
-  font-weight:800;
-  font-variant-numeric:tabular-nums;
-}
-.prayer-row.current {
-  border:1px solid #b68a42;
-  border-radius:8px;color:#ffe2a0;
-  animation:prayerGlow 3.5s ease-in-out infinite;
-}
-@keyframes prayerGlow {
-  0%,100%{
-    background:#332819;
-    box-shadow:0 0 0 transparent;
-  }
-  50%{
-    background:#4c3a20;
-    box-shadow:0 0 9px #e6bd642b;
-  }
-}
-.next-box {
-  margin-top:auto;flex-shrink:0;
-  border-radius:13px;
-  background:linear-gradient(145deg,#332919,#211b13);
-  border:1px solid #80653a;
-  padding:12px 14px;text-align:center;
-}
-.next-label {
-  font-family:Cinzel,Georgia,serif;
-  color:var(--gold);font-size:12px;
-  letter-spacing:1.5px;
-}
-.next-name {
-  font-size:25px;font-weight:700;
-  margin:5px 0 2px;
-}
-.next-time {
-  color:#f4d99b;font-size:37px;
-  font-weight:800;line-height:1.15;
-  font-variant-numeric:tabular-nums;
-  margin:5px 0 8px;
-}
-.remaining-label {
-  font-size:10px;letter-spacing:2px;
-  color:var(--muted);
-}
-.countdown {
-  font-size:18px;font-weight:600;
-  margin-top:5px;
-  font-variant-numeric:tabular-nums;
-}
-.progress-track {
-  width:100%;height:5px;
-  border-radius:20px;overflow:hidden;
-  background:#54432a;margin-top:12px;
-}
-.progress-fill {
-  width:0%;height:100%;border-radius:20px;
-  background:linear-gradient(90deg,#99713b,#ffe1a0);
-  transition:width 1s linear;
-}
-.progress-caption {
-  display:flex;justify-content:space-between;
-  margin-top:5px;color:#a99a7c;font-size:9px;
-}
-.source {
-  text-align:center;font-size:10px;
-  color:#a89c85;margin-top:7px;
-}
-.notice {
-  font-size:13px;color:#c3b393;
-  margin-top:10px;
-}
-.ticker {
-  display:flex;align-items:center;
-  overflow:hidden;white-space:nowrap;
-  border-top:1px solid var(--border);
-  background:#18140f;
-}
-.ticker span {
-  display:inline-block;padding-left:100%;
-  animation:scroll 42s linear infinite;
-  font-size:17px;color:#e7cf9c;
-}
-@keyframes scroll {
-  to{transform:translateX(-100%)}
-}
-
-@media(max-width:1100px) {
-  .body{grid-template-columns:minmax(0,1fr) 285px}
-  .prayers{padding:9px}
-  .prayers h2{font-size:18px}
-  .prayer-row{font-size:14px;padding:7px 5px}
-  .current-name{font-size:19px}
-  .current-time{font-size:17px}
-  .next-time{font-size:30px}
-  .next-name{font-size:22px}
-  .panel-title{font-size:11px}
-  .news-headline{font-size:20px}
-  .news-category{font-size:12px}
-  .news-area{padding:13px 15px}
-  header{padding:8px 15px}
-}
-@media(max-height:750px) {
-  .screen{grid-template-rows:78px minmax(0,1fr) 38px}
-  .audio-controls{bottom:43px}
-  .prayer-row{padding:5px 8px}
-  .current-card{padding:7px 9px}
-  .next-box{padding:8px}
-  .next-time{font-size:30px}
-  .time{font-size:30px}
-  .hijri-panel{margin-bottom:5px}
-  .progress-track{margin-top:7px}
-  .news-area{padding:10px 15px}
-  .news-headline{font-size:clamp(17px,1.45vw,25px)}
-  .news-category{margin-bottom:7px}
-  .news-meta{margin-top:8px}
-  .news-progress{margin-top:8px}
-  .market-area{gap:4px;padding:5px}
-}
-@media(max-height:600px) {
-  .prayers{padding:7px}
-  .prayers h2{font-size:16px}
-  .current-card{margin-bottom:4px}
-  .current-name{font-size:17px}
-  .current-time{font-size:16px}
-  .prayer-row{padding:3px 5px;font-size:13px}
-  .next-name{font-size:18px}
-  .next-time{font-size:26px}
-  .countdown{font-size:15px}
-  .source{font-size:9px}
-}
-@media(max-width:650px) {
-  html,body{overflow:auto}
-  .screen{height:auto;min-height:100vh}
-  header{grid-template-columns:1fr 1fr;gap:8px}
-  .header-center{grid-column:1/-1;grid-row:2}
-  .body{display:block}
-  .left{
-    height:900px;margin-bottom:12px;
-    grid-template-rows:540px 348px;
-  }
-  .prayers{min-height:590px}
-  .bottom-panels{grid-template-columns:1fr}
-  .logo{width:160px}
-  .time{font-size:22px}
-}
-@media(prefers-reduced-motion:reduce) {
-  .azan-overlay.active .azan-background {
-    animation:none;opacity:1;transform:none;
-  }
+@media(max-width:650px){
+html,body{overflow:auto}
+.screen{height:auto;min-height:100vh}
+header{grid-template-columns:1fr 1fr;gap:8px}
+.header-center{grid-column:1/-1;grid-row:2}
+.body{display:block}
+.left{height:900px;margin-bottom:12px;grid-template-rows:540px 348px}
+.prayers{min-height:590px}
+.bottom-panels{grid-template-columns:1fr}
+.logo{width:160px}.time{font-size:22px}
 }
 </style>
 </head>
-
 <body>
 <div class="screen">
-
 <header>
-  <img class="logo" src="logo.png" alt="Shaluq Jewellers">
-
-  <div class="header-center">
-    <div class="market-heading">GLOBAL BULLION MARKET</div>
-    <div class="market-status">
-      <span class="status-dot" id="marketDot"></span>
-      <span id="marketStatus">CHECKING MARKET</span>
-    </div>
-    <div class="status-subtitle" id="marketSubtitle">
-      Gold & Silver Trading Session
-    </div>
-    <div class="header-line"></div>
-  </div>
-
-  <div class="clock">
-    <div class="time" id="clock">--:--:--</div>
-    <div class="date" id="date">Dubai, UAE</div>
-    <div class="hijri-header" id="hijriHeader">Hijri Date</div>
-  </div>
+<img class="logo" src="logo.png" alt="Shaluq Jewellers">
+<div class="header-center">
+<div class="market-heading">GLOBAL BULLION MARKET</div>
+<div class="market-status">
+<span class="status-dot" id="marketDot"></span>
+<span id="marketStatus">CHECKING MARKET</span>
+</div>
+<div class="status-subtitle" id="marketSubtitle">Gold & Silver Trading Session</div>
+<div class="header-line"></div>
+</div>
+<div class="clock">
+<div class="time" id="clock">--:--:--</div>
+<div class="date" id="date">Dubai, UAE</div>
+<div class="hijri-header" id="hijriHeader">Hijri Date</div>
+</div>
 </header>
 
 <div class="body">
 <div class="left">
-
 <main class="panel stage" id="stage">
-  <div class="controls">
-    <button id="skip">Next slide ›</button>
-  </div>
+<div class="controls"><button id="skip">Next slide ›</button></div>
 
-  <section class="slide video active" data-type="video">
-    <video id="intro" src="intro.mp4"
-      muted autoplay playsinline preload="auto"></video>
-  </section>
+<section class="slide video active" data-type="video">
+<video id="intro" src="intro.mp4" muted autoplay playsinline preload="auto"></video>
+</section>
 
-  <section class="slide" data-duration="12000">
-    <img class="mini-logo" src="logo.png" alt="Shaluq">
-    <div class="eyebrow">DUBAI GOLD SOUK</div>
-    <div class="headline">
-      YOUR TRUSTED
-      <span class="highlight">BULLION PARTNER</span>
-    </div>
-    <div class="sub">Wholesale Gold and Silver Bullion</div>
-  </section>
+<section class="slide" data-duration="12000">
+<img class="mini-logo" src="logo.png" alt="Shaluq">
+<div class="eyebrow">DUBAI GOLD SOUK</div>
+<div class="headline">YOUR TRUSTED <span class="highlight">BULLION PARTNER</span></div>
+<div class="sub">Wholesale Gold and Silver Bullion</div>
+</section>
 
-  <section class="slide" data-duration="14000">
-    <div class="eyebrow">OUR PRODUCTS</div>
-    <div class="headline">
-      GOLD BARS <span class="highlight">& SILVER</span>
-    </div>
-    <div class="sub">
-      TT Bars · Kilo Bars · 999.9 Fine Gold Bars<br>
-      Silver Bullion · Raw Gold · Scrap Gold
-    </div>
-  </section>
+<section class="slide" data-duration="14000">
+<div class="eyebrow">OUR PRODUCTS</div>
+<div class="headline">GOLD BARS <span class="highlight">& SILVER</span></div>
+<div class="sub">TT Bars · Kilo Bars · 999.9 Fine Gold Bars<br>Silver Bullion · Raw Gold · Scrap Gold</div>
+</section>
 
-  <section class="slide" data-duration="14000">
-    <div class="eyebrow">OUR SERVICES</div>
-    <div class="headline">
-      WE <span class="highlight">BUY & SELL</span>
-    </div>
-    <div class="sub">
-      Gold Bullion, Raw Gold and Scrap Gold<br>
-      Contact Us for Business Inquiries
-    </div>
-  </section>
+<section class="slide" data-duration="14000">
+<div class="eyebrow">OUR SERVICES</div>
+<div class="headline">WE <span class="highlight">BUY & SELL</span></div>
+<div class="sub">Gold Bullion, Raw Gold and Scrap Gold<br>Contact Us for Business Inquiries</div>
+</section>
 
-  <section class="slide" data-duration="14000">
-    <div class="eyebrow">VISIT OUR OFFICE</div>
-    <div class="headline">
-      SHALUQ <span class="highlight">JEWELLERS L.L.C.</span>
-    </div>
-    <div class="sub">
-      Royal Diamond Building, Office 204, 2nd Floor<br>
-      Al Khor Street, Gold Souk, Deira, Dubai<br>
-      Opposite Gold Souk Parking Building
-    </div>
-  </section>
+<section class="slide" data-duration="14000">
+<div class="eyebrow">VISIT OUR OFFICE</div>
+<div class="headline">SHALUQ <span class="highlight">JEWELLERS L.L.C.</span></div>
+<div class="sub">
+Royal Diamond Building, Office 204, 2nd Floor<br>
+Al Khor Street, Gold Souk, Deira, Dubai<br>
+Opposite Gold Souk Parking Building
+</div>
+</section>
 
-  <section class="slide" id="saturday" data-duration="15000">
-    <div class="eyebrow">SATURDAY NOTICE</div>
-    <div class="headline">
-      GOLD MARKET <span class="highlight">CLOSED TODAY</span>
-    </div>
-    <div class="sub">
-      For Inquiries, Please Contact Shaluq Jewellers
-    </div>
-  </section>
+<section class="slide" id="saturday" data-duration="15000">
+<div class="eyebrow">SATURDAY NOTICE</div>
+<div class="headline">GOLD MARKET <span class="highlight">CLOSED TODAY</span></div>
+<div class="sub">For Inquiries, Please Contact Shaluq Jewellers</div>
+</section>
 
-  <!-- CINEMATIC PRAYER IMAGE -->
-  <div class="azan-overlay" id="azanOverlay">
-    <div class="azan-background" id="azanBackground"></div>
-    <div class="azan-shade"></div>
-
-    <div class="azan-fallback">
-      <div class="azan-fallback-symbol">☪</div>
-      <div class="azan-fallback-name" id="azanFallbackName">
-        Prayer
-      </div>
-    </div>
-
-    <div class="azan-test-label" id="azanTestLabel">
-      AZAN TEST
-    </div>
-  </div>
+<div class="azan-overlay" id="azanOverlay">
+<div class="azan-background" id="azanBackground"></div>
+<div class="azan-live-label" id="azanLiveLabel"></div>
+<div class="azan-fallback">
+<div class="azan-symbol">☪</div>
+<div class="azan-title" id="azanTitle">AZAN NOW</div>
+<div class="azan-prayer" id="azanPrayer">Prayer Time</div>
+<div class="azan-message" id="azanMessage">Dubai, United Arab Emirates</div>
+<div class="azan-animation">
+<span></span><span></span><span></span><span></span><span></span>
+</div>
+</div>
+</div>
 </main>
 
 <div class="bottom-panels">
-
 <section class="panel mini-panel">
-  <div class="panel-heading">
-    <span class="panel-title">
-      <span class="live-dot"></span>LIVE NEWS FLASH
-    </span>
-    <span class="panel-tag" id="newsStatus">CONNECTING</span>
-  </div>
-
-  <div class="news-area" id="newsArea">
-    <div class="news-category" id="newsCategory">
-      WORLD & FINANCIAL NEWS
-    </div>
-    <div class="news-headline" id="newsHeadline">
-      Connecting to the latest market and world news…
-    </div>
-    <div class="news-meta">
-      <span id="newsSource">News feed</span>
-      <span id="newsPosition">-- / --</span>
-    </div>
-    <div class="news-progress">
-      <div class="news-progress-inner" id="newsProgress"></div>
-    </div>
-  </div>
+<div class="panel-heading">
+<span class="panel-title"><span class="live-dot"></span>LIVE NEWS FLASH</span>
+<span class="panel-tag" id="newsStatus">CONNECTING</span>
+</div>
+<div class="news-area" id="newsArea">
+<div class="news-category" id="newsCategory">WORLD & FINANCIAL NEWS</div>
+<div class="news-headline" id="newsHeadline">Connecting to the latest market and world news…</div>
+<div class="news-meta">
+<span id="newsSource">News feed</span>
+<span id="newsPosition">-- / --</span>
+</div>
+<div class="news-progress">
+<div class="news-progress-inner" id="newsProgress"></div>
+</div>
+</div>
 </section>
 
 <section class="panel mini-panel">
-  <div class="panel-heading">
-    <span class="panel-title">GOLD & SILVER MARKET</span>
-    <span class="panel-tag">USD / TROY OZ</span>
-  </div>
-
-  <div class="market-area">
-    <div class="market-item">
-      <div class="tradingview-widget-container">
-        <div class="tradingview-widget-container__widget"></div>
-        <script type="text/javascript"
-          src="https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js"
-          async>
-        {
-          "symbol":"OANDA:XAUUSD",
-          "width":"100%",
-          "isTransparent":false,
-          "colorTheme":"dark",
-          "locale":"en"
-        }
-        </script>
-      </div>
-    </div>
-
-    <div class="market-item">
-      <div class="tradingview-widget-container">
-        <div class="tradingview-widget-container__widget"></div>
-        <script type="text/javascript"
-          src="https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js"
-          async>
-        {
-          "symbol":"OANDA:XAGUSD",
-          "width":"100%",
-          "isTransparent":false,
-          "colorTheme":"dark",
-          "locale":"en"
-        }
-        </script>
-      </div>
-    </div>
-  </div>
+<div class="panel-heading">
+<span class="panel-title">GOLD & SILVER MARKET</span>
+<span class="panel-tag">USD / TROY OZ</span>
+</div>
+<div class="market-area">
+<div class="market-item">
+<div class="tradingview-widget-container">
+<div class="tradingview-widget-container__widget"></div>
+<script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js" async>
+{"symbol":"OANDA:XAUUSD","width":"100%","isTransparent":false,"colorTheme":"dark","locale":"en"}
+</script>
+</div>
+</div>
+<div class="market-item">
+<div class="tradingview-widget-container">
+<div class="tradingview-widget-container__widget"></div>
+<script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js" async>
+{"symbol":"OANDA:XAGUSD","width":"100%","isTransparent":false,"colorTheme":"dark","locale":"en"}
+</script>
+</div>
+</div>
+</div>
 </section>
-
 </div>
 </div>
 
 <aside class="panel prayers">
-  <div class="prayer-header">
-    <div>
-      <h2>Dubai Prayer Times</h2>
-      <div class="location">Dubai, United Arab Emirates</div>
-    </div>
-    <div class="prayer-icon">☪</div>
-  </div>
-
-  <div class="hijri-panel" id="hijriPanel">
-    Loading Hijri date…
-  </div>
-
-  <div class="current-card" id="currentCard">
-    <div class="current-caption">
-      <span>CURRENT PRAYER</span><span>✦</span>
-    </div>
-    <div class="current-content">
-      <span class="current-name" id="currentName">
-        Loading…
-      </span>
-      <span class="current-time" id="currentTime">
-        --:--
-      </span>
-    </div>
-  </div>
-
-  <div id="prayerRows">
-    <div class="notice">Loading prayer times…</div>
-  </div>
-
-  <div class="next-box">
-    <div class="next-label">UPCOMING PRAYER</div>
-    <div class="next-name" id="nextName">Loading…</div>
-    <div class="next-time" id="nextTime">--:--</div>
-    <div class="remaining-label">TIME REMAINING</div>
-    <div class="countdown" id="countdown">--:--:--</div>
-    <div class="progress-track">
-      <div class="progress-fill" id="prayerProgress"></div>
-    </div>
-    <div class="progress-caption">
-      <span>PREVIOUS PRAYER</span>
-      <span>NEXT PRAYER</span>
-    </div>
-  </div>
-
-  <div class="source" id="prayerStatus">
-    Source: AlAdhan · Dubai method 16
-  </div>
+<div class="prayer-header">
+<div>
+<h2>Dubai Prayer Times</h2>
+<div class="location">Dubai, United Arab Emirates</div>
+</div>
+<div class="prayer-icon">☪</div>
+</div>
+<div class="hijri-panel" id="hijriPanel">Loading Hijri date…</div>
+<div class="current-card" id="currentCard">
+<div class="current-caption"><span>CURRENT PRAYER</span><span>✦</span></div>
+<div class="current-content">
+<span class="current-name" id="currentName">Loading…</span>
+<span class="current-time" id="currentTime">--:--</span>
+</div>
+</div>
+<div id="prayerRows"><div class="notice">Loading prayer times…</div></div>
+<div class="next-box">
+<div class="next-label">UPCOMING PRAYER</div>
+<div class="next-name" id="nextName">Loading…</div>
+<div class="next-time" id="nextTime">--:--</div>
+<div class="remaining-label">TIME REMAINING</div>
+<div class="countdown" id="countdown">--:--:--</div>
+<div class="progress-track"><div class="progress-fill" id="prayerProgress"></div></div>
+<div class="progress-caption"><span>PREVIOUS PRAYER</span><span>NEXT PRAYER</span></div>
+</div>
+<div class="source" id="prayerStatus">Source: AlAdhan · Dubai method 16</div>
 </aside>
 </div>
 
 <footer class="ticker">
-  <span>
-    SHALUQ JEWELLERS L.L.C. &nbsp; ✦ &nbsp;
-    WHOLESALE BULLION &nbsp; ✦ &nbsp;
-    GOLD BARS · SILVER · RAW GOLD · SCRAP GOLD &nbsp; ✦ &nbsp;
-    ROYAL DIAMOND BUILDING, OFFICE 204,
-    DEIRA GOLD SOUK, DUBAI &nbsp; ✦ &nbsp;
-    WWW.SHALUQJEWELLERS.COM &nbsp; ✦ &nbsp;
-  </span>
+<span>
+SHALUQ JEWELLERS L.L.C. &nbsp; ✦ &nbsp;
+WHOLESALE BULLION &nbsp; ✦ &nbsp;
+GOLD BARS · SILVER · RAW GOLD · SCRAP GOLD &nbsp; ✦ &nbsp;
+ROYAL DIAMOND BUILDING, OFFICE 204,
+DEIRA GOLD SOUK, DUBAI &nbsp; ✦ &nbsp;
+WWW.SHALUQJEWELLERS.COM &nbsp; ✦ &nbsp;
+</span>
 </footer>
 </div>
 
 <audio id="azanAudio" src="azan.mp3" preload="auto"></audio>
 
 <div class="audio-controls">
-  <button id="audioControl" type="button"
-    title="Turn scheduled Azan on or off">
-    🔊 AZAN
-  </button>
-
-  <button id="testAzan" class="test" type="button"
-    title="Test all five prayer backgrounds">
-    ▶ TEST AZAN
-  </button>
-
-  <button id="stopAzan" class="stop" type="button"
-    title="Stop current Azan" style="display:none">
-    ■ STOP
-  </button>
+<button id="audioControl" type="button" title="Turn scheduled Azan on or off">🔊 AZAN</button>
+<button id="testAzan" class="test" type="button" title="Play a manual Azan test">▶ TEST AZAN</button>
+<button id="stopAzan" class="stop" type="button" title="Stop current Azan" style="display:none">■ STOP</button>
 </div>
-
 <div class="azan-notice" id="azanNotice" role="status"></div>
 
 <script>
@@ -864,368 +360,321 @@ button {
 
 const TZ='Asia/Dubai';
 const names=['Fajr','Dhuhr','Asr','Maghrib','Isha'];
-
 const AZAN_IMAGES={
-  Fajr:'azan-fajr.png',
-  Dhuhr:'azan-dhuhr.png',
-  Asr:'azan-asr.png',
-  Maghrib:'azan-maghrib.png',
-  Isha:'azan-isha.png'
+ Fajr:'azan-fajr.png',
+ Dhuhr:'azan-dhuhr.png',
+ Asr:'azan-asr.png',
+ Maghrib:'azan-maghrib.png',
+ Isha:'azan-isha.png'
 };
-
-const ARABIC_PRAYERS={
-  Fajr:'صلاة الفجر',
-  Dhuhr:'صلاة الظهر',
-  Asr:'صلاة العصر',
-  Maghrib:'صلاة المغرب',
-  Isha:'صلاة العشاء'
+const AZAN_ARABIC={
+ Fajr:'الفجر',
+ Dhuhr:'الظهر',
+ Asr:'العصر',
+ Maghrib:'المغرب',
+ Isha:'العشاء'
 };
-
 const $=id=>document.getElementById(id);
 const pad=n=>String(n).padStart(2,'0');
 
 function parts(d){
-  return Object.fromEntries(
-    new Intl.DateTimeFormat('en-GB',{
-      timeZone:TZ,
-      year:'numeric',
-      month:'2-digit',
-      day:'2-digit',
-      hour:'2-digit',
-      minute:'2-digit',
-      second:'2-digit',
-      hourCycle:'h23'
-    }).formatToParts(d)
-      .filter(x=>x.type!=='literal')
-      .map(x=>[x.type,x.value])
-  );
+ return Object.fromEntries(
+  new Intl.DateTimeFormat('en-GB',{
+   timeZone:TZ,year:'numeric',month:'2-digit',
+   day:'2-digit',hour:'2-digit',minute:'2-digit',
+   second:'2-digit',hourCycle:'h23'
+  }).formatToParts(d)
+   .filter(x=>x.type!=='literal')
+   .map(x=>[x.type,x.value])
+ );
 }
-
 const dubaiNow=()=>parts(new Date());
 const dateKey=p=>`${p.year}-${p.month}-${p.day}`;
 const apiKey=p=>`${p.day}-${p.month}-${p.year}`;
 
 function secondsOf(p){
-  return Number(p.hour)*3600+
-    Number(p.minute)*60+
-    Number(p.second);
+ return Number(p.hour)*3600+Number(p.minute)*60+Number(p.second);
 }
-
 function secTime(s){
-  const m=String(s||'').match(/(\d{1,2}):(\d{2})/);
-  return m?Number(m[1])*3600+Number(m[2])*60:null;
+ const m=String(s||'').match(/(\d{1,2}):(\d{2})/);
+ return m?Number(m[1])*3600+Number(m[2])*60:null;
 }
-
 function displayTime(s){
-  const m=String(s||'').match(/(\d{1,2}):(\d{2})/);
-  if(!m)return '--';
-  const h=Number(m[1]);
-  return `${h%12||12}:${m[2]} ${h>=12?'PM':'AM'}`;
+ const m=String(s||'').match(/(\d{1,2}):(\d{2})/);
+ if(!m)return '--';
+ const h=Number(m[1]);
+ return `${h%12||12}:${m[2]} ${h>=12?'PM':'AM'}`;
 }
-
 function duration(s){
-  return `${pad(Math.floor(s/3600))}:`+
-    `${pad(Math.floor(s%3600/60))}:`+
-    `${pad(s%60)}`;
+ return `${pad(Math.floor(s/3600))}:${pad(Math.floor(s%3600/60))}:${pad(s%60)}`;
 }
 
 /* CLOCK AND MARKET */
-
 let lastHeaderDate='';
-
 function updateHeader(){
-  const p=dubaiNow();
-
-  $('clock').textContent=
-    `${Number(p.hour)%12||12}:${p.minute}:${p.second} `+
-    `${Number(p.hour)>=12?'PM':'AM'}`;
-
-  $('date').textContent=
-    new Intl.DateTimeFormat('en-GB',{
-      timeZone:TZ,
-      weekday:'long',
-      day:'numeric',
-      month:'long',
-      year:'numeric'
-    }).format(new Date());
-
-  if(dateKey(p)!==lastHeaderDate){
-    lastHeaderDate=dateKey(p);
-    updateHijri();
-  }
-
-  updateMarketStatus();
+ const p=dubaiNow();
+ $('clock').textContent=
+  `${Number(p.hour)%12||12}:${p.minute}:${p.second} `+
+  `${Number(p.hour)>=12?'PM':'AM'}`;
+ $('date').textContent=new Intl.DateTimeFormat('en-GB',{
+  timeZone:TZ,weekday:'long',day:'numeric',
+  month:'long',year:'numeric'
+ }).format(new Date());
+ if(dateKey(p)!==lastHeaderDate){
+  lastHeaderDate=dateKey(p);
+  updateHijri();
+ }
+ updateMarketStatus();
 }
-
 function updateMarketStatus(){
-  const obj=Object.fromEntries(
-    new Intl.DateTimeFormat('en-US',{
-      timeZone:'America/New_York',
-      weekday:'short',
-      hour:'2-digit',
-      minute:'2-digit',
-      hourCycle:'h23'
-    }).formatToParts(new Date())
-      .filter(x=>x.type!=='literal')
-      .map(x=>[x.type,x.value])
-  );
-
-  const day=obj.weekday;
-  const mins=Number(obj.hour)*60+Number(obj.minute);
-
-  const open=
-    (day==='Sun'&&mins>=1020)||
-    ['Mon','Tue','Wed','Thu'].includes(day)||
-    (day==='Fri'&&mins<1020);
-
-  $('marketDot').className=
-    'status-dot '+(open?'open':'closed');
-
-  $('marketStatus').textContent=
-    open?'GLOBAL MARKET OPEN':'GLOBAL MARKET CLOSED';
-
-  $('marketSubtitle').textContent=open
-    ?'Indicative Spot Metals Trading Session'
-    :'Outside Indicative Spot Trading Session';
+ const obj=Object.fromEntries(
+  new Intl.DateTimeFormat('en-US',{
+   timeZone:'America/New_York',weekday:'short',
+   hour:'2-digit',minute:'2-digit',hourCycle:'h23'
+  }).formatToParts(new Date())
+   .filter(x=>x.type!=='literal')
+   .map(x=>[x.type,x.value])
+ );
+ const day=obj.weekday;
+ const mins=Number(obj.hour)*60+Number(obj.minute);
+ const open=
+  (day==='Sun'&&mins>=1020)||
+  ['Mon','Tue','Wed','Thu'].includes(day)||
+  (day==='Fri'&&mins<1020);
+ $('marketDot').className='status-dot '+(open?'open':'closed');
+ $('marketStatus').textContent=open?'GLOBAL MARKET OPEN':'GLOBAL MARKET CLOSED';
+ $('marketSubtitle').textContent=open
+  ?'Indicative Spot Metals Trading Session'
+  :'Outside Indicative Spot Trading Session';
 }
-
 function updateHijri(){
-  try{
-    const hijri=new Intl.DateTimeFormat(
-      'en-u-ca-islamic-umalqura',{
-        timeZone:TZ,
-        day:'numeric',
-        month:'long',
-        year:'numeric'
-      }
-    ).format(new Date());
-
-    $('hijriHeader').textContent=hijri+' AH';
-    $('hijriPanel').textContent=hijri+' AH';
-  }catch(e){
-    $('hijriHeader').textContent='Dubai, UAE';
-    $('hijriPanel').textContent='';
-  }
+ try{
+  const hijri=new Intl.DateTimeFormat(
+   'en-u-ca-islamic-umalqura',{
+    timeZone:TZ,day:'numeric',month:'long',year:'numeric'
+   }
+  ).format(new Date());
+  $('hijriHeader').textContent=hijri+' AH';
+  $('hijriPanel').textContent=hijri+' AH';
+ }catch(e){
+  $('hijriHeader').textContent='Dubai, UAE';
+  $('hijriPanel').textContent='';
+ }
 }
 
 /* PRAYER DATA */
-
 let currentDay='',activeDate='',times={},nextTimes={};
 let lastLoad=0,prayerLoading=false;
 let tomorrowLoading=false,tomorrowRetryAfter=0;
 let lastCurrentName=null,prayerInitialized=false;
 let lastPrayerMarkup='';
-
 const cacheKey='shaluq-prayer-dubai-v1';
 
 function cached(){
-  try{
-    return JSON.parse(localStorage.getItem(cacheKey)||'{}');
-  }catch(e){
-    return {};
-  }
+ try{return JSON.parse(localStorage.getItem(cacheKey)||'{}')}
+ catch(e){return {}}
 }
-
 function store(o){
-  try{
-    localStorage.setItem(cacheKey,JSON.stringify(o));
-  }catch(e){}
+ try{localStorage.setItem(cacheKey,JSON.stringify(o))}
+ catch(e){}
 }
-
 async function fetchDay(p){
-  const key=dateKey(p);
-  const cache=cached();
+ const key=dateKey(p);
+ const cache=cached();
+ if(cache[key])return cache[key];
 
-  if(cache[key])return cache[key];
+ const url=
+  `https://api.aladhan.com/v1/timingsByCity/${apiKey(p)}`+
+  `?city=Dubai&country=United%20Arab%20Emirates`+
+  `&method=16&school=0`;
 
-  const url=
-    `https://api.aladhan.com/v1/timingsByCity/${apiKey(p)}`+
-    `?city=Dubai&country=United%20Arab%20Emirates`+
-    `&method=16&school=0`;
+ const controller=new AbortController();
+ const timeout=setTimeout(()=>controller.abort(),12000);
+ try{
+  const response=await fetch(url,{
+   cache:'no-store',signal:controller.signal
+  });
+  if(!response.ok)throw Error('Prayer service unavailable');
+  const json=await response.json();
+  if(json.code!==200||!json.data?.timings)
+   throw Error('Invalid prayer data');
 
-  const controller=new AbortController();
-  const timeout=setTimeout(()=>controller.abort(),12000);
-
-  try{
-    const response=await fetch(url,{
-      cache:'no-store',
-      signal:controller.signal
-    });
-
-    if(!response.ok)
-      throw Error('Prayer service unavailable');
-
-    const json=await response.json();
-
-    if(json.code!==200||!json.data?.timings)
-      throw Error('Invalid prayer data');
-
-    const result={};
-
-    for(const name of names){
-      const value=json.data.timings[name];
-
-      if(secTime(value)===null)
-        throw Error('Missing prayer time');
-
-      result[name]=value;
-    }
-
-    cache[key]=result;
-    store(cache);
-    return result;
-  }finally{
-    clearTimeout(timeout);
+  const result={};
+  for(const name of names){
+   const value=json.data.timings[name];
+   if(secTime(value)===null)throw Error('Missing prayer time');
+   result[name]=value;
   }
+  cache[key]=result;
+  store(cache);
+  return result;
+ }finally{clearTimeout(timeout)}
 }
-
 function tomorrowParts(p){
-  const d=new Date(Date.UTC(
-    Number(p.year),
-    Number(p.month)-1,
-    Number(p.day)+1
-  ));
-
-  return {
-    year:String(d.getUTCFullYear()),
-    month:pad(d.getUTCMonth()+1),
-    day:pad(d.getUTCDate())
-  };
+ const d=new Date(Date.UTC(
+  Number(p.year),Number(p.month)-1,Number(p.day)+1
+ ));
+ return{
+  year:String(d.getUTCFullYear()),
+  month:pad(d.getUTCMonth()+1),
+  day:pad(d.getUTCDate())
+ };
 }
-
 async function loadPrayer(){
-  if(prayerLoading)return;
-
-  prayerLoading=true;
-
-  const p=dubaiNow();
-  const key=dateKey(p);
-
-  try{
-    const today=await fetchDay(p);
-
-    if(key!==dateKey(dubaiNow()))return;
-
-    times=today;
-    activeDate=key;
-    nextTimes={};
-    lastLoad=Date.now();
-
-    $('prayerStatus').textContent=
-      'Source: AlAdhan · Dubai method 16';
-
-    renderPrayer();
-  }catch(e){
-    lastLoad=Date.now();
-
-    $('prayerStatus').textContent=
-      'Prayer service unavailable · check connection';
-
-    if(!times.Fajr){
-      $('prayerRows').innerHTML=
-        '<div class="notice">Unable to load prayer times.</div>';
-    }
-  }finally{
-    prayerLoading=false;
+ if(prayerLoading)return;
+ prayerLoading=true;
+ const p=dubaiNow();
+ const key=dateKey(p);
+ try{
+  const today=await fetchDay(p);
+  if(key!==dateKey(dubaiNow()))return;
+  times=today;
+  activeDate=key;
+  nextTimes={};
+  lastLoad=Date.now();
+  $('prayerStatus').textContent='Source: AlAdhan · Dubai method 16';
+  renderPrayer();
+ }catch(e){
+  lastLoad=Date.now();
+  $('prayerStatus').textContent=
+   'Prayer service unavailable · check connection';
+  if(!times.Fajr){
+   $('prayerRows').innerHTML=
+    '<div class="notice">Unable to load prayer times.</div>';
   }
+ }finally{prayerLoading=false}
 }
 
-/* PROMOTIONAL SLIDES */
-
+/* PROMOTIONAL SLIDES — UNCHANGED */
 const slides=[...document.querySelectorAll('.slide')];
 const video=$('intro');
-
-let slideIndex=0;
-let slideTimer=null;
-let slideDeadline=0;
+let slideIndex=0,slideTimer=null,slideDeadline=0;
 
 function isSaturday(){
-  return new Intl.DateTimeFormat('en-US',{
-    timeZone:TZ,
-    weekday:'long'
-  }).format(new Date())==='Saturday';
+ return new Intl.DateTimeFormat('en-US',{
+  timeZone:TZ,weekday:'long'
+ }).format(new Date())==='Saturday';
 }
-
 function showSlide(i){
-  if(azanPlaying)return;
-
-  clearTimeout(slideTimer);
-  video.pause();
-
-  slides.forEach(s=>s.classList.remove('active'));
-
-  let attempts=0;
-
-  while(
-    slides[i].id==='saturday'&&
-    !isSaturday()&&
-    attempts<slides.length
-  ){
-    i=(i+1)%slides.length;
-    attempts++;
+ if(azanPlaying)return;
+ clearTimeout(slideTimer);
+ video.pause();
+ slides.forEach(s=>s.classList.remove('active'));
+ let attempts=0;
+ while(
+  slides[i].id==='saturday'&&!isSaturday()&&
+  attempts<slides.length
+ ){
+  i=(i+1)%slides.length;
+  attempts++;
+ }
+ slideIndex=i;
+ const slide=slides[i];
+ slide.classList.add('active');
+ if(slide.dataset.type==='video'){
+  try{video.currentTime=0}catch(e){}
+  slideDeadline=Date.now()+30000;
+  slideTimer=setTimeout(nextSlide,30000);
+  const promise=video.play();
+  if(promise&&promise.catch){
+   promise.catch(()=>{
+    if(azanPlaying)return;
+    clearTimeout(slideTimer);
+    slideDeadline=Date.now()+5000;
+    slideTimer=setTimeout(nextSlide,5000);
+   });
   }
-
-  slideIndex=i;
-
-  const slide=slides[i];
-  slide.classList.add('active');
-
-  if(slide.dataset.type==='video'){
-    try{video.currentTime=0}catch(e){}
-
-    slideDeadline=Date.now()+30000;
-    slideTimer=setTimeout(nextSlide,30000);
-
-    const promise=video.play();
-
-    if(promise&&promise.catch){
-      promise.catch(()=>{
-        if(azanPlaying)return;
-
-        clearTimeout(slideTimer);
-        slideDeadline=Date.now()+5000;
-        slideTimer=setTimeout(nextSlide,5000);
-      });
-    }
-  }else{
-    const ms=Number(slide.dataset.duration)||12000;
-
-    slideDeadline=Date.now()+ms;
-    slideTimer=setTimeout(nextSlide,ms);
-  }
+ }else{
+  const ms=Number(slide.dataset.duration)||12000;
+  slideDeadline=Date.now()+ms;
+  slideTimer=setTimeout(nextSlide,ms);
+ }
 }
-
 function nextSlide(){
-  if(!azanPlaying)
-    showSlide((slideIndex+1)%slides.length);
+ if(!azanPlaying)showSlide((slideIndex+1)%slides.length);
 }
-
 video.addEventListener('ended',()=>{
-  if(slideIndex===0&&!azanPlaying)nextSlide();
+ if(slideIndex===0&&!azanPlaying)nextSlide();
 });
-
 video.addEventListener('error',()=>{
-  if(slideIndex===0&&!azanPlaying)nextSlide();
+ if(slideIndex===0&&!azanPlaying)nextSlide();
 });
-
 $('skip').addEventListener('click',nextSlide);
 
-/* CINEMATIC AZAN SYSTEM */
-
+/* AZAN — ENABLED BY DEFAULT */
 const azanAudio=$('azanAudio');
-const azanOverlay=$('azanOverlay');
-const azanBackground=$('azanBackground');
-
 const AZAN_PREF='shaluq-azan-enabled-v2';
 const AZAN_PLAYED='shaluq-azan-played-v2';
 const AZAN_GRACE=30;
 const AZAN_MAX_MS=12*60*1000;
 
-let audioEnabled=true;
+/* NEW: DUPLICATE PLAYBACK PROTECTION */
+const AZAN_COOLDOWN_MS=10*60*1000;
+const AZAN_LOCK_KEY='shaluq-azan-lock-v3';
+const AZAN_COMPLETE_KEY='shaluq-azan-complete-v3';
+const AZAN_INSTANCE_ID=
+ Date.now().toString(36)+'-'+Math.random().toString(36).slice(2);
 
+let memoryLocks={};
+let completedPrayers={};
+let lastAudioStop=0;
+let lastAudioStart=0;
+let activePrayer=null;
+let activePrayerKey=null;
+let azanStopping=false;
+
+function readJSON(key){
+ try{
+  const data=JSON.parse(localStorage.getItem(key)||'{}');
+  return data&&typeof data==='object'?data:{};
+ }catch(e){return {}}
+}
+function writeJSON(key,value){
+ try{localStorage.setItem(key,JSON.stringify(value))}
+ catch(e){}
+}
+function getPrayerLock(key){
+ const stored=readJSON(AZAN_LOCK_KEY);
+ return Math.max(
+  Number(memoryLocks[key]||0),
+  Number(stored[key]||0)
+ );
+}
+function lockPrayer(key){
+ if(!key)return;
+ const until=Date.now()+AZAN_COOLDOWN_MS;
+ memoryLocks[key]=until;
+ const stored=readJSON(AZAN_LOCK_KEY);
+ stored[key]=until;
+
+ const cutoff=Date.now()-86400000;
+ for(const k of Object.keys(stored)){
+  if(Number(stored[k])<cutoff)delete stored[k];
+ }
+ writeJSON(AZAN_LOCK_KEY,stored);
+}
+function prayerIsLocked(key){
+ if(!key)return false;
+ return Date.now()<getPrayerLock(key);
+}
+function completePrayer(key){
+ if(!key)return;
+ completedPrayers[key]=true;
+ const data=readJSON(AZAN_COMPLETE_KEY);
+ data[key]=true;
+ const keys=Object.keys(data).sort();
+ while(keys.length>35)delete data[keys.shift()];
+ writeJSON(AZAN_COMPLETE_KEY,data);
+}
+function prayerCompleted(key){
+ return !!completedPrayers[key]||
+  !!readJSON(AZAN_COMPLETE_KEY)[key];
+}
+
+let audioEnabled=true;
 try{
-  const saved=localStorage.getItem(AZAN_PREF);
-  audioEnabled=saved===null?true:saved==='true';
+ const saved=localStorage.getItem(AZAN_PREF);
+ audioEnabled=saved===null?true:saved==='true';
 }catch(e){}
 
 let azanPlaying=false;
@@ -1239,691 +688,514 @@ let azanAttempt=0;
 let testPrayerIndex=0;
 let imageRequest=0;
 
+function setPrayerBackground(prayer){
+ const overlay=$('azanOverlay');
+ const bg=$('azanBackground');
+ const file=AZAN_IMAGES[prayer]||AZAN_IMAGES.Dhuhr;
+ const request=++imageRequest;
+
+ overlay.classList.remove('active','ending','image-missing');
+ bg.style.animation='none';
+ bg.style.backgroundImage='url("'+file+'")';
+ $('azanLiveLabel').textContent=
+  prayer+' Prayer · '+(AZAN_ARABIC[prayer]||'');
+ overlay.setAttribute('aria-label',prayer+' prayer Azan');
+
+ const check=new Image();
+ check.onload=()=>{
+  if(request===imageRequest)
+   overlay.classList.remove('image-missing');
+ };
+ check.onerror=()=>{
+  if(request===imageRequest)
+   overlay.classList.add('image-missing');
+ };
+ check.src=file;
+
+ void bg.offsetWidth;
+ bg.style.animation='';
+}
+
 function saveAzanPreference(){
-  try{
-    localStorage.setItem(
-      AZAN_PREF,String(audioEnabled)
-    );
-  }catch(e){}
+ try{localStorage.setItem(AZAN_PREF,String(audioEnabled))}
+ catch(e){}
 }
-
 function playedAzans(){
-  try{
-    return JSON.parse(
-      localStorage.getItem(AZAN_PLAYED)||'{}'
-    );
-  }catch(e){
-    return {};
-  }
+ try{return JSON.parse(localStorage.getItem(AZAN_PLAYED)||'{}')}
+ catch(e){return {}}
 }
-
 function markPlayed(key){
-  const data=playedAzans();
-  data[key]=true;
-
-  const keys=Object.keys(data).sort();
-
-  while(keys.length>35){
-    delete data[keys.shift()];
-  }
-
-  try{
-    localStorage.setItem(
-      AZAN_PLAYED,JSON.stringify(data)
-    );
-  }catch(e){}
+ const data=playedAzans();
+ data[key]=true;
+ const keys=Object.keys(data).sort();
+ while(keys.length>35)delete data[keys.shift()];
+ try{localStorage.setItem(AZAN_PLAYED,JSON.stringify(data))}
+ catch(e){}
 }
-
 function updateAudioButton(){
-  const b=$('audioControl');
-
-  b.className=
-    !audioEnabled?'off':azanBlocked?'blocked':'';
-
-  b.textContent=
-    audioEnabled?'🔊 AZAN':'🔇 AZAN';
-
-  b.title=!audioEnabled
-    ?'Azan OFF — click to enable'
-    :azanBlocked
-      ?'Azan ON — sound was blocked'
-      :'Azan ON — click to disable';
-
-  b.setAttribute(
-    'aria-pressed',String(audioEnabled)
-  );
+ const b=$('audioControl');
+ b.className=!audioEnabled?'off':azanBlocked?'blocked':'';
+ b.textContent=audioEnabled?'🔊 AZAN':'🔇 AZAN';
+ b.title=!audioEnabled
+  ?'Azan OFF — click to enable'
+  :azanBlocked
+   ?'Azan ON — sound was blocked'
+   :'Azan ON — click to disable';
+ b.setAttribute('aria-pressed',String(audioEnabled));
 }
-
 function updateTestButtons(){
-  $('testAzan').style.display=
-    azanPlaying?'none':'';
-
-  $('stopAzan').style.display=
-    azanPlaying?'':'none';
+ $('testAzan').style.display=azanPlaying?'none':'';
+ $('stopAzan').style.display=azanPlaying?'':'none';
 }
-
 function showNotice(message){
-  $('azanNotice').textContent=message;
-  $('azanNotice').classList.add('show');
-
-  clearTimeout(showNotice.timer);
-
-  showNotice.timer=setTimeout(()=>{
-    $('azanNotice').classList.remove('show');
-  },5500);
+ $('azanNotice').textContent=message;
+ $('azanNotice').classList.add('show');
+ clearTimeout(showNotice.timer);
+ showNotice.timer=setTimeout(()=>{
+  $('azanNotice').classList.remove('show');
+ },5500);
 }
 
-/* SELECT CORRECT IMAGE FOR EACH PRAYER */
-
-function setPrayerImage(prayer){
-  const filename=AZAN_IMAGES[prayer];
-  const request=++imageRequest;
-
-  azanOverlay.classList.remove('image-missing');
-
-  $('azanFallbackName').textContent=
-    ARABIC_PRAYERS[prayer]||prayer+' Prayer';
-
-  if(!filename){
-    azanOverlay.classList.add('image-missing');
-    return;
-  }
-
-  const img=new Image();
-
-  img.onload=()=>{
-    if(request!==imageRequest)return;
-
-    azanBackground.style.backgroundImage=
-      'url("'+filename+'")';
-
-    azanOverlay.classList.remove('image-missing');
-  };
-
-  img.onerror=()=>{
-    if(request!==imageRequest)return;
-
-    azanOverlay.classList.add('image-missing');
-    showNotice('Prayer image not found: '+filename);
-  };
-
-  azanBackground.style.backgroundImage=
-    'url("'+filename+'")';
-
-  img.src=filename;
-}
-
-function restartPrayerAnimation(){
-  azanOverlay.classList.remove('active','ending');
-
-  void azanOverlay.offsetWidth;
-
-  azanOverlay.classList.add('active');
-}
-
+/* UPDATED: SAFE AUDIO STOP AND CLEANUP */
 function stopAzan(){
-  azanAttempt++;
-  imageRequest++;
+ if(azanStopping)return;
+ azanStopping=true;
 
-  clearTimeout(azanTimer);
-  azanTimer=null;
+ const wasPlaying=azanPlaying;
+ const wasScheduled=azanMode==='scheduled';
+ const finishedKey=activePrayerKey;
 
-  azanPlaying=false;
-  azanMode=null;
+ azanAttempt++;
+ clearTimeout(azanTimer);
+ azanTimer=null;
 
-  azanAudio.pause();
+ /* Lock before resetting audio or resuming the slideshow */
+ if(wasPlaying&&wasScheduled&&finishedKey){
+  lockPrayer(finishedKey);
+  completePrayer(finishedKey);
+  markPlayed(finishedKey);
+ }
 
-  try{
-    azanAudio.currentTime=0;
-  }catch(e){}
+ azanPlaying=false;
+ azanMode=null;
+ activePrayer=null;
+ activePrayerKey=null;
+ lastAudioStop=Date.now();
 
-  azanOverlay.classList.remove(
-    'active','testing','ending','image-missing'
-  );
+ /* Prevent lingering audio playback */
+ azanAudio.pause();
+ try{azanAudio.currentTime=0}catch(e){}
+ $('azanOverlay').classList.remove('active','ending');
 
-  if(pausedForAzan){
-    pausedForAzan=false;
+ imageRequest++;
 
-    if(slideIndex===0){
-      try{
-        video.currentTime=savedVideoPosition;
-      }catch(e){}
-
-      const p=video.play();
-
-      if(p&&p.catch)
-        p.catch(()=>{});
-    }
-
-    clearTimeout(slideTimer);
-
-    slideDeadline=
-      Date.now()+savedSlideRemaining;
-
-    slideTimer=setTimeout(
-      nextSlide,savedSlideRemaining
-    );
-  }
-
-  updateTestButtons();
-}
-
-function pauseForAzan(){
-  pausedForAzan=true;
-
-  savedSlideRemaining=Math.max(
-    1000,slideDeadline-Date.now()
-  );
-
-  clearTimeout(slideTimer);
-
+ if(pausedForAzan){
+  pausedForAzan=false;
   if(slideIndex===0){
-    savedVideoPosition=video.currentTime||0;
-    video.pause();
+   try{video.currentTime=savedVideoPosition}catch(e){}
+   const p=video.play();
+   if(p&&p.catch)p.catch(()=>{});
   }
+  clearTimeout(slideTimer);
+  slideDeadline=Date.now()+savedSlideRemaining;
+  slideTimer=setTimeout(nextSlide,savedSlideRemaining);
+ }
+
+ updateTestButtons();
+ azanStopping=false;
+}
+function pauseForAzan(){
+ pausedForAzan=true;
+ savedSlideRemaining=Math.max(
+  1000,slideDeadline-Date.now()
+ );
+ clearTimeout(slideTimer);
+ if(slideIndex===0){
+  savedVideoPosition=video.currentTime||0;
+  video.pause();
+ }
 }
 
+/* UPDATED: PLAYBACK GUARDS */
 function playAzan(prayer,isTest=false){
-  if(azanPlaying)return;
-  if(!isTest&&!audioEnabled)return;
+ if(azanPlaying||azanStopping)return false;
+ if(!isTest&&!audioEnabled)return false;
 
-  const attempt=++azanAttempt;
+ const prayerKey=dateKey(dubaiNow())+'-'+prayer;
 
-  azanPlaying=true;
-  azanMode=isTest?'test':'scheduled';
+ if(!isTest){
+  if(prayerIsLocked(prayerKey))return false;
+  if(prayerCompleted(prayerKey))return false;
+  if(playedAzans()[prayerKey])return false;
 
-  pauseForAzan();
+  /* Stop a second scheduled start immediately */
+  if(Date.now()-lastAudioStop<AZAN_COOLDOWN_MS)
+   return false;
 
-  setPrayerImage(prayer);
-  restartPrayerAnimation();
+  lockPrayer(prayerKey);
+  markPlayed(prayerKey);
+ }
 
-  azanOverlay.classList.toggle('testing',isTest);
+ const attempt=++azanAttempt;
+ azanPlaying=true;
+ azanMode=isTest?'test':'scheduled';
+ activePrayer=prayer;
+ activePrayerKey=isTest?null:prayerKey;
+ lastAudioStart=Date.now();
 
-  updateTestButtons();
+ setPrayerBackground(prayer);
+ $('azanTitle').textContent=isTest?'AZAN TEST':'AZAN NOW';
+ $('azanPrayer').textContent=prayer+' Prayer';
+ $('azanMessage').textContent=isTest
+  ?'Manual Audio Test · Dubai'
+  :'Dubai, United Arab Emirates';
 
-  azanAudio.muted=false;
-  azanAudio.volume=1;
+ pauseForAzan();
+ $('azanOverlay').classList.add('active');
+ updateTestButtons();
 
-  try{
-    azanAudio.currentTime=0;
-  }catch(e){}
+ azanAudio.pause();
+ azanAudio.muted=false;
+ azanAudio.volume=1;
+ try{azanAudio.currentTime=0}catch(e){}
+ azanTimer=setTimeout(stopAzan,AZAN_MAX_MS);
 
-  azanTimer=setTimeout(
-    stopAzan,AZAN_MAX_MS
-  );
-
-  let promise;
-
-  try{
-    promise=azanAudio.play();
-  }catch(e){
-    azanBlocked=true;
-    updateAudioButton();
-
-    showNotice(
-      'Azan playback failed: '+e.message
-    );
-
-    stopAzan();
-    return;
-  }
-
-  if(promise&&promise.then){
-    promise.then(()=>{
-      if(attempt!==azanAttempt)return;
-
-      azanBlocked=false;
-      updateAudioButton();
-
-      if(isTest){
-        showNotice(
-          prayer+' Prayer — Azan test is playing.'
-        );
-      }
-    }).catch(e=>{
-      if(attempt!==azanAttempt)return;
-
-      azanBlocked=true;
-      updateAudioButton();
-
-      showNotice(
-        'Audio blocked by TV browser. Azan could not start.'
-      );
-
-      stopAzan();
-    });
-  }
-}
-
-azanAudio.addEventListener('ended',stopAzan);
-
-azanAudio.addEventListener('error',()=>{
-  if(azanPlaying){
-    showNotice('Unable to play azan.mp3.');
-    stopAzan();
-  }
-});
-
-/* AZAN ON/OFF SWITCH */
-
-$('audioControl').addEventListener('click',()=>{
-  audioEnabled=!audioEnabled;
-  saveAzanPreference();
-
-  if(!audioEnabled){
-    if(azanPlaying&&azanMode==='scheduled')
-      stopAzan();
-
-    azanBlocked=false;
-    showNotice('Scheduled Azan switched OFF.');
-  }else{
-    azanBlocked=false;
-    showNotice('Scheduled Azan switched ON.');
-  }
-
+ let promise;
+ try{
+  promise=azanAudio.play();
+ }catch(e){
+  azanBlocked=true;
   updateAudioButton();
-});
-
-/* MANUAL TEST — CYCLES THROUGH FIVE PRAYERS */
-
-$('testAzan').addEventListener('click',()=>{
-  if(azanPlaying)return;
-
-  const prayer=names[testPrayerIndex%names.length];
-  testPrayerIndex++;
-
-  playAzan(prayer,true);
-});
-
-$('stopAzan').addEventListener('click',()=>{
-  if(!azanPlaying)return;
-
+  showNotice('Azan playback failed: '+e.message);
   stopAzan();
+  return false;
+ }
 
-  showNotice(
-    'Azan stopped. Dashboard resumed.'
-  );
-});
-
-/* AUTOMATIC AZAN AT SCHEDULED PRAYER TIME */
-
-function checkAzan(){
-  if(!times.Fajr||!audioEnabled||azanPlaying)
-    return;
-
-  const p=dubaiNow();
-
-  if(dateKey(p)!==activeDate)return;
-
-  const now=secondsOf(p);
-
-  for(const prayer of names){
-    const at=secTime(times[prayer]);
-
-    if(at===null)continue;
-
-    const difference=now-at;
-
-    if(difference<0||difference>AZAN_GRACE)
-      continue;
-
-    const key=dateKey(p)+'-'+prayer;
-
-    if(playedAzans()[key])continue;
-
-    markPlayed(key);
-    playAzan(prayer,false);
-    break;
-  }
+ if(promise&&promise.then){
+  promise.then(()=>{
+   if(attempt!==azanAttempt)return;
+   azanBlocked=false;
+   updateAudioButton();
+   if(isTest){
+    showNotice('Azan test is playing through the TV.');
+   }
+  }).catch(e=>{
+   if(attempt!==azanAttempt)return;
+   azanBlocked=true;
+   updateAudioButton();
+   showNotice(
+    'Audio blocked by TV browser. Manual test could not start.'
+   );
+   stopAzan();
+  });
+ }
+ return true;
 }
 
-/* PRAYER PANEL DISPLAY */
+/* UPDATED: AUDIO ENDING CANNOT TRIGGER A RESTART */
+azanAudio.addEventListener('ended',()=>{
+ if(!azanPlaying)return;
+ stopAzan();
+});
+azanAudio.addEventListener('error',()=>{
+ if(azanPlaying){
+  showNotice('Unable to play azan.mp3.');
+  stopAzan();
+ }
+});
 
+/* EXTRA SAFETY: STOP ANY STRAY PLAYBACK */
+azanAudio.addEventListener('play',()=>{
+ if(!azanPlaying||azanStopping){
+  azanAudio.pause();
+  return;
+ }
+ if(
+  azanMode==='scheduled'&&
+  activePrayerKey&&
+  prayerCompleted(activePrayerKey)
+ ){
+  stopAzan();
+ }
+});
+
+/* AZAN ON/OFF SWITCH — SAME AS BEFORE */
+$('audioControl').addEventListener('click',()=>{
+ audioEnabled=!audioEnabled;
+ saveAzanPreference();
+
+ if(!audioEnabled){
+  if(azanPlaying&&azanMode==='scheduled')stopAzan();
+  azanBlocked=false;
+  showNotice('Scheduled Azan switched OFF.');
+ }else{
+  azanBlocked=false;
+  showNotice('Scheduled Azan switched ON.');
+ }
+ updateAudioButton();
+});
+
+/* MANUAL TEST — SAME BUTTON, ALL FIVE IMAGES */
+$('testAzan').addEventListener('click',()=>{
+ if(azanPlaying)return;
+ const prayer=names[testPrayerIndex%names.length];
+ testPrayerIndex++;
+ playAzan(prayer,true);
+});
+$('stopAzan').addEventListener('click',()=>{
+ if(!azanPlaying)return;
+ stopAzan();
+ showNotice('Azan stopped. Dashboard resumed.');
+});
+
+/* UPDATED: SCHEDULED AZAN DUPLICATE CHECK */
+function checkAzan(){
+ if(!times.Fajr||!audioEnabled||azanPlaying||azanStopping)
+  return;
+
+ const p=dubaiNow();
+ if(dateKey(p)!==activeDate)return;
+ const now=secondsOf(p);
+
+ for(const prayer of names){
+  const at=secTime(times[prayer]);
+  if(at===null)continue;
+
+  const difference=now-at;
+  if(difference<0||difference>AZAN_GRACE)continue;
+
+  const key=dateKey(p)+'-'+prayer;
+
+  if(playedAzans()[key])continue;
+  if(prayerCompleted(key))continue;
+  if(prayerIsLocked(key))continue;
+
+  if(playAzan(prayer,false))break;
+ }
+}
+
+/* PRAYER DISPLAY — UNCHANGED */
 function renderPrayer(){
-  if(!times.Fajr)return;
+ if(!times.Fajr)return;
+ const p=dubaiNow();
+ if(dateKey(p)!==activeDate)return;
+ const now=secondsOf(p);
 
-  const p=dubaiNow();
+ const current=[...names].reverse()
+  .find(n=>secTime(times[n])<=now)||null;
+ const next=names.find(n=>secTime(times[n])>now)||null;
 
-  if(dateKey(p)!==activeDate)return;
+ let nextName,nextTime,remaining,progress=0;
+ const currentName=current||'Isha (Previous Day)';
+ const currentTime=current?times[current]:null;
 
-  const now=secondsOf(p);
-
-  const current=[...names].reverse()
-    .find(n=>secTime(times[n])<=now)||null;
-
-  const next=names.find(
-    n=>secTime(times[n])>now
-  )||null;
-
-  let nextName,nextTime,remaining,progress=0;
-
-  const currentName=
-    current||'Isha (Previous Day)';
-
-  const currentTime=
-    current?times[current]:null;
-
-  if(next){
-    nextName=next;
-    nextTime=times[next];
-
-    remaining=secTime(nextTime)-now;
-
-    const previous=
-      current?secTime(times[current]):0;
-
-    const total=
-      secTime(nextTime)-previous;
-
-    progress=total>0
-      ?(now-previous)/total*100:0;
-  }else{
-    nextName='Fajr (Tomorrow)';
-    nextTime=nextTimes.Fajr||null;
-
-    remaining=nextTime
-      ?86400-now+secTime(nextTime)
-      :null;
-
-    const previous=secTime(times.Isha);
-
-    const total=nextTime
-      ?86400+secTime(nextTime)-previous
-      :0;
-
-    progress=total>0
-      ?(now-previous)/total*100:0;
-
-    if(
-      !nextTimes.Fajr&&
-      !tomorrowLoading&&
-      Date.now()>=tomorrowRetryAfter
-    ){
-      tomorrowLoading=true;
-
-      fetchDay(tomorrowParts(p))
-        .then(x=>{
-          nextTimes=x;
-          renderPrayer();
-        })
-        .catch(()=>{
-          tomorrowRetryAfter=
-            Date.now()+60000;
-        })
-        .finally(()=>{
-          tomorrowLoading=false;
-        });
-    }
-  }
-
-  $('currentName').textContent=currentName;
-
-  $('currentTime').textContent=currentTime
-    ?displayTime(currentTime)
-    :'--:--';
-
-  const markup=names.map(n=>`
-    <div class="prayer-row ${n===current?'current':''}">
-      <span>${n}</span>
-      <strong>${displayTime(times[n])}</strong>
-    </div>
-  `).join('');
-
-  if(markup!==lastPrayerMarkup){
-    $('prayerRows').innerHTML=markup;
-    lastPrayerMarkup=markup;
-  }
+ if(next){
+  nextName=next;
+  nextTime=times[next];
+  remaining=secTime(nextTime)-now;
+  const previous=current?secTime(times[current]):0;
+  const total=secTime(nextTime)-previous;
+  progress=total>0?(now-previous)/total*100:0;
+ }else{
+  nextName='Fajr (Tomorrow)';
+  nextTime=nextTimes.Fajr||null;
+  remaining=nextTime?86400-now+secTime(nextTime):null;
+  const previous=secTime(times.Isha);
+  const total=nextTime?86400+secTime(nextTime)-previous:0;
+  progress=total>0?(now-previous)/total*100:0;
 
   if(
-    prayerInitialized&&
-    currentName!==lastCurrentName
+   !nextTimes.Fajr&&!tomorrowLoading&&
+   Date.now()>=tomorrowRetryAfter
   ){
-    const card=$('currentCard');
-
-    card.classList.remove('pulse');
-    void card.offsetWidth;
-    card.classList.add('pulse');
-
-    setTimeout(()=>{
-      card.classList.remove('pulse');
-    },2600);
+   tomorrowLoading=true;
+   fetchDay(tomorrowParts(p))
+    .then(x=>{nextTimes=x;renderPrayer()})
+    .catch(()=>{
+     tomorrowRetryAfter=Date.now()+60000;
+    })
+    .finally(()=>{tomorrowLoading=false});
   }
+ }
 
-  lastCurrentName=currentName;
-  prayerInitialized=true;
+ $('currentName').textContent=currentName;
+ $('currentTime').textContent=currentTime
+  ?displayTime(currentTime):'--:--';
 
-  $('nextName').textContent=nextName;
+ const markup=names.map(n=>`
+  <div class="prayer-row ${n===current?'current':''}">
+   <span>${n}</span>
+   <strong>${displayTime(times[n])}</strong>
+  </div>
+ `).join('');
 
-  $('nextTime').textContent=nextTime
-    ?displayTime(nextTime)
-    :'--:--';
+ if(markup!==lastPrayerMarkup){
+  $('prayerRows').innerHTML=markup;
+  lastPrayerMarkup=markup;
+ }
 
-  $('countdown').textContent=remaining===null
-    ?'--:--:--'
-    :duration(Math.max(0,remaining));
+ if(prayerInitialized&&currentName!==lastCurrentName){
+  const card=$('currentCard');
+  card.classList.remove('pulse');
+  void card.offsetWidth;
+  card.classList.add('pulse');
+  setTimeout(()=>card.classList.remove('pulse'),2600);
+ }
+ lastCurrentName=currentName;
+ prayerInitialized=true;
 
-  $('prayerProgress').style.width=
-    Math.max(0,Math.min(100,progress))+'%';
+ $('nextName').textContent=nextName;
+ $('nextTime').textContent=nextTime
+  ?displayTime(nextTime):'--:--';
+ $('countdown').textContent=remaining===null
+  ?'--:--:--':duration(Math.max(0,remaining));
+ $('prayerProgress').style.width=
+  Math.max(0,Math.min(100,progress))+'%';
 }
 
-/* LIVE NEWS */
-
+/* LIVE NEWS — UNCHANGED */
 const NEWS_FEEDS=[
-  {
-    category:'GOLD & PRECIOUS METALS',
-    url:'https://news.google.com/rss/search?q=gold+silver+prices+bullion+markets&hl=en-US&gl=US&ceid=US:en'
-  },
-  {
-    category:'GLOBAL ECONOMY',
-    url:'https://news.google.com/rss/search?q=global+economy+Federal+Reserve+inflation+markets&hl=en-US&gl=US&ceid=US:en'
-  },
-  {
-    category:'WORLD BUSINESS NEWS',
-    url:'https://news.google.com/rss/search?q=world+business+financial+markets&hl=en-US&gl=US&ceid=US:en'
-  }
+ {
+  category:'GOLD & PRECIOUS METALS',
+  url:'https://news.google.com/rss/search?q=gold+silver+prices+bullion+markets&hl=en-US&gl=US&ceid=US:en'
+ },
+ {
+  category:'GLOBAL ECONOMY',
+  url:'https://news.google.com/rss/search?q=global+economy+Federal+Reserve+inflation+markets&hl=en-US&gl=US&ceid=US:en'
+ },
+ {
+  category:'WORLD BUSINESS NEWS',
+  url:'https://news.google.com/rss/search?q=world+business+financial+markets&hl=en-US&gl=US&ceid=US:en'
+ }
 ];
-
-let newsItems=[];
-let newsIndex=0;
-let newsStarted=0;
-
+let newsItems=[],newsIndex=0,newsStarted=0;
 const NEWS_INTERVAL=11000;
 
 function cleanNewsText(s){
-  const div=document.createElement('div');
-  div.innerHTML=String(s||'');
-
-  return(
-    div.textContent||div.innerText||''
-  ).replace(/\s+/g,' ').trim();
+ const div=document.createElement('div');
+ div.innerHTML=String(s||'');
+ return(div.textContent||div.innerText||'')
+  .replace(/\s+/g,' ').trim();
 }
-
 function parseRSS(xmlText,category){
-  const xml=new DOMParser().parseFromString(
-    xmlText,'application/xml'
-  );
+ const xml=new DOMParser().parseFromString(
+  xmlText,'application/xml'
+ );
+ if(xml.querySelector('parsererror'))
+  throw Error('Invalid RSS XML');
 
-  if(xml.querySelector('parsererror'))
-    throw Error('Invalid RSS XML');
-
-  return [...xml.querySelectorAll('item')]
-    .slice(0,8)
-    .map(item=>{
-      const title=cleanNewsText(
-        item.querySelector('title')?.textContent
-      );
-
-      const pub=
-        item.querySelector('pubDate')?.textContent;
-
-      const date=pub?new Date(pub):null;
-
-      const source=cleanNewsText(
-        item.querySelector('source')?.textContent
-      )||'Google News';
-
-      return {
-        title,category,source,
-        date:date&&!isNaN(date.getTime())
-          ?date:null
-      };
-    })
-    .filter(item=>item.title);
+ return[...xml.querySelectorAll('item')]
+  .slice(0,8).map(item=>{
+   const title=cleanNewsText(
+    item.querySelector('title')?.textContent
+   );
+   const pub=item.querySelector('pubDate')?.textContent;
+   const date=pub?new Date(pub):null;
+   const source=cleanNewsText(
+    item.querySelector('source')?.textContent
+   )||'Google News';
+   return{
+    title,category,source,
+    date:date&&!isNaN(date.getTime())?date:null
+   };
+  }).filter(item=>item.title);
 }
-
 async function fetchNewsFeed(feed){
-  const rssUrl=feed.url;
+ const rssUrl=feed.url;
+ try{
+  const response=await fetch(
+   'https://api.allorigins.win/raw?url='+
+   encodeURIComponent(rssUrl),
+   {cache:'no-store'}
+  );
+  if(!response.ok)throw Error('Proxy unavailable');
+  const xml=await response.text();
+  const parsed=parseRSS(xml,feed.category);
+  if(parsed.length)return parsed;
+ }catch(e){}
 
-  try{
-    const response=await fetch(
-      'https://api.allorigins.win/raw?url='+
-      encodeURIComponent(rssUrl),
-      {cache:'no-store'}
-    );
+ const url=
+  'https://api.rss2json.com/v1/api.json?rss_url='+
+  encodeURIComponent(rssUrl);
+ const response=await fetch(url,{cache:'no-store'});
+ if(!response.ok)throw Error('News service unavailable');
+ const data=await response.json();
+ if(data.status!=='ok'||!Array.isArray(data.items))
+  throw Error('News feed unavailable');
 
-    if(!response.ok)
-      throw Error('Proxy unavailable');
-
-    const xml=await response.text();
-    const parsed=parseRSS(xml,feed.category);
-
-    if(parsed.length)return parsed;
-  }catch(e){}
-
-  const url=
-    'https://api.rss2json.com/v1/api.json?rss_url='+
-    encodeURIComponent(rssUrl);
-
-  const response=await fetch(url,{
-    cache:'no-store'
-  });
-
-  if(!response.ok)
-    throw Error('News service unavailable');
-
-  const data=await response.json();
-
-  if(
-    data.status!=='ok'||
-    !Array.isArray(data.items)
-  ){
-    throw Error('News feed unavailable');
-  }
-
-  return data.items.slice(0,8)
-    .map(item=>{
-      const date=item.pubDate
-        ?new Date(item.pubDate):null;
-
-      return {
-        title:cleanNewsText(item.title),
-        category:feed.category,
-        source:cleanNewsText(item.author)
-          ||'Google News',
-        date:date&&!isNaN(date.getTime())
-          ?date:null
-      };
-    })
-    .filter(item=>item.title);
+ return data.items.slice(0,8).map(item=>{
+  const date=item.pubDate?new Date(item.pubDate):null;
+  return{
+   title:cleanNewsText(item.title),
+   category:feed.category,
+   source:cleanNewsText(item.author)||'Google News',
+   date:date&&!isNaN(date.getTime())?date:null
+  };
+ }).filter(item=>item.title);
 }
-
 function newsAge(date){
-  if(!date)return 'LATEST HEADLINE';
-
-  const minutes=Math.max(
-    0,Math.floor(
-      (Date.now()-date.getTime())/60000
-    )
-  );
-
-  if(minutes<60)
-    return `${minutes} MIN AGO`;
-
-  if(minutes<1440)
-    return `${Math.floor(minutes/60)} H AGO`;
-
-  return `${Math.floor(minutes/1440)} D AGO`;
+ if(!date)return 'LATEST HEADLINE';
+ const minutes=Math.max(0,Math.floor(
+  (Date.now()-date.getTime())/60000
+ ));
+ if(minutes<60)return `${minutes} MIN AGO`;
+ if(minutes<1440)return `${Math.floor(minutes/60)} H AGO`;
+ return `${Math.floor(minutes/1440)} D AGO`;
 }
-
 function showNews(){
-  if(!newsItems.length)return;
-
-  const item=newsItems[
-    newsIndex%newsItems.length
-  ];
-
-  $('newsArea').classList.remove('fade');
-  void $('newsArea').offsetWidth;
-  $('newsArea').classList.add('fade');
-
-  $('newsCategory').textContent=item.category;
-  $('newsHeadline').textContent=item.title;
-
-  $('newsSource').textContent=
-    item.source+' · '+newsAge(item.date);
-
-  $('newsPosition').textContent=
-    `${newsIndex%newsItems.length+1} / ${newsItems.length}`;
-
-  $('newsProgress').style.width='0%';
-  newsStarted=Date.now();
+ if(!newsItems.length)return;
+ const item=newsItems[newsIndex%newsItems.length];
+ $('newsArea').classList.remove('fade');
+ void $('newsArea').offsetWidth;
+ $('newsArea').classList.add('fade');
+ $('newsCategory').textContent=item.category;
+ $('newsHeadline').textContent=item.title;
+ $('newsSource').textContent=
+  item.source+' · '+newsAge(item.date);
+ $('newsPosition').textContent=
+  `${newsIndex%newsItems.length+1} / ${newsItems.length}`;
+ $('newsProgress').style.width='0%';
+ newsStarted=Date.now();
 }
-
 function rotateNews(){
-  if(!newsItems.length)return;
-
-  newsIndex=(newsIndex+1)%newsItems.length;
-  showNews();
+ if(!newsItems.length)return;
+ newsIndex=(newsIndex+1)%newsItems.length;
+ showNews();
 }
-
 async function loadNews(){
-  $('newsStatus').textContent='UPDATING';
+ $('newsStatus').textContent='UPDATING';
+ const results=await Promise.allSettled(
+  NEWS_FEEDS.map(fetchNewsFeed)
+ );
+ const incoming=results
+  .filter(r=>r.status==='fulfilled')
+  .flatMap(r=>r.value);
+ const seen=new Set();
+ const unique=incoming.filter(item=>{
+  const key=item.title.toLowerCase();
+  if(seen.has(key))return false;
+  seen.add(key);
+  return true;
+ });
 
-  const results=await Promise.allSettled(
-    NEWS_FEEDS.map(fetchNewsFeed)
-  );
-
-  const incoming=results
-    .filter(r=>r.status==='fulfilled')
-    .flatMap(r=>r.value);
-
-  const seen=new Set();
-
-  const unique=incoming.filter(item=>{
-    const key=item.title.toLowerCase();
-
-    if(seen.has(key))return false;
-
-    seen.add(key);
-    return true;
-  });
-
-  if(unique.length){
-    newsItems=unique;
-    newsIndex=0;
-
-    $('newsStatus').textContent='HEADLINES';
-    showNews();
-  }else{
-    $('newsStatus').textContent='OFFLINE';
-
-    if(!newsItems.length){
-      $('newsCategory').textContent=
-        'NEWS CONNECTION';
-
-      $('newsHeadline').textContent=
-        'Live headlines are temporarily unavailable. Check the internet connection or try again later.';
-
-      $('newsSource').textContent=
-        'News feed unavailable';
-
-      $('newsPosition').textContent='-- / --';
-    }
+ if(unique.length){
+  newsItems=unique;
+  newsIndex=0;
+  $('newsStatus').textContent='HEADLINES';
+  showNews();
+ }else{
+  $('newsStatus').textContent='OFFLINE';
+  if(!newsItems.length){
+   $('newsCategory').textContent='NEWS CONNECTION';
+   $('newsHeadline').textContent=
+    'Live headlines are temporarily unavailable. Check the internet connection or try again later.';
+   $('newsSource').textContent='News feed unavailable';
+   $('newsPosition').textContent='-- / --';
   }
+ }
 }
 
-/* INITIALIZE */
-
+/* INITIALIZE — UNCHANGED */
 updateHeader();
 updateAudioButton();
 updateTestButtons();
@@ -1931,54 +1203,42 @@ showSlide(0);
 loadNews();
 
 function dashboardTick(){
-  updateHeader();
-
-  const p=dubaiNow();
-  const key=dateKey(p);
-
-  if(key!==currentDay){
-    currentDay=key;
-    loadPrayer();
-  }
-
-  if(Date.now()-lastLoad>15*60*1000){
-    lastLoad=Date.now();
-    loadPrayer();
-  }
-
-  if(times.Fajr){
-    renderPrayer();
-    checkAzan();
-  }
+ updateHeader();
+ const p=dubaiNow();
+ const key=dateKey(p);
+ if(key!==currentDay){
+  currentDay=key;
+  loadPrayer();
+ }
+ if(Date.now()-lastLoad>15*60*1000){
+  lastLoad=Date.now();
+  loadPrayer();
+ }
+ if(times.Fajr){
+  renderPrayer();
+  checkAzan();
+ }
 }
-
 dashboardTick();
 setInterval(dashboardTick,1000);
 
 setInterval(()=>{
-  if(!newsItems.length)return;
-
-  const elapsed=Date.now()-newsStarted;
-
-  $('newsProgress').style.width=
-    Math.min(
-      100,elapsed/NEWS_INTERVAL*100
-    )+'%';
-
-  if(elapsed>=NEWS_INTERVAL)
-    rotateNews();
+ if(!newsItems.length)return;
+ const elapsed=Date.now()-newsStarted;
+ $('newsProgress').style.width=
+  Math.min(100,elapsed/NEWS_INTERVAL*100)+'%';
+ if(elapsed>=NEWS_INTERVAL)rotateNews();
 },250);
 
 setInterval(loadNews,15*60*1000);
 
-/* PRELOAD PRAYER IMAGES */
+/* PRELOAD ALL FIVE PRAYER IMAGES */
 window.addEventListener('load',()=>{
-  Object.values(AZAN_IMAGES).forEach(src=>{
-    const img=new Image();
-    img.src=src;
-  });
+ Object.values(AZAN_IMAGES).forEach(src=>{
+  const img=new Image();
+  img.src=src;
+ });
 });
-
 </script>
 </body>
 </html>
