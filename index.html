@@ -1,419 +1,532 @@
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SHALUQ TV • Dubai</title>
+<title>SHALUQ TV | Live News & Bullion</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root {
-  --gold:#e6bd64;
-  --line:#66502c;
-  --bg:#080a0d;
+:root{
+ --gold:#e6bd64;
+ --bg:#080a0d;
+ --border:#66502c;
 }
-* { box-sizing:border-box; }
-html,body {
-  margin:0;
-  width:100%;
-  height:100%;
-  background:var(--bg);
-  color:#f6eddb;
-  font-family:"Manrope",Arial,sans-serif;
-  overflow:hidden;
+*{box-sizing:border-box}
+html,body{
+ margin:0;width:100%;height:100%;
+ background:var(--bg);color:#f6eddb;
+ font-family:Manrope,Arial,sans-serif;
+ overflow:hidden;
 }
-.screen {
-  height:100vh;
-  height:100dvh;
-  display:grid;
-  grid-template-rows:110px minmax(0,1fr) 62px;
-  background:radial-gradient(ellipse at 30% 10%,#292015 0%,#080a0d 60%);
+.screen{
+ height:100vh;height:100dvh;
+ display:grid;
+ grid-template-rows:94px minmax(0,1fr) 49px;
+ background:radial-gradient(ellipse at 30% 10%,#292015,#080a0d 65%);
 }
-header {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:12px 30px;
-  border-bottom:1px solid var(--line);
-  gap:24px;
+header{
+ display:flex;align-items:center;
+ justify-content:space-between;
+ padding:10px 26px;
+ border-bottom:1px solid var(--border);
 }
-.logo {
-  width:325px;
-  max-height:75px;
-  object-fit:contain;
-  object-position:left center;
+.logo{
+ width:290px;max-height:72px;
+ object-fit:contain;object-position:left;
 }
-.clock { text-align:right; }
-.time {
-  font-size:46px;
-  font-weight:800;
-  font-variant-numeric:tabular-nums;
+.clock{text-align:right}
+.time{
+ font-size:39px;font-weight:800;
+ font-variant-numeric:tabular-nums;
 }
-.date {
-  font-size:17px;
-  color:var(--gold);
-  margin-top:3px;
+.date{font-size:14px;color:var(--gold)}
+.body{
+ min-height:0;display:grid;
+ grid-template-columns:minmax(0,1fr) 345px;
+ gap:12px;padding:12px;
 }
-.body {
-  min-height:0;
-  display:grid;
-  grid-template-columns:minmax(0,1fr) 365px;
-  gap:16px;
-  padding:18px;
+.left{
+ min-height:0;display:grid;
+ grid-template-rows:minmax(0,1fr) 185px;
+ gap:12px;
 }
-.stage,.prayers {
-  border:1px solid #59482b;
-  border-radius:20px;
-  background:#101115;
-  overflow:hidden;
-  min-height:0;
+.panel{
+ min-height:0;overflow:hidden;
+ border:1px solid #59482b;
+ border-radius:15px;background:#101115;
 }
-.stage { position:relative; }
-.slide {
-  position:absolute;
-  inset:0;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
-  text-align:center;
-  padding:35px;
-  background:radial-gradient(circle at center,#2d2111,#090a0d 72%);
+.stage{position:relative}
+.slide{
+ position:absolute;inset:0;display:none;
+ align-items:center;justify-content:center;
+ flex-direction:column;text-align:center;
+ padding:25px;
+ background:radial-gradient(circle,#2d2111,#090a0d 75%);
 }
-.slide.active { display:flex; }
-.slide video {
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  background:#000;
+.slide.active{display:flex}
+.slide.video{padding:0;background:#000}
+.slide video{
+ width:100%;height:100%;
+ object-fit:contain;background:#000;
 }
-.slide.video {
-  padding:0;
-  background:#000;
+.mini-logo{
+ width:min(48%,370px);max-height:110px;
+ object-fit:contain;
 }
-.eyebrow {
-  font-family:"Cinzel",Georgia,serif;
-  font-size:19px;
-  letter-spacing:.15em;
-  color:var(--gold);
-  font-weight:600;
+.eyebrow{
+ font-family:Cinzel,Georgia,serif;
+ color:var(--gold);font-size:16px;
+ letter-spacing:3px;font-weight:600;
 }
-.headline {
-  font-family:"Cinzel",Georgia,serif;
-  font-size:clamp(36px,4.5vw,78px);
-  font-weight:600;
-  letter-spacing:.025em;
-  line-height:1.12;
-  margin:22px 0;
-  color:#fff1cf;
+.headline{
+ font-family:Cinzel,Georgia,serif;
+ font-size:clamp(28px,3.1vw,57px);
+ line-height:1.16;font-weight:600;
+ margin:15px 0;color:#fff1cf;
 }
-.sub {
-  font-size:clamp(19px,2vw,32px);
-  color:#e4d2aa;
-  line-height:1.5;
+.highlight{color:var(--gold)}
+.sub{
+ font-size:clamp(15px,1.5vw,24px);
+ line-height:1.5;color:#e4d2aa;
 }
-.highlight { color:var(--gold); }
-.slide .mini-logo {
-  width:min(55%,470px);
-  max-height:155px;
-  object-fit:contain;
-}
-.prayers {
-  padding:15px 18px;
-  display:flex;
-  flex-direction:column;
-  background:linear-gradient(150deg,#1d1b17,#0c0e12);
-}
-.prayers h2 {
-  font-family:"Cinzel",Georgia,serif;
-  font-size:26px;
-  margin:0 0 5px;
-  color:var(--gold);
-}
-.location {
-  color:#b5a587;
-  font-size:14px;
-  margin-bottom:7px;
-}
-#prayerRows {
-  min-height:0;
-}
-.prayer-row {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  border-bottom:1px solid #3e362a;
-  padding:clamp(7px,1.35vh,14px) 11px;
-  font-size:clamp(16px,1.25vw,21px);
-  gap:6px;
-}
-.prayer-row strong {
-  font-weight:800;
-  font-variant-numeric:tabular-nums;
-}
-.prayer-row.current {
-  background:#42331b;
-  border:1px solid #d6a84f;
-  border-radius:10px;
-  color:#ffe2a0;
-  animation:prayerGlow 2s ease-in-out infinite;
-}
-.prayer-row.current strong { color:#ffe3a3; }
-@keyframes prayerGlow {
-  0%,100% {
-    box-shadow:inset 0 0 0 rgba(230,189,100,0);
-    background:#332819;
-  }
-  50% {
-    box-shadow:inset 0 0 18px rgba(230,189,100,.23),
-               0 0 12px rgba(230,189,100,.16);
-    background:#59431e;
-  }
-}
-
-/* PREMIUM UPCOMING PRAYER PANEL */
-.next-box {
-  margin-top:auto;
-  border-radius:14px;
-  background:linear-gradient(145deg,#332919,#211b13);
-  border:1px solid #80653a;
-  padding:12px 15px;
-  text-align:center;
-  flex-shrink:0;
-}
-.next-label {
-  font-family:"Cinzel",Georgia,serif;
-  color:var(--gold);
-  font-size:13px;
-  text-transform:uppercase;
-  letter-spacing:2px;
-}
-.next-name {
-  font-size:27px;
-  font-weight:700;
-  margin:5px 0 2px;
-  color:#fff;
-}
-.next-time {
-  color:#f4d99b;
-  font-size:38px;
-  font-weight:800;
-  margin:4px 0 8px;
-  font-variant-numeric:tabular-nums;
-  line-height:1.15;
-}
-.remaining-label {
-  font-size:10px;
-  color:#b5a587;
-  letter-spacing:2px;
-  margin-top:3px;
-}
-.countdown {
-  font-size:19px;
-  font-weight:600;
-  color:#fff;
-  margin-top:4px;
-  letter-spacing:1px;
-  font-variant-numeric:tabular-nums;
-}
-.source {
-  font-size:10px;
-  color:#a89c85;
-  text-align:center;
-  margin-top:5px;
-}
-.ticker {
-  border-top:1px solid var(--line);
-  background:#18140f;
-  display:flex;
-  align-items:center;
-  overflow:hidden;
-  white-space:nowrap;
-}
-.ticker span {
-  display:inline-block;
-  padding-left:100%;
-  animation:scroll 38s linear infinite;
-  font-size:20px;
-  color:#e7cf9c;
-}
-@keyframes scroll {
-  to { transform:translateX(-100%); }
-}
-.controls {
-  position:absolute;
-  top:14px;
-  left:14px;
-  z-index:3;
-  opacity:0;
-  transition:opacity .2s;
+.controls{
+ position:absolute;top:10px;left:10px;
+ z-index:5;opacity:0;
 }
 .stage:hover .controls,
-.controls:focus-within { opacity:1; }
-button {
-  background:#a7803e;
-  border:0;
-  border-radius:6px;
-  color:#111;
-  padding:8px 12px;
-  cursor:pointer;
-  font-weight:bold;
+.controls:focus-within{opacity:1}
+button{
+ background:#a7803e;border:0;
+ border-radius:6px;color:#111;
+ padding:7px 12px;cursor:pointer;
+ font-weight:700;
 }
-.notice {
-  font-size:14px;
-  color:#c3b393;
-  margin-top:9px;
+
+/* BOTTOM NEWS AND MARKET PANELS */
+.bottom-panels{
+ display:grid;grid-template-columns:1fr 1fr;
+ gap:12px;min-height:0;
 }
-[lang="ar"],.arabic {
-  font-family:"Tajawal",Arial,sans-serif;
+.mini-panel{
+ display:flex;flex-direction:column;
+ min-height:0;
 }
-@media(max-width:1000px) {
-  .screen {
-    grid-template-rows:85px minmax(0,1fr) 45px;
-  }
-  .body {
-    grid-template-columns:minmax(0,1fr) 280px;
-    padding:9px;
-    gap:9px;
-  }
-  .logo { width:240px; }
-  .time { font-size:30px; }
-  .date { font-size:13px; }
-  .prayers { padding:11px; }
-  .prayers h2 { font-size:22px; }
-  .prayer-row {
-    padding:11px 5px;
-    font-size:17px;
-  }
-  .next-box { padding:10px; }
-  .next-name { font-size:23px; }
-  .next-time { font-size:32px; }
-  .countdown { font-size:17px; }
-  .ticker span { font-size:15px; }
+.panel-heading{
+ display:flex;align-items:center;
+ justify-content:space-between;
+ padding:9px 12px;
+ background:#1d1a15;
+ border-bottom:1px solid #473922;
+ min-height:37px;
 }
-@media(max-width:650px) {
-  .body {
-    grid-template-columns:1fr;
-    grid-template-rows:55% 45%;
-    overflow:auto;
-  }
-  .screen { overflow:auto; }
-  .prayers { overflow:auto; }
-  .clock .time { font-size:24px; }
-  .logo { width:160px; }
+.panel-title{
+ color:var(--gold);
+ font-size:13px;font-weight:800;
+ letter-spacing:1px;
+}
+.panel-tag{
+ color:#c4b395;font-size:10px;
+}
+.live-dot{
+ display:inline-block;width:7px;height:7px;
+ border-radius:50%;background:#f04444;
+ margin-right:5px;
+ animation:dotPulse 2s infinite;
+}
+@keyframes dotPulse{50%{opacity:.35}}
+
+/* AUTOMATIC TEXT NEWS FLASH */
+.news-area{
+ flex:1;min-height:0;
+ display:flex;flex-direction:column;
+ justify-content:center;
+ padding:12px 16px;
+ background:
+ radial-gradient(ellipse at top right,#30271a,#0b0e12 75%);
+}
+.news-category{
+ color:#e6bd64;font-size:10px;
+ letter-spacing:2px;font-weight:800;
+ margin-bottom:7px;
+}
+.news-headline{
+ color:#f8f1e4;
+ font-size:clamp(13px,1.15vw,19px);
+ line-height:1.4;
+ font-weight:700;
+ overflow:hidden;
+ display:-webkit-box;
+ -webkit-line-clamp:3;
+ -webkit-box-orient:vertical;
+}
+.news-meta{
+ display:flex;justify-content:space-between;
+ gap:6px;margin-top:9px;
+ font-size:10px;color:#c2aa7e;
+}
+.news-progress{
+ height:2px;background:#443722;
+ margin-top:9px;overflow:hidden;
+}
+.news-progress-inner{
+ height:100%;width:0;
+ background:var(--gold);
+}
+.news-error{
+ color:#bdb2a1;font-size:12px;
+ line-height:1.5;
+}
+.news-area.fade{
+ animation:newsFade .5s ease;
+}
+@keyframes newsFade{
+ from{opacity:.3;transform:translateY(4px)}
+ to{opacity:1;transform:translateY(0)}
+}
+
+/* MARKET QUOTES */
+.market-area{
+ display:grid;grid-template-rows:1fr 1fr;
+ flex:1;min-height:0;
+ gap:2px;padding:4px;
+ background:#111317;
+}
+.market-item{
+ min-height:0;overflow:hidden;
+ background:#18191c;
+}
+.tradingview-widget-container,
+.tradingview-widget-container__widget{
+ width:100%;height:100%;min-height:0;
+}
+
+/* DUBAI PRAYER PANEL */
+.prayers{
+ padding:13px 15px;
+ display:flex;flex-direction:column;
+ background:linear-gradient(150deg,#1d1b17,#0c0e12);
+}
+.prayers h2{
+ font-family:Cinzel,Georgia,serif;
+ font-size:23px;margin:0 0 5px;
+ color:var(--gold);
+}
+.location{
+ font-size:12px;color:#b5a587;
+ margin-bottom:8px;
+}
+.prayer-row{
+ display:flex;justify-content:space-between;
+ align-items:center;gap:5px;
+ border-bottom:1px solid #3e362a;
+ padding:clamp(7px,1.5vh,14px) 8px;
+ font-size:clamp(15px,1.2vw,19px);
+}
+.prayer-row strong{
+ font-weight:800;
+ font-variant-numeric:tabular-nums;
+}
+.prayer-row.current{
+ border:1px solid #d6a84f;
+ border-radius:9px;
+ color:#ffe2a0;
+ animation:prayerGlow 2s ease-in-out infinite;
+}
+@keyframes prayerGlow{
+ 0%,100%{
+  background:#332819;
+  box-shadow:0 0 0 transparent;
+ }
+ 50%{
+  background:#59431e;
+  box-shadow:0 0 14px #e6bd6440;
+ }
+}
+.next-box{
+ margin-top:auto;flex-shrink:0;
+ border-radius:13px;
+ background:linear-gradient(145deg,#332919,#211b13);
+ border:1px solid #80653a;
+ padding:13px;text-align:center;
+}
+.next-label{
+ font-family:Cinzel,Georgia,serif;
+ color:var(--gold);
+ font-size:12px;letter-spacing:1.5px;
+}
+.next-name{
+ font-size:25px;font-weight:700;
+ margin:5px 0 2px;
+}
+.next-time{
+ color:#f4d99b;
+ font-size:37px;font-weight:800;
+ line-height:1.15;
+ font-variant-numeric:tabular-nums;
+ margin:5px 0 8px;
+}
+.remaining-label{
+ font-size:10px;letter-spacing:2px;
+ color:#b5a587;
+}
+.countdown{
+ font-size:18px;font-weight:600;
+ margin-top:5px;
+ font-variant-numeric:tabular-nums;
+}
+.source{
+ text-align:center;font-size:10px;
+ color:#a89c85;margin-top:6px;
+}
+.notice{
+ font-size:13px;color:#c3b393;
+ margin-top:10px;
+}
+.ticker{
+ display:flex;align-items:center;
+ overflow:hidden;white-space:nowrap;
+ border-top:1px solid var(--border);
+ background:#18140f;
+}
+.ticker span{
+ display:inline-block;padding-left:100%;
+ animation:scroll 42s linear infinite;
+ font-size:17px;color:#e7cf9c;
+}
+@keyframes scroll{
+ to{transform:translateX(-100%)}
+}
+@media(max-width:1100px){
+ .body{grid-template-columns:minmax(0,1fr) 285px}
+ .prayers{padding:9px}
+ .prayers h2{font-size:20px}
+ .prayer-row{font-size:15px;padding:9px 5px}
+ .next-time{font-size:30px}
+ .next-name{font-size:22px}
+ .left{grid-template-rows:minmax(0,1fr) 155px}
+ .panel-title{font-size:11px}
+ .news-headline{font-size:13px}
+}
+@media(max-height:750px){
+ .screen{grid-template-rows:78px minmax(0,1fr) 38px}
+ .left{grid-template-rows:minmax(0,1fr) 145px}
+ .prayer-row{padding:6px 8px}
+ .next-box{padding:8px}
+ .next-time{font-size:30px}
+ .time{font-size:32px}
+}
+@media(max-width:650px){
+ html,body{overflow:auto}
+ .screen{height:auto;min-height:100vh}
+ .body{display:block}
+ .left{height:850px;margin-bottom:12px;
+  grid-template-rows:450px 388px}
+ .prayers{min-height:500px}
+ .bottom-panels{grid-template-columns:1fr}
+ .logo{width:160px}
+ .time{font-size:22px}
 }
 </style>
 </head>
+
 <body>
 <div class="screen">
+
 <header>
-  <img class="logo" src="logo.png" alt="Shaluq Jewellers">
-  <div class="clock">
-    <div class="time" id="clock">--:--:--</div>
-    <div class="date" id="date">Dubai, UAE</div>
-  </div>
+ <img class="logo" src="logo.png" alt="Shaluq Jewellers">
+ <div class="clock">
+  <div class="time" id="clock">--:--:--</div>
+  <div class="date" id="date">Dubai, UAE</div>
+ </div>
 </header>
 
 <div class="body">
-<main class="stage" id="stage">
-  <div class="controls">
-    <button id="skip" type="button">Next slide ›</button>
+
+<div class="left">
+
+<main class="panel stage" id="stage">
+ <div class="controls">
+  <button id="skip">Next slide ›</button>
+ </div>
+
+ <section class="slide video active" data-type="video">
+  <video id="intro" src="intro.mp4"
+   muted autoplay playsinline preload="auto"></video>
+ </section>
+
+ <section class="slide" data-duration="12000">
+  <img class="mini-logo" src="logo.png" alt="Shaluq">
+  <div class="eyebrow">DUBAI GOLD SOUK</div>
+  <div class="headline">
+   YOUR TRUSTED
+   <span class="highlight">BULLION PARTNER</span>
   </div>
+  <div class="sub">
+   Wholesale Gold and Silver Bullion
+  </div>
+ </section>
 
-  <section class="slide video active" data-type="video">
-    <video id="intro" src="intro.mp4"
-      muted autoplay playsinline preload="auto"></video>
-  </section>
+ <section class="slide" data-duration="14000">
+  <div class="eyebrow">OUR PRODUCTS</div>
+  <div class="headline">
+   GOLD BARS <span class="highlight">& SILVER</span>
+  </div>
+  <div class="sub">
+   TT Bars · Kilo Bars · 999.9 Fine Gold Bars<br>
+   Silver Bullion · Raw Gold · Scrap Gold
+  </div>
+ </section>
 
-  <section class="slide" data-duration="12000">
-    <img class="mini-logo" src="logo.png" alt="Shaluq">
-    <div class="eyebrow">DUBAI GOLD SOUK</div>
-    <div class="headline">
-      YOUR TRUSTED <span class="highlight">BULLION PARTNER</span>
-    </div>
-    <div class="sub">Wholesale gold and silver bullion</div>
-  </section>
+ <section class="slide" data-duration="14000">
+  <div class="eyebrow">OUR SERVICES</div>
+  <div class="headline">
+   WE <span class="highlight">BUY & SELL</span>
+  </div>
+  <div class="sub">
+   Gold Bullion, Raw Gold and Scrap Gold<br>
+   Contact Us for Business Inquiries
+  </div>
+ </section>
 
-  <section class="slide" data-duration="14000">
-    <div class="eyebrow">OUR PRODUCTS</div>
-    <div class="headline">
-      GOLD BARS <span class="highlight">& SILVER</span>
-    </div>
-    <div class="sub">
-      TT Bars · Kilo Bars · 999.9 Fine Gold Bars<br>
-      Silver Bullion · Raw Gold · Scrap Gold
-    </div>
-  </section>
+ <section class="slide" data-duration="14000">
+  <div class="eyebrow">VISIT OUR OFFICE</div>
+  <div class="headline">
+   SHALUQ <span class="highlight">JEWELLERS L.L.C.</span>
+  </div>
+  <div class="sub">
+   Royal Diamond Building, Office 204, 2nd Floor<br>
+   Al Khor Street, Gold Souk, Deira, Dubai<br>
+   Opposite Gold Souk Parking Building
+  </div>
+ </section>
 
-  <section class="slide" data-duration="14000">
-    <div class="eyebrow">OUR SERVICES</div>
-    <div class="headline">
-      WE <span class="highlight">BUY & SELL</span>
-    </div>
-    <div class="sub">
-      Gold bullion, raw gold and scrap gold<br>
-      Contact us for business inquiries
-    </div>
-  </section>
-
-  <section class="slide" data-duration="14000">
-    <div class="eyebrow">VISIT OUR OFFICE</div>
-    <div class="headline">
-      SHALUQ <span class="highlight">JEWELLERS L.L.C.</span>
-    </div>
-    <div class="sub">
-      Royal Diamond Building, Office 204, 2nd Floor<br>
-      Al Khor Street, Gold Souk, Deira, Dubai<br>
-      Opposite Gold Souk Parking Building
-    </div>
-  </section>
-
-  <section class="slide" id="saturday" data-duration="15000">
-    <div class="eyebrow">SATURDAY NOTICE</div>
-    <div class="headline">
-      GOLD MARKET <span class="highlight">CLOSED TODAY</span>
-    </div>
-    <div class="sub">
-      For inquiries, please contact Shaluq Jewellers
-    </div>
-  </section>
+ <section class="slide" id="saturday" data-duration="15000">
+  <div class="eyebrow">SATURDAY NOTICE</div>
+  <div class="headline">
+   GOLD MARKET
+   <span class="highlight">CLOSED TODAY</span>
+  </div>
+  <div class="sub">
+   For Inquiries, Please Contact Shaluq Jewellers
+  </div>
+ </section>
 </main>
 
-<aside class="prayers">
-  <h2>Dubai Prayer Times</h2>
-  <div class="location" id="prayerDate">
-    Dubai, United Arab Emirates
+<!-- LIVE TEXT NEWS + GOLD MARKET -->
+<div class="bottom-panels">
+
+<section class="panel mini-panel">
+ <div class="panel-heading">
+  <span class="panel-title">
+   <span class="live-dot"></span>
+   LIVE NEWS FLASH
+  </span>
+  <span class="panel-tag" id="newsStatus">CONNECTING</span>
+ </div>
+
+ <div class="news-area" id="newsArea">
+  <div class="news-category" id="newsCategory">
+   WORLD & FINANCIAL NEWS
   </div>
-  <div id="prayerRows">
-    <div class="notice">Loading prayer times…</div>
+  <div class="news-headline" id="newsHeadline">
+   Connecting to the latest market and world news…
+  </div>
+  <div class="news-meta">
+   <span id="newsSource">News feed</span>
+   <span id="newsPosition">-- / --</span>
+  </div>
+  <div class="news-progress">
+   <div class="news-progress-inner" id="newsProgress"></div>
+  </div>
+ </div>
+</section>
+
+<section class="panel mini-panel">
+ <div class="panel-heading">
+  <span class="panel-title">GOLD & SILVER MARKET</span>
+  <span class="panel-tag">USD / TROY OZ</span>
+ </div>
+
+ <div class="market-area">
+
+  <div class="market-item">
+   <div class="tradingview-widget-container">
+    <div class="tradingview-widget-container__widget"></div>
+    <script type="text/javascript"
+     src="https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js"
+     async>
+    {
+      "symbol":"OANDA:XAUUSD",
+      "width":"100%",
+      "isTransparent":false,
+      "colorTheme":"dark",
+      "locale":"en"
+    }
+    </script>
+   </div>
   </div>
 
-  <div class="next-box">
-    <div class="next-label">Upcoming Prayer</div>
-    <div class="next-name" id="nextName">Loading…</div>
-    <div class="next-time" id="nextTime">--:--</div>
-    <div class="remaining-label">TIME REMAINING</div>
-    <div class="countdown" id="countdown">--:--:--</div>
+  <div class="market-item">
+   <div class="tradingview-widget-container">
+    <div class="tradingview-widget-container__widget"></div>
+    <script type="text/javascript"
+     src="https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js"
+     async>
+    {
+      "symbol":"OANDA:XAGUSD",
+      "width":"100%",
+      "isTransparent":false,
+      "colorTheme":"dark",
+      "locale":"en"
+    }
+    </script>
+   </div>
   </div>
 
-  <div class="source" id="prayerStatus">
-    Source: AlAdhan · Dubai method 16
-  </div>
+ </div>
+</section>
+
+</div>
+</div>
+
+<!-- PRAYER TIMES -->
+<aside class="panel prayers">
+ <h2>Dubai Prayer Times</h2>
+ <div class="location">Dubai, United Arab Emirates</div>
+
+ <div id="prayerRows">
+  <div class="notice">Loading prayer times…</div>
+ </div>
+
+ <div class="next-box">
+  <div class="next-label">UPCOMING PRAYER</div>
+  <div class="next-name" id="nextName">Loading…</div>
+  <div class="next-time" id="nextTime">--:--</div>
+  <div class="remaining-label">TIME REMAINING</div>
+  <div class="countdown" id="countdown">--:--:--</div>
+ </div>
+
+ <div class="source" id="prayerStatus">
+  Source: AlAdhan · Dubai method 16
+ </div>
 </aside>
+
 </div>
 
 <footer class="ticker">
-  <span>
-    SHALUQ JEWELLERS L.L.C. &nbsp; ✦ &nbsp;
-    WHOLESALE BULLION &nbsp; ✦ &nbsp;
-    GOLD BARS · SILVER · RAW GOLD · SCRAP GOLD &nbsp; ✦ &nbsp;
-    ROYAL DIAMOND BUILDING, OFFICE 204,
-    DEIRA GOLD SOUK, DUBAI &nbsp; ✦ &nbsp;
-    WWW.SHALUQJEWELLERS.COM &nbsp; ✦ &nbsp;
-  </span>
+ <span>
+  SHALUQ JEWELLERS L.L.C. &nbsp; ✦ &nbsp;
+  WHOLESALE BULLION &nbsp; ✦ &nbsp;
+  GOLD BARS · SILVER · RAW GOLD · SCRAP GOLD &nbsp; ✦ &nbsp;
+  ROYAL DIAMOND BUILDING, OFFICE 204,
+  DEIRA GOLD SOUK, DUBAI &nbsp; ✦ &nbsp;
+  WWW.SHALUQJEWELLERS.COM &nbsp; ✦ &nbsp;
+ </span>
 </footer>
+
 </div>
 
 <script>
@@ -424,322 +537,482 @@ const names=['Fajr','Dhuhr','Asr','Maghrib','Isha'];
 const $=id=>document.getElementById(id);
 
 const parts=d=>Object.fromEntries(
-  new Intl.DateTimeFormat('en-GB',{
-    timeZone:TZ,
-    year:'numeric',
-    month:'2-digit',
-    day:'2-digit',
-    hour:'2-digit',
-    minute:'2-digit',
-    second:'2-digit',
-    hourCycle:'h23'
-  }).formatToParts(d)
-  .filter(x=>x.type!=='literal')
-  .map(x=>[x.type,x.value])
+ new Intl.DateTimeFormat('en-GB',{
+  timeZone:TZ,
+  year:'numeric',
+  month:'2-digit',
+  day:'2-digit',
+  hour:'2-digit',
+  minute:'2-digit',
+  second:'2-digit',
+  hourCycle:'h23'
+ }).formatToParts(d)
+ .filter(x=>x.type!=='literal')
+ .map(x=>[x.type,x.value])
 );
 
 const dubaiNow=()=>parts(new Date());
 const dateKey=p=>`${p.year}-${p.month}-${p.day}`;
 const apiKey=p=>`${p.day}-${p.month}-${p.year}`;
-
-const secondsOf=p=>
-  Number(p.hour)*3600+
-  Number(p.minute)*60+
-  Number(p.second);
-
-const displayTime=s=>{
-  const m=String(s||'').match(/(\d{1,2}):(\d{2})/);
-  if(!m)return '--';
-  const h=Number(m[1]);
-  return `${h%12||12}:${m[2]} ${h>=12?'PM':'AM'}`;
-};
-
-const secTime=s=>{
-  const m=String(s||'').match(/(\d{1,2}):(\d{2})/);
-  return m?Number(m[1])*3600+Number(m[2])*60:null;
-};
-
 const pad=n=>String(n).padStart(2,'0');
 
-const duration=s=>
-  `${pad(Math.floor(s/3600))}:`+
-  `${pad(Math.floor(s%3600/60))}:`+
-  `${pad(s%60)}`;
+const secondsOf=p=>
+ Number(p.hour)*3600+
+ Number(p.minute)*60+
+ Number(p.second);
+
+function secTime(s){
+ const m=String(s||'').match(/(\d{1,2}):(\d{2})/);
+ return m?Number(m[1])*3600+Number(m[2])*60:null;
+}
+
+function displayTime(s){
+ const m=String(s||'').match(/(\d{1,2}):(\d{2})/);
+ if(!m)return '--';
+ const h=Number(m[1]);
+ return `${h%12||12}:${m[2]} ${h>=12?'PM':'AM'}`;
+}
+
+function duration(s){
+ return `${pad(Math.floor(s/3600))}:`+
+ `${pad(Math.floor(s%3600/60))}:`+
+ `${pad(s%60)}`;
+}
 
 let currentDay='';
 let times={};
 let nextTimes={};
 let activeDate='';
 let lastLoad=0;
+let tomorrowLoading=false;
 
 const cacheKey='shaluq-prayer-dubai-v1';
 
 function cached(){
-  try {
-    return JSON.parse(localStorage.getItem(cacheKey)||'{}');
-  } catch(e) {
-    return {};
-  }
+ try{
+  return JSON.parse(localStorage.getItem(cacheKey)||'{}');
+ }catch(e){return {}}
 }
 
 function store(o){
-  try {
-    localStorage.setItem(cacheKey,JSON.stringify(o));
-  } catch(e){}
+ try{
+  localStorage.setItem(cacheKey,JSON.stringify(o));
+ }catch(e){}
 }
 
 async function fetchDay(p){
-  const key=dateKey(p);
-  const cache=cached();
+ const key=dateKey(p);
+ const cache=cached();
+ if(cache[key])return cache[key];
 
-  if(cache[key])return cache[key];
+ const url=
+ `https://api.aladhan.com/v1/timingsByCity/${apiKey(p)}`+
+ `?city=Dubai&country=United%20Arab%20Emirates`+
+ `&method=16&school=0`;
 
-  const u=
-    `https://api.aladhan.com/v1/timingsByCity/${apiKey(p)}`+
-    `?city=Dubai&country=United%20Arab%20Emirates`+
-    `&method=16&school=0`;
+ const controller=new AbortController();
+ const timeout=setTimeout(()=>controller.abort(),12000);
 
-  const c=new AbortController();
-  const t=setTimeout(()=>c.abort(),12000);
+ try{
+  const response=await fetch(url,{
+   cache:'no-store',signal:controller.signal
+  });
+  if(!response.ok)throw Error('Prayer service unavailable');
 
-  try {
-    const r=await fetch(u,{
-      cache:'no-store',
-      signal:c.signal
-    });
+  const json=await response.json();
+  if(json.code!==200||!json.data?.timings)
+   throw Error('Invalid prayer data');
 
-    if(!r.ok)throw Error('Prayer service unavailable');
-
-    const j=await r.json();
-
-    if(j.code!==200||!j.data?.timings)
-      throw Error('Invalid response');
-
-    const out={};
-
-    for(const n of names){
-      const val=j.data.timings[n];
-      if(secTime(val)===null)
-        throw Error('Missing '+n);
-      out[n]=val;
-    }
-
-    cache[key]=out;
-    store(cache);
-    return out;
-  } finally {
-    clearTimeout(t);
+  const result={};
+  for(const name of names){
+   const value=json.data.timings[name];
+   if(secTime(value)===null)
+    throw Error('Missing prayer time');
+   result[name]=value;
   }
+
+  cache[key]=result;
+  store(cache);
+  return result;
+ }finally{
+  clearTimeout(timeout);
+ }
 }
 
 function tomorrowParts(p){
-  const d=new Date(Date.UTC(
-    Number(p.year),
-    Number(p.month)-1,
-    Number(p.day)+1
-  ));
-
-  return {
-    year:String(d.getUTCFullYear()),
-    month:pad(d.getUTCMonth()+1),
-    day:pad(d.getUTCDate())
-  };
+ const d=new Date(Date.UTC(
+  Number(p.year),
+  Number(p.month)-1,
+  Number(p.day)+1
+ ));
+ return{
+  year:String(d.getUTCFullYear()),
+  month:pad(d.getUTCMonth()+1),
+  day:pad(d.getUTCDate())
+ };
 }
 
 function tickClock(){
-  const p=dubaiNow();
+ const p=dubaiNow();
+ $('clock').textContent=
+ `${Number(p.hour)%12||12}:${p.minute}:${p.second} `+
+ `${Number(p.hour)>=12?'PM':'AM'}`;
 
-  $('clock').textContent=
-    `${Number(p.hour)%12||12}:${p.minute}:${p.second} `+
-    `${Number(p.hour)>=12?'PM':'AM'}`;
+ $('date').textContent=
+ new Intl.DateTimeFormat('en-GB',{
+  timeZone:TZ,weekday:'long',
+  day:'numeric',month:'long',year:'numeric'
+ }).format(new Date());
 
-  $('date').textContent=
-    new Intl.DateTimeFormat('en-GB',{
-      timeZone:TZ,
-      weekday:'long',
-      day:'numeric',
-      month:'long',
-      year:'numeric'
-    }).format(new Date());
-
-  const key=dateKey(p);
-
-  if(key!==currentDay){
-    currentDay=key;
-    loadPrayer();
-  }
+ const key=dateKey(p);
+ if(key!==currentDay){
+  currentDay=key;
+  loadPrayer();
+ }
 }
 
 async function loadPrayer(){
-  const p=dubaiNow();
-  const key=dateKey(p);
+ const p=dubaiNow();
+ const key=dateKey(p);
+ try{
+  const today=await fetchDay(p);
+  if(key!==dateKey(dubaiNow()))return;
 
-  try {
-    const today=await fetchDay(p);
+  times=today;
+  activeDate=key;
+  nextTimes={};
+  lastLoad=Date.now();
 
-    times=today;
-    activeDate=key;
-    nextTimes={};
-    lastLoad=Date.now();
+  $('prayerStatus').textContent=
+   'Source: AlAdhan · Dubai method 16';
 
-    $('prayerStatus').textContent=
-      'Source: AlAdhan · Dubai method 16';
+  renderPrayer();
+ }catch(e){
+  lastLoad=Date.now();
+  $('prayerStatus').textContent=
+   'Prayer service unavailable · check connection';
 
-    renderPrayer();
-
-    if(!names.some(n=>
-      secTime(today[n])>secondsOf(dubaiNow())
-    )){
-      nextTimes=await fetchDay(tomorrowParts(p));
-      renderPrayer();
-    }
-
-  } catch(e) {
-    lastLoad=Date.now();
-
-    $('prayerStatus').textContent=
-      'Prayer service unavailable · cached data if available';
-
-    if(!times.Fajr){
-      $('prayerRows').innerHTML=
-        '<div class="notice">Unable to load prayer times. Check internet connection.</div>';
-
-      $('nextName').textContent='Unavailable';
-      $('nextTime').textContent='--:--';
-    }
+  if(!times.Fajr){
+   $('prayerRows').innerHTML=
+    '<div class="notice">Unable to load prayer times.</div>';
+   $('nextName').textContent='Unavailable';
+   $('nextTime').textContent='--:--';
   }
+ }
 }
 
 function renderPrayer(){
-  if(!times.Fajr)return;
+ if(!times.Fajr)return;
+ const p=dubaiNow();
+ if(dateKey(p)!==activeDate)return;
 
-  const p=dubaiNow();
+ const now=secondsOf(p);
+ const current=[...names].reverse()
+  .find(n=>secTime(times[n])<=now)||null;
+ const next=names.find(n=>secTime(times[n])>now)||null;
 
-  if(dateKey(p)!==activeDate)return;
+ let nextName,nextTime,remaining;
 
-  const now=secondsOf(p);
+ if(next){
+  nextName=next;
+  nextTime=times[next];
+  remaining=secTime(nextTime)-now;
+ }else{
+  nextName='Fajr (Tomorrow)';
+  nextTime=nextTimes.Fajr||null;
+  remaining=nextTime
+   ?86400-now+secTime(nextTime):null;
 
-  const current=[...names].reverse()
-    .find(n=>secTime(times[n])<=now)||null;
-
-  const next=names.find(n=>secTime(times[n])>now)||null;
-
-  let remaining,nextName,nextTime;
-
-  if(next){
-    nextName=next;
-    nextTime=times[next];
-    remaining=secTime(nextTime)-now;
-  } else {
-    nextName='Fajr (Tomorrow)';
-    nextTime=nextTimes.Fajr||null;
-
-    remaining=nextTime
-      ?86400-now+secTime(nextTime)
-      :null;
-
-    if(!nextTimes.Fajr){
-      fetchDay(tomorrowParts(p))
-        .then(x=>{
-          nextTimes=x;
-          renderPrayer();
-        })
-        .catch(()=>{});
-    }
+  if(!nextTimes.Fajr&&!tomorrowLoading){
+   tomorrowLoading=true;
+   fetchDay(tomorrowParts(p))
+    .then(x=>{
+     nextTimes=x;
+     renderPrayer();
+    })
+    .catch(()=>{})
+    .finally(()=>{tomorrowLoading=false});
   }
+ }
 
-  $('prayerRows').innerHTML=names.map(n=>`
-    <div class="prayer-row ${n===current?'current':''}">
-      <span>${n}</span>
-      <strong>${displayTime(times[n])}</strong>
-    </div>
-  `).join('');
+ $('prayerRows').innerHTML=names.map(n=>`
+  <div class="prayer-row ${n===current?'current':''}">
+   <span>${n}</span>
+   <strong>${displayTime(times[n])}</strong>
+  </div>
+ `).join('');
 
-  $('nextName').textContent=nextName;
-
-  $('nextTime').textContent=
-    nextTime?displayTime(nextTime):'--:--';
-
-  $('countdown').textContent=
-    remaining===null?'--:--:--':duration(remaining);
+ $('nextName').textContent=nextName;
+ $('nextTime').textContent=
+  nextTime?displayTime(nextTime):'--:--';
+ $('countdown').textContent=
+  remaining===null?'--:--:--':duration(remaining);
 }
 
+/* AUTOMATIC PROMOTIONAL SLIDES */
 const slides=[...document.querySelectorAll('.slide')];
-let idx=0;
-let timer=null;
-
 const video=$('intro');
+let slideIndex=0;
+let slideTimer=null;
 
-function show(i){
-  clearTimeout(timer);
-  video.pause();
-
-  slides.forEach(s=>s.classList.remove('active'));
-
-  let count=0;
-
-  while(
-    slides[i].id==='saturday' &&
-    new Intl.DateTimeFormat('en-US',{
-      timeZone:TZ,
-      weekday:'long'
-    }).format(new Date())!=='Saturday' &&
-    count<slides.length
-  ){
-    i=(i+1)%slides.length;
-    count++;
-  }
-
-  idx=i;
-
-  const slide=slides[idx];
-  slide.classList.add('active');
-
-  if(slide.dataset.type==='video'){
-    video.currentTime=0;
-
-    const p=video.play();
-
-    if(p&&p.catch)
-      p.catch(()=>{timer=setTimeout(next,12000)});
-
-    timer=setTimeout(next,30000);
-  } else {
-    timer=setTimeout(
-      next,
-      Number(slide.dataset.duration)||12000
-    );
-  }
+function isSaturday(){
+ return new Intl.DateTimeFormat('en-US',{
+  timeZone:TZ,weekday:'long'
+ }).format(new Date())==='Saturday';
 }
 
-function next(){
-  show((idx+1)%slides.length);
+function showSlide(i){
+ clearTimeout(slideTimer);
+ video.pause();
+ slides.forEach(s=>s.classList.remove('active'));
+
+ let attempts=0;
+ while(
+  slides[i].id==='saturday' &&
+  !isSaturday() &&
+  attempts<slides.length
+ ){
+  i=(i+1)%slides.length;
+  attempts++;
+ }
+
+ slideIndex=i;
+ const slide=slides[i];
+ slide.classList.add('active');
+
+ if(slide.dataset.type==='video'){
+  try{video.currentTime=0}catch(e){}
+  slideTimer=setTimeout(nextSlide,30000);
+
+  const playPromise=video.play();
+  if(playPromise&&playPromise.catch){
+   playPromise.catch(()=>{
+    clearTimeout(slideTimer);
+    slideTimer=setTimeout(nextSlide,5000);
+   });
+  }
+ }else{
+  slideTimer=setTimeout(
+   nextSlide,
+   Number(slide.dataset.duration)||12000
+  );
+ }
+}
+
+function nextSlide(){
+ showSlide((slideIndex+1)%slides.length);
 }
 
 video.addEventListener('ended',()=>{
-  if(idx===0)next();
+ if(slideIndex===0)nextSlide();
 });
-
 video.addEventListener('error',()=>{
-  if(idx===0)next();
+ if(slideIndex===0)nextSlide();
 });
+$('skip').addEventListener('click',nextSlide);
 
-$('skip').addEventListener('click',next);
+/* LIVE FINANCIAL AND WORLD NEWS HEADLINES
+   Google News RSS via public RSS-to-JSON services.
+   These public services can limit or block requests.
+   Headlines are displayed only after real feed data
+   has been successfully retrieved.
+*/
 
+const NEWS_FEEDS=[
+ {
+  category:'GOLD & PRECIOUS METALS',
+  url:'https://news.google.com/rss/search?q=gold+silver+prices+bullion+markets&hl=en-US&gl=US&ceid=US:en'
+ },
+ {
+  category:'GLOBAL ECONOMY',
+  url:'https://news.google.com/rss/search?q=global+economy+Federal+Reserve+inflation+markets&hl=en-US&gl=US&ceid=US:en'
+ },
+ {
+  category:'WORLD BUSINESS NEWS',
+  url:'https://news.google.com/rss/search?q=world+business+financial+markets&hl=en-US&gl=US&ceid=US:en'
+ }
+];
+
+let newsItems=[];
+let newsIndex=0;
+let newsStarted=0;
+const NEWS_INTERVAL=11000;
+
+function cleanNewsText(s){
+ const div=document.createElement('div');
+ div.innerHTML=String(s||'');
+ return (div.textContent||div.innerText||'')
+  .replace(/\s+/g,' ').trim();
+}
+
+function parseRSS(xmlText,category){
+ const xml=new DOMParser().parseFromString(
+  xmlText,'application/xml'
+ );
+ if(xml.querySelector('parsererror'))
+  throw Error('Invalid RSS XML');
+
+ return [...xml.querySelectorAll('item')]
+  .slice(0,8)
+  .map(item=>{
+   const title=cleanNewsText(
+    item.querySelector('title')?.textContent
+   );
+   const pub=item.querySelector('pubDate')?.textContent;
+   const date=pub?new Date(pub):null;
+   const source=cleanNewsText(
+    item.querySelector('source')?.textContent
+   )||'Google News';
+
+   return{
+    title,category,source,
+    date:date&&!isNaN(date.getTime())?date:null
+   };
+  })
+  .filter(item=>item.title);
+}
+
+async function fetchNewsFeed(feed){
+ const rssUrl=feed.url;
+
+ // First try an XML proxy.
+ try{
+  const response=await fetch(
+   'https://api.allorigins.win/raw?url='+
+   encodeURIComponent(rssUrl),
+   {cache:'no-store'}
+  );
+  if(!response.ok)throw Error('Proxy unavailable');
+  const xml=await response.text();
+  const parsed=parseRSS(xml,feed.category);
+  if(parsed.length)return parsed;
+ }catch(e){}
+
+ // Alternative public RSS-to-JSON service.
+ const url=
+  'https://api.rss2json.com/v1/api.json?rss_url='+
+  encodeURIComponent(rssUrl);
+
+ const response=await fetch(url,{cache:'no-store'});
+ if(!response.ok)throw Error('News service unavailable');
+
+ const data=await response.json();
+ if(data.status!=='ok'||!Array.isArray(data.items))
+  throw Error('News feed unavailable');
+
+ return data.items.slice(0,8).map(item=>{
+  const date=item.pubDate?new Date(item.pubDate):null;
+  return{
+   title:cleanNewsText(item.title),
+   category:feed.category,
+   source:cleanNewsText(item.author)||'Google News',
+   date:date&&!isNaN(date.getTime())?date:null
+  };
+ }).filter(item=>item.title);
+}
+
+function newsAge(date){
+ if(!date)return 'LATEST HEADLINE';
+ const minutes=Math.max(0,Math.floor(
+  (Date.now()-date.getTime())/60000
+ ));
+ if(minutes<60)return `${minutes} MIN AGO`;
+ if(minutes<1440)return `${Math.floor(minutes/60)} H AGO`;
+ return `${Math.floor(minutes/1440)} D AGO`;
+}
+
+function showNews(){
+ if(!newsItems.length)return;
+
+ const item=newsItems[newsIndex%newsItems.length];
+
+ $('newsArea').classList.remove('fade');
+ void $('newsArea').offsetWidth;
+ $('newsArea').classList.add('fade');
+
+ $('newsCategory').textContent=item.category;
+ $('newsHeadline').textContent=item.title;
+ $('newsSource').textContent=
+  item.source+' · '+newsAge(item.date);
+ $('newsPosition').textContent=
+  `${newsIndex%newsItems.length+1} / ${newsItems.length}`;
+
+ $('newsProgress').style.width='0%';
+ newsStarted=Date.now();
+}
+
+function rotateNews(){
+ if(!newsItems.length)return;
+ newsIndex=(newsIndex+1)%newsItems.length;
+ showNews();
+}
+
+async function loadNews(){
+ $('newsStatus').textContent='UPDATING';
+
+ const results=await Promise.allSettled(
+  NEWS_FEEDS.map(fetchNewsFeed)
+ );
+
+ const incoming=results
+  .filter(r=>r.status==='fulfilled')
+  .flatMap(r=>r.value);
+
+ const seen=new Set();
+ const unique=incoming.filter(item=>{
+  const key=item.title.toLowerCase();
+  if(seen.has(key))return false;
+  seen.add(key);
+  return true;
+ });
+
+ if(unique.length){
+  newsItems=unique;
+  newsIndex=0;
+  $('newsStatus').textContent='HEADLINES';
+  showNews();
+ }else{
+  $('newsStatus').textContent='OFFLINE';
+
+  if(!newsItems.length){
+   $('newsCategory').textContent='NEWS CONNECTION';
+   $('newsHeadline').textContent=
+    'Live headlines are temporarily unavailable. Check the internet connection or try again later.';
+   $('newsSource').textContent='News feed unavailable';
+   $('newsPosition').textContent='-- / --';
+  }
+ }
+}
+
+/* INITIALIZE DASHBOARD */
 tickClock();
+showSlide(0);
+loadNews();
 
 setInterval(()=>{
-  tickClock();
+ tickClock();
 
-  if(Date.now()-lastLoad>15*60*1000)
-    loadPrayer();
+ if(Date.now()-lastLoad>15*60*1000){
+  lastLoad=Date.now();
+  loadPrayer();
+ }
 
-  if(times.Fajr)
-    renderPrayer();
-
+ if(times.Fajr)renderPrayer();
 },1000);
 
-show(0);
+setInterval(()=>{
+ if(!newsItems.length)return;
+
+ const elapsed=Date.now()-newsStarted;
+ $('newsProgress').style.width=
+  Math.min(100,elapsed/NEWS_INTERVAL*100)+'%';
+
+ if(elapsed>=NEWS_INTERVAL)rotateNews();
+},250);
+
+// Refresh online news every 15 minutes.
+setInterval(loadNews,15*60*1000);
+
 </script>
 </body>
 </html>
