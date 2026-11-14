@@ -43,7 +43,7 @@ header{display:grid;grid-template-columns:1fr 1.15fr 1fr;align-items:center;gap:
 .stage:hover .controls,.controls:focus-within{opacity:1}
 button{background:#a7803e;border:0;border-radius:6px;color:#111;padding:7px 12px;cursor:pointer;font-weight:700}
 
-/* EXISTING CINEMATIC AZAN DISPLAY */
+/* CINEMATIC AZAN DISPLAY */
 .azan-overlay{position:absolute;inset:0;z-index:15;display:none;align-items:center;justify-content:center;overflow:hidden;background:#080d14}
 .azan-overlay.active{display:flex}
 .azan-background{position:absolute;inset:0;background-size:cover;background-position:center;background-repeat:no-repeat;transform:scale(1);opacity:0}
@@ -72,7 +72,7 @@ button{background:#a7803e;border:0;border-radius:6px;color:#111;padding:7px 12px
 @keyframes azanWave{to{height:5px;opacity:.5}}
 @media(prefers-reduced-motion:reduce){.azan-overlay.active .azan-background{animation:none;opacity:1}}
 
-/* AZAN BUTTONS — UNCHANGED */
+/* AZAN CONTROLS */
 .audio-controls{position:fixed;bottom:54px;right:12px;z-index:100;display:flex;gap:5px;align-items:center}
 .audio-controls button{height:30px;padding:4px 9px;border-radius:7px;border:1px solid #b99551;background:#183727;color:#d6f0d8;font:800 11px Manrope,Arial,sans-serif;white-space:nowrap;cursor:pointer;box-shadow:0 3px 12px #0008}
 .audio-controls .off{background:#412020;color:#ffc7c7;border-color:#b45b5b}
@@ -83,7 +83,7 @@ button{background:#a7803e;border:0;border-radius:6px;color:#111;padding:7px 12px
 .azan-notice{position:fixed;left:50%;top:105px;transform:translateX(-50%);z-index:101;max-width:90vw;background:#2b2116;color:#ffe2a0;border:1px solid #ab8246;border-radius:10px;padding:12px 20px;font-size:13px;display:none;text-align:center}
 .azan-notice.show{display:block}
 
-/* NEWS AND MARKET — UNCHANGED */
+/* NEWS AND MARKET */
 .bottom-panels{display:grid;grid-template-columns:1fr 1fr;gap:12px;min-height:0}
 .mini-panel{display:flex;flex-direction:column;min-height:0}
 .panel-heading{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;background:#1d1a15;border-bottom:1px solid #473922;min-height:43px}
@@ -106,7 +106,7 @@ button{background:#a7803e;border:0;border-radius:6px;color:#111;padding:7px 12px
 .market-item .tradingview-widget-container__widget{width:100%;height:100%;min-height:0}
 .market-item iframe{width:100%;max-width:100%;border:0;display:block}
 
-/* PRAYER PANEL — UNCHANGED */
+/* PRAYER PANEL */
 .prayers{padding:12px 15px;display:flex;flex-direction:column;background:linear-gradient(150deg,#1d1b17,#0c0e12)}
 .prayer-header{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
 .prayers h2{font-family:Cinzel,Georgia,serif;font-size:22px;margin:0 0 4px;color:var(--gold)}
@@ -346,8 +346,6 @@ WWW.SHALUQJEWELLERS.COM &nbsp; ✦ &nbsp;
 </footer>
 </div>
 
-<audio id="azanAudio" src="azan.mp3" preload="auto"></audio>
-
 <div class="audio-controls">
 <button id="audioControl" type="button" title="Turn scheduled Azan on or off">🔊 AZAN</button>
 <button id="testAzan" class="test" type="button" title="Play a manual Azan test">▶ TEST AZAN</button>
@@ -545,7 +543,7 @@ async function loadPrayer(){
  }finally{prayerLoading=false}
 }
 
-/* PROMOTIONAL SLIDES — UNCHANGED */
+/* PROMOTIONAL SLIDES */
 const slides=[...document.querySelectorAll('.slide')];
 const video=$('intro');
 let slideIndex=0,slideTimer=null,slideDeadline=0;
@@ -601,27 +599,39 @@ video.addEventListener('error',()=>{
 });
 $('skip').addEventListener('click',nextSlide);
 
-/* AZAN — ENABLED BY DEFAULT */
-const azanAudio=$('azanAudio');
+/*
+ SAMSUNG TIZEN AZAN FIX
+ Fresh audio element for every session.
+ No seek-to-zero when the audio finishes.
+ Old media element detached and released.
+ Completion guard and daily duplicate lock.
+*/
+const AZAN_AUDIO_SRC='azan.mp3';
 const AZAN_PREF='shaluq-azan-enabled-v2';
 const AZAN_PLAYED='shaluq-azan-played-v2';
 const AZAN_GRACE=30;
 const AZAN_MAX_MS=12*60*1000;
-
-/* NEW: DUPLICATE PLAYBACK PROTECTION */
 const AZAN_COOLDOWN_MS=10*60*1000;
 const AZAN_LOCK_KEY='shaluq-azan-lock-v3';
 const AZAN_COMPLETE_KEY='shaluq-azan-complete-v3';
-const AZAN_INSTANCE_ID=
- Date.now().toString(36)+'-'+Math.random().toString(36).slice(2);
 
 let memoryLocks={};
 let completedPrayers={};
 let lastAudioStop=0;
-let lastAudioStart=0;
 let activePrayer=null;
 let activePrayerKey=null;
 let azanStopping=false;
+let azanAudio=null;
+let azanPlaying=false;
+let azanBlocked=false;
+let azanTimer=null;
+let savedVideoPosition=0;
+let savedSlideRemaining=1000;
+let pausedForAzan=false;
+let azanMode=null;
+let azanAttempt=0;
+let testPrayerIndex=0;
+let imageRequest=0;
 
 function readJSON(key){
  try{
@@ -646,7 +656,6 @@ function lockPrayer(key){
  memoryLocks[key]=until;
  const stored=readJSON(AZAN_LOCK_KEY);
  stored[key]=until;
-
  const cutoff=Date.now()-86400000;
  for(const k of Object.keys(stored)){
   if(Number(stored[k])<cutoff)delete stored[k];
@@ -654,8 +663,7 @@ function lockPrayer(key){
  writeJSON(AZAN_LOCK_KEY,stored);
 }
 function prayerIsLocked(key){
- if(!key)return false;
- return Date.now()<getPrayerLock(key);
+ return !!key&&Date.now()<getPrayerLock(key);
 }
 function completePrayer(key){
  if(!key)return;
@@ -670,37 +678,23 @@ function prayerCompleted(key){
  return !!completedPrayers[key]||
   !!readJSON(AZAN_COMPLETE_KEY)[key];
 }
-
 let audioEnabled=true;
 try{
  const saved=localStorage.getItem(AZAN_PREF);
  audioEnabled=saved===null?true:saved==='true';
 }catch(e){}
 
-let azanPlaying=false;
-let azanBlocked=false;
-let azanTimer=null;
-let savedVideoPosition=0;
-let savedSlideRemaining=1000;
-let pausedForAzan=false;
-let azanMode=null;
-let azanAttempt=0;
-let testPrayerIndex=0;
-let imageRequest=0;
-
 function setPrayerBackground(prayer){
  const overlay=$('azanOverlay');
  const bg=$('azanBackground');
  const file=AZAN_IMAGES[prayer]||AZAN_IMAGES.Dhuhr;
  const request=++imageRequest;
-
  overlay.classList.remove('active','ending','image-missing');
  bg.style.animation='none';
  bg.style.backgroundImage='url("'+file+'")';
  $('azanLiveLabel').textContent=
   prayer+' Prayer · '+(AZAN_ARABIC[prayer]||'');
  overlay.setAttribute('aria-label',prayer+' prayer Azan');
-
  const check=new Image();
  check.onload=()=>{
   if(request===imageRequest)
@@ -711,11 +705,9 @@ function setPrayerBackground(prayer){
    overlay.classList.add('image-missing');
  };
  check.src=file;
-
  void bg.offsetWidth;
  bg.style.animation='';
 }
-
 function saveAzanPreference(){
  try{localStorage.setItem(AZAN_PREF,String(audioEnabled))}
  catch(e){}
@@ -755,8 +747,37 @@ function showNotice(message){
   $('azanNotice').classList.remove('show');
  },5500);
 }
+function pauseForAzan(){
+ pausedForAzan=true;
+ savedSlideRemaining=Math.max(
+  1000,slideDeadline-Date.now()
+ );
+ clearTimeout(slideTimer);
+ if(slideIndex===0){
+  savedVideoPosition=video.currentTime||0;
+  video.pause();
+ }
+}
 
-/* UPDATED: SAFE AUDIO STOP AND CLEANUP */
+/* TIZEN: RELEASE THE PLAYER WITHOUT SEEKING IT */
+function releaseAzanPlayer(player){
+ if(!player)return;
+ player.onended=null;
+ player.onerror=null;
+ player.ontimeupdate=null;
+ player.onplay=null;
+ player.onpause=null;
+ try{player.pause()}catch(e){}
+ try{
+  player.removeAttribute('src');
+  player.load();
+ }catch(e){}
+ try{
+  if(player.parentNode)player.parentNode.removeChild(player);
+ }catch(e){}
+}
+
+/* TIZEN: CLEAN UP ONCE AND RETURN TO THE DASHBOARD */
 function stopAzan(){
  if(azanStopping)return;
  azanStopping=true;
@@ -769,7 +790,6 @@ function stopAzan(){
  clearTimeout(azanTimer);
  azanTimer=null;
 
- /* Lock before resetting audio or resuming the slideshow */
  if(wasPlaying&&wasScheduled&&finishedKey){
   lockPrayer(finishedKey);
   completePrayer(finishedKey);
@@ -782,11 +802,11 @@ function stopAzan(){
  activePrayerKey=null;
  lastAudioStop=Date.now();
 
- /* Prevent lingering audio playback */
- azanAudio.pause();
- try{azanAudio.currentTime=0}catch(e){}
- $('azanOverlay').classList.remove('active','ending');
+ const oldPlayer=azanAudio;
+ azanAudio=null;
+ releaseAzanPlayer(oldPlayer);
 
+ $('azanOverlay').classList.remove('active','ending');
  imageRequest++;
 
  if(pausedForAzan){
@@ -804,19 +824,8 @@ function stopAzan(){
  updateTestButtons();
  azanStopping=false;
 }
-function pauseForAzan(){
- pausedForAzan=true;
- savedSlideRemaining=Math.max(
-  1000,slideDeadline-Date.now()
- );
- clearTimeout(slideTimer);
- if(slideIndex===0){
-  savedVideoPosition=video.currentTime||0;
-  video.pause();
- }
-}
 
-/* UPDATED: PLAYBACK GUARDS */
+/* TIZEN: EACH AZAN USES ITS OWN MEDIA SESSION */
 function playAzan(prayer,isTest=false){
  if(azanPlaying||azanStopping)return false;
  if(!isTest&&!audioEnabled)return false;
@@ -827,8 +836,6 @@ function playAzan(prayer,isTest=false){
   if(prayerIsLocked(prayerKey))return false;
   if(prayerCompleted(prayerKey))return false;
   if(playedAzans()[prayerKey])return false;
-
-  /* Stop a second scheduled start immediately */
   if(Date.now()-lastAudioStop<AZAN_COOLDOWN_MS)
    return false;
 
@@ -841,7 +848,6 @@ function playAzan(prayer,isTest=false){
  azanMode=isTest?'test':'scheduled';
  activePrayer=prayer;
  activePrayerKey=isTest?null:prayerKey;
- lastAudioStart=Date.now();
 
  setPrayerBackground(prayer);
  $('azanTitle').textContent=isTest?'AZAN TEST':'AZAN NOW';
@@ -854,15 +860,65 @@ function playAzan(prayer,isTest=false){
  $('azanOverlay').classList.add('active');
  updateTestButtons();
 
- azanAudio.pause();
- azanAudio.muted=false;
- azanAudio.volume=1;
- try{azanAudio.currentTime=0}catch(e){}
- azanTimer=setTimeout(stopAzan,AZAN_MAX_MS);
+ /*
+  IMPORTANT:
+  Do not reuse a completed audio element on Samsung Tizen.
+ */
+ const player=document.createElement('audio');
+ player.preload='auto';
+ player.autoplay=false;
+ player.loop=false;
+ player.src=AZAN_AUDIO_SRC;
+ player.muted=false;
+ player.volume=1;
+ player.style.display='none';
+
+ document.body.appendChild(player);
+ azanAudio=player;
+
+ function valid(){
+  return attempt===azanAttempt&&
+   azanPlaying&&
+   azanAudio===player;
+ }
+
+ player.onended=()=>{
+  if(valid())stopAzan();
+ };
+
+ player.onerror=()=>{
+  if(valid()){
+   showNotice('Unable to play azan.mp3.');
+   stopAzan();
+  }
+ };
+
+ /*
+  Samsung sometimes delays the ended event.
+  Detect when playback reaches the actual duration.
+ */
+ player.ontimeupdate=()=>{
+  if(!valid())return;
+  const d=player.duration;
+  const t=player.currentTime;
+  if(Number.isFinite(d)&&d>0&&t>=d-0.35){
+   stopAzan();
+  }
+ };
+
+ player.onplay=()=>{
+  if(!valid()){
+   try{player.pause()}catch(e){}
+  }
+ };
+
+ azanTimer=setTimeout(()=>{
+  if(valid())stopAzan();
+ },AZAN_MAX_MS);
 
  let promise;
  try{
-  promise=azanAudio.play();
+  promise=player.play();
  }catch(e){
   azanBlocked=true;
   updateAudioButton();
@@ -873,57 +929,28 @@ function playAzan(prayer,isTest=false){
 
  if(promise&&promise.then){
   promise.then(()=>{
-   if(attempt!==azanAttempt)return;
+   if(!valid())return;
    azanBlocked=false;
    updateAudioButton();
    if(isTest){
     showNotice('Azan test is playing through the TV.');
    }
-  }).catch(e=>{
-   if(attempt!==azanAttempt)return;
+  }).catch(()=>{
+   if(!valid())return;
    azanBlocked=true;
    updateAudioButton();
-   showNotice(
-    'Audio blocked by TV browser. Manual test could not start.'
-   );
+   showNotice('Audio blocked by TV browser. Manual test could not start.');
    stopAzan();
   });
  }
+
  return true;
 }
 
-/* UPDATED: AUDIO ENDING CANNOT TRIGGER A RESTART */
-azanAudio.addEventListener('ended',()=>{
- if(!azanPlaying)return;
- stopAzan();
-});
-azanAudio.addEventListener('error',()=>{
- if(azanPlaying){
-  showNotice('Unable to play azan.mp3.');
-  stopAzan();
- }
-});
-
-/* EXTRA SAFETY: STOP ANY STRAY PLAYBACK */
-azanAudio.addEventListener('play',()=>{
- if(!azanPlaying||azanStopping){
-  azanAudio.pause();
-  return;
- }
- if(
-  azanMode==='scheduled'&&
-  activePrayerKey&&
-  prayerCompleted(activePrayerKey)
- ){
-  stopAzan();
- }
-});
-
-/* AZAN ON/OFF SWITCH — SAME AS BEFORE */
+/* AZAN ON/OFF — SAME BUTTON */
 $('audioControl').addEventListener('click',()=>{
  audioEnabled=!audioEnabled;
  saveAzanPreference();
-
  if(!audioEnabled){
   if(azanPlaying&&azanMode==='scheduled')stopAzan();
   azanBlocked=false;
@@ -935,7 +962,7 @@ $('audioControl').addEventListener('click',()=>{
  updateAudioButton();
 });
 
-/* MANUAL TEST — SAME BUTTON, ALL FIVE IMAGES */
+/* TEST AZAN — SAME BUTTON, FIVE PRAYERS */
 $('testAzan').addEventListener('click',()=>{
  if(azanPlaying)return;
  const prayer=names[testPrayerIndex%names.length];
@@ -948,7 +975,7 @@ $('stopAzan').addEventListener('click',()=>{
  showNotice('Azan stopped. Dashboard resumed.');
 });
 
-/* UPDATED: SCHEDULED AZAN DUPLICATE CHECK */
+/* SCHEDULED AZAN */
 function checkAzan(){
  if(!times.Fajr||!audioEnabled||azanPlaying||azanStopping)
   return;
@@ -965,7 +992,6 @@ function checkAzan(){
   if(difference<0||difference>AZAN_GRACE)continue;
 
   const key=dateKey(p)+'-'+prayer;
-
   if(playedAzans()[key])continue;
   if(prayerCompleted(key))continue;
   if(prayerIsLocked(key))continue;
@@ -974,7 +1000,7 @@ function checkAzan(){
  }
 }
 
-/* PRAYER DISPLAY — UNCHANGED */
+/* PRAYER DISPLAY */
 function renderPrayer(){
  if(!times.Fajr)return;
  const p=dubaiNow();
@@ -1053,7 +1079,7 @@ function renderPrayer(){
   Math.max(0,Math.min(100,progress))+'%';
 }
 
-/* LIVE NEWS — UNCHANGED */
+/* LIVE NEWS */
 const NEWS_FEEDS=[
  {
   category:'GOLD & PRECIOUS METALS',
@@ -1195,7 +1221,7 @@ async function loadNews(){
  }
 }
 
-/* INITIALIZE — UNCHANGED */
+/* INITIALIZE */
 updateHeader();
 updateAudioButton();
 updateTestButtons();
@@ -1232,7 +1258,6 @@ setInterval(()=>{
 
 setInterval(loadNews,15*60*1000);
 
-/* PRELOAD ALL FIVE PRAYER IMAGES */
 window.addEventListener('load',()=>{
  Object.values(AZAN_IMAGES).forEach(src=>{
   const img=new Image();
