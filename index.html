@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Shaluq TV | Premium Bullion Dashboard</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,816 +11,520 @@
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
 
 <style>
-:root {
+:root{
   --bg:#080a0d;
   --gold:#e6bd64;
-  --gold-light:#ffe4a6;
   --border:#66502c;
   --text:#f6eddb;
   --muted:#b5a587;
 }
-
-* {box-sizing:border-box}
-
-html,body {
-  margin:0;
-  width:100%;
-  height:100%;
-  background:var(--bg);
-  color:var(--text);
+*{box-sizing:border-box}
+html,body{
+  margin:0;width:100%;height:100%;
+  background:var(--bg);color:var(--text);
   font-family:Manrope,Arial,sans-serif;
   overflow:hidden;
 }
-
-.screen {
-  height:100vh;
-  height:100dvh;
+.screen{
+  height:100vh;height:100dvh;
   display:grid;
   grid-template-rows:94px minmax(0,1fr) 49px;
-  background:radial-gradient(
-    ellipse at 30% 10%,
-    #292015,
-    #080a0d 65%
-  );
+  background:radial-gradient(ellipse at 30% 10%,#292015,#080a0d 65%);
 }
 
-/* HEADER */
-
-header {
+/* TOP HEADER */
+header{
   display:grid;
   grid-template-columns:1fr 1.15fr 1fr;
-  align-items:center;
-  gap:12px;
+  align-items:center;gap:12px;
   padding:8px 25px;
   border-bottom:1px solid var(--border);
 }
-
-.logo {
-  width:285px;
-  max-width:100%;
-  max-height:72px;
-  object-fit:contain;
-  object-position:left center;
+.logo{
+  width:285px;max-width:100%;max-height:72px;
+  object-fit:contain;object-position:left center;
 }
-
-.header-center {
-  text-align:center;
-  min-width:0;
-  position:relative;
-}
-
-.market-heading {
+.header-center{text-align:center;min-width:0}
+.market-heading{
   color:var(--gold);
   font-family:Cinzel,Georgia,serif;
   font-size:clamp(11px,1.15vw,16px);
-  letter-spacing:1.5px;
-  font-weight:600;
+  letter-spacing:1.5px;font-weight:600;
 }
-
-.market-status {
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:8px;
+.market-status{
+  display:flex;justify-content:center;
+  align-items:center;gap:8px;
   margin-top:5px;
   font-size:clamp(12px,1.25vw,18px);
   font-weight:800;
 }
-
-.status-dot {
-  width:9px;
-  height:9px;
-  border-radius:50%;
-  background:#9a9a9a;
-  flex-shrink:0;
+.status-dot{
+  width:9px;height:9px;border-radius:50%;
+  background:#999;flex-shrink:0;
 }
-
-.status-dot.open {
+.status-dot.open{
   background:#49d98a;
   box-shadow:0 0 11px #49d98a77;
   animation:dotPulse 2s infinite;
 }
-
-.status-dot.closed {
-  background:#e5a650;
+.status-dot.closed{background:#e5a650}
+.status-subtitle{
+  margin-top:3px;color:#b7a98c;font-size:10px;
 }
-
-.status-subtitle {
-  margin-top:3px;
-  color:#b7a98c;
-  font-size:10px;
-}
-
-.header-line {
-  height:2px;
-  width:70%;
+.header-line{
+  height:2px;width:70%;
   margin:7px auto 0;
-  background:linear-gradient(
-    90deg,transparent,#9a743a,transparent
-  );
-  position:relative;
-  overflow:hidden;
+  background:linear-gradient(90deg,transparent,#9a743a,transparent);
+  position:relative;overflow:hidden;
 }
-
-.header-line:after {
-  content:"";
-  position:absolute;
-  width:25%;
-  height:100%;
-  background:linear-gradient(
-    90deg,transparent,#ffe3a0,transparent
-  );
+.header-line:after{
+  content:"";position:absolute;
+  width:25%;height:100%;
+  background:linear-gradient(90deg,transparent,#ffe3a0,transparent);
   animation:lineSweep 5s linear infinite;
 }
-
-@keyframes lineSweep {
-  from{left:-30%}
-  to{left:110%}
+@keyframes lineSweep{
+  from{left:-30%}to{left:110%}
 }
-
-.clock {
-  text-align:right;
-}
-
-.time {
+.clock{text-align:right}
+.time{
   font-size:clamp(25px,2.6vw,39px);
   font-weight:800;
   font-variant-numeric:tabular-nums;
   white-space:nowrap;
 }
-
-.date {
-  font-size:13px;
-  color:var(--gold);
-}
-
-.hijri-header {
-  margin-top:3px;
-  font-size:11px;
-  color:#c4b391;
+.date{font-size:13px;color:var(--gold)}
+.hijri-header{
+  margin-top:3px;font-size:11px;color:#c4b391;
 }
 
 /* MAIN LAYOUT */
-
-.body {
-  min-height:0;
-  display:grid;
+.body{
+  min-height:0;display:grid;
   grid-template-columns:minmax(0,1fr) 345px;
-  gap:12px;
-  padding:12px;
+  gap:12px;padding:12px;
 }
-
-.left {
-  min-height:0;
-  display:grid;
-  grid-template-rows:minmax(0,1fr) 185px;
+.left{
+  min-height:0;display:grid;
+  /* NEW: 60% SLIDES / 40% NEWS AND MARKET */
+  grid-template-rows:minmax(0,3fr) minmax(0,2fr);
   gap:12px;
 }
-
-.panel {
-  min-height:0;
-  overflow:hidden;
+.panel{
+  min-height:0;overflow:hidden;
   border:1px solid #59482b;
-  border-radius:15px;
-  background:#101115;
+  border-radius:15px;background:#101115;
 }
 
 /* PROMOTIONAL SLIDES */
-
-.stage {position:relative}
-
-.slide {
-  position:absolute;
-  inset:0;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
-  text-align:center;
+.stage{position:relative}
+.slide{
+  position:absolute;inset:0;display:none;
+  align-items:center;justify-content:center;
+  flex-direction:column;text-align:center;
   padding:25px;
-  background:radial-gradient(
-    circle,#2d2111,#090a0d 75%
-  );
+  background:radial-gradient(circle,#2d2111,#090a0d 75%);
 }
-
-.slide.active {display:flex}
-
-.slide.video {
-  padding:0;
-  background:#000;
+.slide.active{display:flex}
+.slide.video{padding:0;background:#000}
+.slide video{
+  width:100%;height:100%;
+  object-fit:contain;background:#000;
 }
-
-.slide video {
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  background:#000;
-}
-
-.mini-logo {
-  width:min(48%,370px);
-  max-height:110px;
+.mini-logo{
+  width:min(48%,370px);max-height:110px;
   object-fit:contain;
 }
-
-.eyebrow {
+.eyebrow{
   font-family:Cinzel,Georgia,serif;
-  color:var(--gold);
-  font-size:16px;
-  letter-spacing:3px;
-  font-weight:600;
+  color:var(--gold);font-size:16px;
+  letter-spacing:3px;font-weight:600;
 }
-
-.headline {
+.headline{
   font-family:Cinzel,Georgia,serif;
   font-size:clamp(28px,3.1vw,57px);
-  line-height:1.16;
-  font-weight:600;
-  margin:15px 0;
-  color:#fff1cf;
+  line-height:1.16;font-weight:600;
+  margin:15px 0;color:#fff1cf;
 }
-
-.highlight {color:var(--gold)}
-
-.sub {
+.highlight{color:var(--gold)}
+.sub{
   font-size:clamp(15px,1.5vw,24px);
-  line-height:1.5;
-  color:#e4d2aa;
+  line-height:1.5;color:#e4d2aa;
 }
-
-.controls {
-  position:absolute;
-  top:10px;
-  left:10px;
-  z-index:5;
-  opacity:0;
+.controls{
+  position:absolute;top:10px;left:10px;
+  z-index:5;opacity:0;
 }
-
 .stage:hover .controls,
-.controls:focus-within {
-  opacity:1;
-}
-
-button {
-  background:#a7803e;
-  border:0;
-  border-radius:6px;
-  color:#111;
-  padding:7px 12px;
-  cursor:pointer;
+.controls:focus-within{opacity:1}
+button{
+  background:#a7803e;border:0;
+  border-radius:6px;color:#111;
+  padding:7px 12px;cursor:pointer;
   font-weight:700;
 }
 
-/* NEWS AND MARKET PANELS */
-
-.bottom-panels {
+/* LARGER NEWS AND MARKET PANELS */
+.bottom-panels{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:12px;
+  gap:12px;min-height:0;
+}
+.mini-panel{
+  display:flex;flex-direction:column;
   min-height:0;
 }
-
-.mini-panel {
-  display:flex;
-  flex-direction:column;
-  min-height:0;
-}
-
-.panel-heading {
-  display:flex;
-  align-items:center;
+.panel-heading{
+  display:flex;align-items:center;
   justify-content:space-between;
-  padding:9px 12px;
+  padding:11px 14px;
   background:#1d1a15;
   border-bottom:1px solid #473922;
-  min-height:37px;
+  min-height:43px;
 }
-
-.panel-title {
+.panel-title{
   color:var(--gold);
-  font-size:13px;
-  font-weight:800;
+  font-size:14px;font-weight:800;
   letter-spacing:1px;
 }
-
-.panel-tag {
-  color:#c4b395;
-  font-size:10px;
-}
-
-.live-dot {
+.panel-tag{color:#c4b395;font-size:11px}
+.live-dot{
   display:inline-block;
-  width:7px;
-  height:7px;
-  border-radius:50%;
-  background:#f04444;
+  width:7px;height:7px;
+  border-radius:50%;background:#f04444;
   margin-right:5px;
   animation:dotPulse 2s infinite;
 }
+@keyframes dotPulse{50%{opacity:.35}}
 
-@keyframes dotPulse {
-  50%{opacity:.35}
-}
-
-/* LIVE TEXT NEWS */
-
-.news-area {
-  flex:1;
-  min-height:0;
-  display:flex;
-  flex-direction:column;
+/* LIVE NEWS */
+.news-area{
+  flex:1;min-height:0;
+  display:flex;flex-direction:column;
   justify-content:center;
-  padding:12px 16px;
+  padding:17px 20px;
   background:radial-gradient(
-    ellipse at top right,
-    #30271a,#0b0e12 75%
+    ellipse at top right,#30271a,#0b0e12 75%
   );
 }
-
-.news-category {
+.news-category{
   color:var(--gold);
-  font-size:10px;
-  letter-spacing:2px;
-  font-weight:800;
-  margin-bottom:7px;
+  font-size:12px;letter-spacing:2px;
+  font-weight:800;margin-bottom:12px;
 }
-
-.news-headline {
+.news-headline{
   color:#f8f1e4;
-  font-size:clamp(13px,1.15vw,19px);
-  line-height:1.4;
-  font-weight:700;
-  overflow:hidden;
-  display:-webkit-box;
-  -webkit-line-clamp:3;
+  font-size:clamp(17px,1.4vw,24px);
+  line-height:1.5;font-weight:700;
+  overflow:hidden;display:-webkit-box;
+  -webkit-line-clamp:4;
   -webkit-box-orient:vertical;
 }
-
-.news-meta {
-  display:flex;
-  justify-content:space-between;
-  gap:6px;
-  margin-top:9px;
-  font-size:10px;
-  color:#c2aa7e;
+.news-meta{
+  display:flex;justify-content:space-between;
+  gap:6px;margin-top:15px;
+  font-size:12px;color:#c2aa7e;
 }
-
-.news-progress {
-  height:2px;
-  background:#443722;
-  margin-top:9px;
-  overflow:hidden;
+.news-progress{
+  height:3px;background:#443722;
+  margin-top:13px;overflow:hidden;
 }
-
-.news-progress-inner {
-  height:100%;
-  width:0;
+.news-progress-inner{
+  height:100%;width:0;
   background:var(--gold);
 }
-
-.news-area.fade {
-  animation:newsFade .5s ease;
+.news-area.fade{animation:newsFade .5s ease}
+@keyframes newsFade{
+  from{opacity:.3;transform:translateY(4px)}
+  to{opacity:1;transform:translateY(0)}
 }
 
-@keyframes newsFade {
-  from {
-    opacity:.3;
-    transform:translateY(4px);
-  }
-  to {
-    opacity:1;
-    transform:translateY(0);
-  }
-}
-
-/* GOLD AND SILVER QUOTES */
-
-.market-area {
-  display:grid;
-  grid-template-rows:1fr 1fr;
-  flex:1;
-  min-height:0;
-  gap:2px;
-  padding:4px;
+/* GOLD AND SILVER */
+.market-area{
+  display:grid;grid-template-rows:1fr 1fr;
+  flex:1;min-height:0;
+  gap:5px;padding:7px;
   background:#111317;
 }
-
-.market-item {
-  min-height:0;
-  overflow:hidden;
+.market-item{
+  min-height:0;overflow:hidden;
   background:#18191c;
 }
-
 .tradingview-widget-container,
-.tradingview-widget-container__widget {
-  width:100%;
-  height:100%;
-  min-height:0;
+.tradingview-widget-container__widget{
+  width:100%;height:100%;min-height:0;
 }
 
 /* PREMIUM PRAYER PANEL */
-
-.prayers {
+.prayers{
   padding:12px 15px;
-  display:flex;
-  flex-direction:column;
-  background:linear-gradient(
-    150deg,#1d1b17,#0c0e12
-  );
+  display:flex;flex-direction:column;
+  background:linear-gradient(150deg,#1d1b17,#0c0e12);
 }
-
-.prayer-header {
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  gap:8px;
+.prayer-header{
+  display:flex;align-items:flex-start;
+  justify-content:space-between;gap:8px;
 }
-
-.prayers h2 {
+.prayers h2{
   font-family:Cinzel,Georgia,serif;
-  font-size:22px;
-  margin:0 0 4px;
+  font-size:22px;margin:0 0 4px;
   color:var(--gold);
 }
-
-.prayer-icon {
-  color:var(--gold);
-  font-size:25px;
-  line-height:1;
+.prayer-icon{
+  color:var(--gold);font-size:25px;line-height:1;
 }
-
-.location {
-  font-size:11px;
-  color:var(--muted);
+.location{font-size:11px;color:var(--muted)}
+.hijri-panel{
+  color:#d6bd8c;font-size:11px;
+  margin-top:5px;margin-bottom:9px;
 }
-
-.hijri-panel {
-  color:#d6bd8c;
-  font-size:11px;
-  margin-top:5px;
-  margin-bottom:9px;
-}
-
-.current-card {
+.current-card{
   border:1px solid #8b6c36;
   border-radius:10px;
-  background:linear-gradient(
-    120deg,#342819,#201b15
-  );
-  padding:10px 12px;
-  margin-bottom:8px;
-  transition:background .4s;
+  background:linear-gradient(120deg,#342819,#201b15);
+  padding:10px 12px;margin-bottom:8px;
 }
-
-.current-card.pulse {
+.current-card.pulse{
   animation:prayerTransition 2.5s ease;
 }
-
-@keyframes prayerTransition {
-  0% {
-    box-shadow:0 0 0 transparent;
-  }
-  35% {
+@keyframes prayerTransition{
+  0%{box-shadow:0 0 0 transparent}
+  35%{
     box-shadow:0 0 22px #e6bd6490;
     background:#59431e;
   }
-  100% {
-    box-shadow:0 0 0 transparent;
-  }
+  100%{box-shadow:0 0 0 transparent}
 }
-
-.current-caption {
-  font-size:10px;
-  font-weight:800;
-  color:var(--gold);
-  letter-spacing:1.3px;
-  display:flex;
-  align-items:center;
+.current-caption{
+  font-size:10px;font-weight:800;
+  color:var(--gold);letter-spacing:1.3px;
+  display:flex;justify-content:space-between;
+}
+.current-content{
+  display:flex;align-items:center;
   justify-content:space-between;
+  margin-top:5px;gap:8px;
 }
-
-.current-content {
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin-top:5px;
-  gap:8px;
+.current-name{
+  font-size:22px;font-weight:800;color:#ffe2a0;
 }
-
-.current-name {
-  font-size:22px;
-  font-weight:800;
-  color:#ffe2a0;
-}
-
-.current-time {
-  font-size:21px;
-  font-weight:800;
+.current-time{
+  font-size:21px;font-weight:800;
   color:#ffe2a0;
   font-variant-numeric:tabular-nums;
 }
-
-.prayer-row {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:5px;
+.prayer-row{
+  display:flex;justify-content:space-between;
+  align-items:center;gap:5px;
   border-bottom:1px solid #3e362a;
   padding:clamp(5px,1.1vh,11px) 8px;
   font-size:clamp(14px,1.1vw,18px);
-  transition:background .4s;
 }
-
-.prayer-row strong {
+.prayer-row strong{
   font-weight:800;
   font-variant-numeric:tabular-nums;
 }
-
-.prayer-row.current {
+.prayer-row.current{
   border:1px solid #b68a42;
-  border-radius:8px;
-  color:#ffe2a0;
+  border-radius:8px;color:#ffe2a0;
   animation:prayerGlow 3.5s ease-in-out infinite;
 }
-
-@keyframes prayerGlow {
-  0%,100% {
+@keyframes prayerGlow{
+  0%,100%{
     background:#332819;
     box-shadow:0 0 0 transparent;
   }
-  50% {
+  50%{
     background:#4c3a20;
     box-shadow:0 0 9px #e6bd642b;
   }
 }
-
-.next-box {
-  margin-top:auto;
-  flex-shrink:0;
+.next-box{
+  margin-top:auto;flex-shrink:0;
   border-radius:13px;
-  background:linear-gradient(
-    145deg,#332919,#211b13
-  );
+  background:linear-gradient(145deg,#332919,#211b13);
   border:1px solid #80653a;
-  padding:12px 14px;
-  text-align:center;
+  padding:12px 14px;text-align:center;
 }
-
-.next-label {
+.next-label{
   font-family:Cinzel,Georgia,serif;
   color:var(--gold);
-  font-size:12px;
-  letter-spacing:1.5px;
+  font-size:12px;letter-spacing:1.5px;
 }
-
-.next-name {
-  font-size:25px;
-  font-weight:700;
+.next-name{
+  font-size:25px;font-weight:700;
   margin:5px 0 2px;
 }
-
-.next-time {
-  color:#f4d99b;
-  font-size:37px;
-  font-weight:800;
-  line-height:1.15;
+.next-time{
+  color:#f4d99b;font-size:37px;
+  font-weight:800;line-height:1.15;
   font-variant-numeric:tabular-nums;
   margin:5px 0 8px;
 }
-
-.remaining-label {
-  font-size:10px;
-  letter-spacing:2px;
+.remaining-label{
+  font-size:10px;letter-spacing:2px;
   color:var(--muted);
 }
-
-.countdown {
-  font-size:18px;
-  font-weight:600;
+.countdown{
+  font-size:18px;font-weight:600;
   margin-top:5px;
   font-variant-numeric:tabular-nums;
 }
-
-.progress-track {
-  width:100%;
-  height:5px;
-  border-radius:20px;
-  overflow:hidden;
-  background:#54432a;
-  margin-top:12px;
+.progress-track{
+  width:100%;height:5px;
+  border-radius:20px;overflow:hidden;
+  background:#54432a;margin-top:12px;
 }
-
-.progress-fill {
-  width:0%;
-  height:100%;
+.progress-fill{
+  width:0%;height:100%;
   border-radius:20px;
-  background:linear-gradient(
-    90deg,#99713b,#ffe1a0
-  );
+  background:linear-gradient(90deg,#99713b,#ffe1a0);
   transition:width 1s linear;
 }
-
-.progress-caption {
-  display:flex;
-  justify-content:space-between;
-  margin-top:5px;
-  color:#a99a7c;
+.progress-caption{
+  display:flex;justify-content:space-between;
+  margin-top:5px;color:#a99a7c;
   font-size:9px;
 }
-
-.source {
-  text-align:center;
-  font-size:10px;
-  color:#a89c85;
-  margin-top:7px;
+.source{
+  text-align:center;font-size:10px;
+  color:#a89c85;margin-top:7px;
+}
+.notice{
+  font-size:13px;color:#c3b393;margin-top:10px;
 }
 
-.notice {
-  font-size:13px;
-  color:#c3b393;
-  margin-top:10px;
-}
-
-/* TICKER */
-
-.ticker {
-  display:flex;
-  align-items:center;
-  overflow:hidden;
-  white-space:nowrap;
+/* BOTTOM TICKER */
+.ticker{
+  display:flex;align-items:center;
+  overflow:hidden;white-space:nowrap;
   border-top:1px solid var(--border);
   background:#18140f;
 }
-
-.ticker span {
-  display:inline-block;
-  padding-left:100%;
+.ticker span{
+  display:inline-block;padding-left:100%;
   animation:scroll 42s linear infinite;
-  font-size:17px;
-  color:#e7cf9c;
+  font-size:17px;color:#e7cf9c;
+}
+@keyframes scroll{
+  to{transform:translateX(-100%)}
 }
 
-@keyframes scroll {
-  to {transform:translateX(-100%)}
+/* SCREEN ADJUSTMENTS */
+@media(max-width:1100px){
+  .body{grid-template-columns:minmax(0,1fr) 285px}
+  .prayers{padding:9px}
+  .prayers h2{font-size:18px}
+  .prayer-row{font-size:14px;padding:7px 5px}
+  .current-name{font-size:19px}
+  .current-time{font-size:17px}
+  .next-time{font-size:30px}
+  .next-name{font-size:22px}
+  .panel-title{font-size:11px}
+  .news-headline{font-size:15px}
+  header{padding:8px 15px}
 }
-
-/* TV SCREEN ADJUSTMENTS */
-
-@media(max-width:1100px) {
-  .body {
-    grid-template-columns:minmax(0,1fr) 285px;
-  }
-  .prayers {padding:9px}
-  .prayers h2 {font-size:18px}
-  .prayer-row {
-    font-size:14px;
-    padding:7px 5px;
-  }
-  .current-name {font-size:19px}
-  .current-time {font-size:17px}
-  .next-time {font-size:30px}
-  .next-name {font-size:22px}
-  .left {
-    grid-template-rows:minmax(0,1fr) 155px;
-  }
-  .panel-title {font-size:11px}
-  .news-headline {font-size:13px}
-  header {padding:8px 15px}
-}
-
-@media(max-height:750px) {
-  .screen {
+@media(max-height:750px){
+  .screen{
     grid-template-rows:78px minmax(0,1fr) 38px;
   }
-  .left {
-    grid-template-rows:minmax(0,1fr) 145px;
-  }
-  .prayer-row {padding:5px 8px}
-  .current-card {padding:7px 9px}
-  .next-box {padding:8px}
-  .next-time {font-size:30px}
-  .time {font-size:30px}
-  .hijri-panel {margin-bottom:5px}
-  .progress-track {margin-top:7px}
+  .prayer-row{padding:5px 8px}
+  .current-card{padding:7px 9px}
+  .next-box{padding:8px}
+  .next-time{font-size:30px}
+  .time{font-size:30px}
+  .hijri-panel{margin-bottom:5px}
+  .progress-track{margin-top:7px}
+  .news-area{padding:10px 14px}
 }
-
-@media(max-height:600px) {
-  .prayers {padding:7px}
-  .prayers h2 {font-size:16px}
-  .current-card {margin-bottom:4px}
-  .current-name {font-size:17px}
-  .current-time {font-size:16px}
-  .prayer-row {
-    padding:3px 5px;
-    font-size:13px;
-  }
-  .next-name {font-size:18px}
-  .next-time {font-size:26px}
-  .countdown {font-size:15px}
-  .source {font-size:9px}
+@media(max-height:600px){
+  .prayers{padding:7px}
+  .prayers h2{font-size:16px}
+  .current-card{margin-bottom:4px}
+  .current-name{font-size:17px}
+  .current-time{font-size:16px}
+  .prayer-row{padding:3px 5px;font-size:13px}
+  .next-name{font-size:18px}
+  .next-time{font-size:26px}
+  .countdown{font-size:15px}
+  .source{font-size:9px}
 }
-
-@media(max-width:650px) {
-  html,body {overflow:auto}
-  .screen {
-    height:auto;
-    min-height:100vh;
-  }
-  header {
+@media(max-width:650px){
+  html,body{overflow:auto}
+  .screen{height:auto;min-height:100vh}
+  header{
     grid-template-columns:1fr 1fr;
     gap:8px;
   }
-  .header-center {
+  .header-center{
     grid-column:1 / -1;
     grid-row:2;
   }
-  .body {display:block}
-  .left {
-    height:850px;
-    margin-bottom:12px;
-    grid-template-rows:450px 388px;
+  .body{display:block}
+  .left{
+    height:900px;margin-bottom:12px;
+    grid-template-rows:540px 348px;
   }
-  .prayers {min-height:590px}
-  .bottom-panels {grid-template-columns:1fr}
-  .logo {width:160px}
-  .time {font-size:22px}
+  .prayers{min-height:590px}
+  .bottom-panels{grid-template-columns:1fr}
+  .logo{width:160px}
+  .time{font-size:22px}
 }
 </style>
 </head>
 
 <body>
-
 <div class="screen">
 
 <header>
-
-  <img class="logo"
-       src="logo.png"
-       alt="Shaluq Jewellers">
+  <img class="logo" src="logo.png" alt="Shaluq Jewellers">
 
   <div class="header-center">
-    <div class="market-heading">
-      GLOBAL BULLION MARKET
-    </div>
-
+    <div class="market-heading">GLOBAL BULLION MARKET</div>
     <div class="market-status">
       <span class="status-dot" id="marketDot"></span>
       <span id="marketStatus">CHECKING MARKET</span>
     </div>
-
     <div class="status-subtitle" id="marketSubtitle">
       Gold & Silver Trading Session
     </div>
-
     <div class="header-line"></div>
   </div>
 
   <div class="clock">
     <div class="time" id="clock">--:--:--</div>
     <div class="date" id="date">Dubai, UAE</div>
-    <div class="hijri-header" id="hijriHeader">
-      Hijri Date
-    </div>
+    <div class="hijri-header" id="hijriHeader">Hijri Date</div>
   </div>
-
 </header>
 
 <div class="body">
-
 <div class="left">
 
+<!-- PROMOTIONAL VIDEO AND SLIDES -->
 <main class="panel stage" id="stage">
-
   <div class="controls">
     <button id="skip">Next slide ›</button>
   </div>
 
   <section class="slide video active" data-type="video">
-    <video id="intro"
-           src="intro.mp4"
-           muted
-           autoplay
-           playsinline
-           preload="auto"></video>
+    <video id="intro" src="intro.mp4"
+      muted autoplay playsinline preload="auto"></video>
   </section>
 
   <section class="slide" data-duration="12000">
     <img class="mini-logo" src="logo.png" alt="Shaluq">
     <div class="eyebrow">DUBAI GOLD SOUK</div>
     <div class="headline">
-      YOUR TRUSTED
-      <span class="highlight">BULLION PARTNER</span>
+      YOUR TRUSTED <span class="highlight">BULLION PARTNER</span>
     </div>
-    <div class="sub">
-      Wholesale Gold and Silver Bullion
-    </div>
+    <div class="sub">Wholesale Gold and Silver Bullion</div>
   </section>
 
   <section class="slide" data-duration="14000">
     <div class="eyebrow">OUR PRODUCTS</div>
     <div class="headline">
-      GOLD BARS
-      <span class="highlight">& SILVER</span>
+      GOLD BARS <span class="highlight">& SILVER</span>
     </div>
     <div class="sub">
       TT Bars · Kilo Bars · 999.9 Fine Gold Bars<br>
@@ -842,8 +546,7 @@ button {
   <section class="slide" data-duration="14000">
     <div class="eyebrow">VISIT OUR OFFICE</div>
     <div class="headline">
-      SHALUQ
-      <span class="highlight">JEWELLERS L.L.C.</span>
+      SHALUQ <span class="highlight">JEWELLERS L.L.C.</span>
     </div>
     <div class="sub">
       Royal Diamond Building, Office 204, 2nd Floor<br>
@@ -852,71 +555,50 @@ button {
     </div>
   </section>
 
-  <section class="slide"
-           id="saturday"
-           data-duration="15000">
+  <section class="slide" id="saturday" data-duration="15000">
     <div class="eyebrow">SATURDAY NOTICE</div>
     <div class="headline">
-      GOLD MARKET
-      <span class="highlight">CLOSED TODAY</span>
+      GOLD MARKET <span class="highlight">CLOSED TODAY</span>
     </div>
     <div class="sub">
       For Inquiries, Please Contact Shaluq Jewellers
     </div>
   </section>
-
 </main>
 
+<!-- ENLARGED BOTTOM PANELS -->
 <div class="bottom-panels">
-
-<!-- LIVE NEWS -->
 
 <section class="panel mini-panel">
   <div class="panel-heading">
     <span class="panel-title">
-      <span class="live-dot"></span>
-      LIVE NEWS FLASH
+      <span class="live-dot"></span>LIVE NEWS FLASH
     </span>
-    <span class="panel-tag" id="newsStatus">
-      CONNECTING
-    </span>
+    <span class="panel-tag" id="newsStatus">CONNECTING</span>
   </div>
-
   <div class="news-area" id="newsArea">
     <div class="news-category" id="newsCategory">
       WORLD & FINANCIAL NEWS
     </div>
-
     <div class="news-headline" id="newsHeadline">
       Connecting to the latest market and world news…
     </div>
-
     <div class="news-meta">
       <span id="newsSource">News feed</span>
       <span id="newsPosition">-- / --</span>
     </div>
-
     <div class="news-progress">
-      <div class="news-progress-inner"
-           id="newsProgress"></div>
+      <div class="news-progress-inner" id="newsProgress"></div>
     </div>
   </div>
 </section>
 
-<!-- GOLD AND SILVER -->
-
 <section class="panel mini-panel">
   <div class="panel-heading">
-    <span class="panel-title">
-      GOLD & SILVER MARKET
-    </span>
-    <span class="panel-tag">
-      USD / TROY OZ
-    </span>
+    <span class="panel-title">GOLD & SILVER MARKET</span>
+    <span class="panel-tag">USD / TROY OZ</span>
   </div>
-
   <div class="market-area">
-
     <div class="market-item">
       <div class="tradingview-widget-container">
         <div class="tradingview-widget-container__widget"></div>
@@ -933,7 +615,6 @@ button {
         </script>
       </div>
     </div>
-
     <div class="market-item">
       <div class="tradingview-widget-container">
         <div class="tradingview-widget-container__widget"></div>
@@ -950,23 +631,18 @@ button {
         </script>
       </div>
     </div>
-
   </div>
 </section>
 
 </div>
 </div>
 
-<!-- PREMIUM PRAYER PANEL -->
-
+<!-- PRAYER PANEL -->
 <aside class="panel prayers">
-
   <div class="prayer-header">
     <div>
       <h2>Dubai Prayer Times</h2>
-      <div class="location">
-        Dubai, United Arab Emirates
-      </div>
+      <div class="location">Dubai, United Arab Emirates</div>
     </div>
     <div class="prayer-icon">☪</div>
   </div>
@@ -977,51 +653,27 @@ button {
 
   <div class="current-card" id="currentCard">
     <div class="current-caption">
-      <span>CURRENT PRAYER</span>
-      <span>✦</span>
+      <span>CURRENT PRAYER</span><span>✦</span>
     </div>
-
     <div class="current-content">
-      <span class="current-name" id="currentName">
-        Loading…
-      </span>
-      <span class="current-time" id="currentTime">
-        --:--
-      </span>
+      <span class="current-name" id="currentName">Loading…</span>
+      <span class="current-time" id="currentTime">--:--</span>
     </div>
   </div>
 
   <div id="prayerRows">
-    <div class="notice">
-      Loading prayer times…
-    </div>
+    <div class="notice">Loading prayer times…</div>
   </div>
 
   <div class="next-box">
-    <div class="next-label">
-      UPCOMING PRAYER
-    </div>
-
-    <div class="next-name" id="nextName">
-      Loading…
-    </div>
-
-    <div class="next-time" id="nextTime">
-      --:--
-    </div>
-
-    <div class="remaining-label">
-      TIME REMAINING
-    </div>
-
-    <div class="countdown" id="countdown">
-      --:--:--
-    </div>
-
+    <div class="next-label">UPCOMING PRAYER</div>
+    <div class="next-name" id="nextName">Loading…</div>
+    <div class="next-time" id="nextTime">--:--</div>
+    <div class="remaining-label">TIME REMAINING</div>
+    <div class="countdown" id="countdown">--:--:--</div>
     <div class="progress-track">
       <div class="progress-fill" id="prayerProgress"></div>
     </div>
-
     <div class="progress-caption">
       <span>PREVIOUS PRAYER</span>
       <span>NEXT PRAYER</span>
@@ -1031,7 +683,6 @@ button {
   <div class="source" id="prayerStatus">
     Source: AlAdhan · Dubai method 16
   </div>
-
 </aside>
 
 </div>
@@ -1046,7 +697,6 @@ button {
     WWW.SHALUQJEWELLERS.COM &nbsp; ✦ &nbsp;
   </span>
 </footer>
-
 </div>
 
 <script>
@@ -1060,14 +710,9 @@ const pad=n=>String(n).padStart(2,'0');
 function parts(d){
   return Object.fromEntries(
     new Intl.DateTimeFormat('en-GB',{
-      timeZone:TZ,
-      year:'numeric',
-      month:'2-digit',
-      day:'2-digit',
-      hour:'2-digit',
-      minute:'2-digit',
-      second:'2-digit',
-      hourCycle:'h23'
+      timeZone:TZ,year:'numeric',month:'2-digit',
+      day:'2-digit',hour:'2-digit',minute:'2-digit',
+      second:'2-digit',hourCycle:'h23'
     }).formatToParts(d)
       .filter(x=>x.type!=='literal')
       .map(x=>[x.type,x.value])
@@ -1080,119 +725,84 @@ const apiKey=p=>`${p.day}-${p.month}-${p.year}`;
 
 function secondsOf(p){
   return Number(p.hour)*3600+
-    Number(p.minute)*60+
-    Number(p.second);
+    Number(p.minute)*60+Number(p.second);
 }
-
 function secTime(s){
   const m=String(s||'').match(/(\d{1,2}):(\d{2})/);
-  return m
-    ?Number(m[1])*3600+Number(m[2])*60
-    :null;
+  return m?Number(m[1])*3600+Number(m[2])*60:null;
 }
-
 function displayTime(s){
   const m=String(s||'').match(/(\d{1,2}):(\d{2})/);
   if(!m)return '--';
   const h=Number(m[1]);
   return `${h%12||12}:${m[2]} ${h>=12?'PM':'AM'}`;
 }
-
 function duration(s){
   return `${pad(Math.floor(s/3600))}:`+
     `${pad(Math.floor(s%3600/60))}:`+
     `${pad(s%60)}`;
 }
 
-/* HEADER CLOCK AND MARKET SESSION */
-
+/* CLOCK AND MARKET STATUS */
 let lastHeaderDate='';
 
 function updateHeader(){
   const p=dubaiNow();
-
   $('clock').textContent=
     `${Number(p.hour)%12||12}:${p.minute}:${p.second} `+
     `${Number(p.hour)>=12?'PM':'AM'}`;
 
   $('date').textContent=
     new Intl.DateTimeFormat('en-GB',{
-      timeZone:TZ,
-      weekday:'long',
-      day:'numeric',
-      month:'long',
-      year:'numeric'
+      timeZone:TZ,weekday:'long',
+      day:'numeric',month:'long',year:'numeric'
     }).format(new Date());
 
   if(dateKey(p)!==lastHeaderDate){
     lastHeaderDate=dateKey(p);
     updateHijri();
   }
-
   updateMarketStatus();
 }
 
-/*
- Indicative global spot FX/metals session:
- Sunday 5 PM New York to Friday 5 PM New York.
- Actual XAU/XAG trading hours and maintenance
- breaks depend on the data provider.
-*/
-
 function updateMarketStatus(){
-  const nyParts=new Intl.DateTimeFormat('en-US',{
-    timeZone:'America/New_York',
-    weekday:'short',
-    hour:'2-digit',
-    minute:'2-digit',
-    hourCycle:'h23'
-  }).formatToParts(new Date());
-
   const obj=Object.fromEntries(
-    nyParts
+    new Intl.DateTimeFormat('en-US',{
+      timeZone:'America/New_York',
+      weekday:'short',hour:'2-digit',
+      minute:'2-digit',hourCycle:'h23'
+    }).formatToParts(new Date())
       .filter(x=>x.type!=='literal')
       .map(x=>[x.type,x.value])
   );
 
   const day=obj.weekday;
   const mins=Number(obj.hour)*60+Number(obj.minute);
-
   const open=
-    (day==='Sun'&&mins>=17*60)||
-    (day==='Mon'||day==='Tue'||
-     day==='Wed'||day==='Thu')||
-    (day==='Fri'&&mins<17*60);
+    (day==='Sun'&&mins>=1020)||
+    ['Mon','Tue','Wed','Thu'].includes(day)||
+    (day==='Fri'&&mins<1020);
 
   $('marketDot').className=
     'status-dot '+(open?'open':'closed');
-
   $('marketStatus').textContent=
     open?'GLOBAL MARKET OPEN':'GLOBAL MARKET CLOSED';
-
   $('marketSubtitle').textContent=
-    open
-    ?'Indicative Spot Metals Trading Session'
-    :'Outside Indicative Spot Trading Session';
+    open?'Indicative Spot Metals Trading Session':
+      'Outside Indicative Spot Trading Session';
 }
-
-/* HIJRI DATE */
 
 function updateHijri(){
   try{
-    const date=new Date();
-
     const hijri=new Intl.DateTimeFormat(
       'en-u-ca-islamic-umalqura',{
-        timeZone:TZ,
-        day:'numeric',
-        month:'long',
-        year:'numeric'
+        timeZone:TZ,day:'numeric',
+        month:'long',year:'numeric'
       }
-    ).format(date);
+    ).format(new Date());
 
     $('hijriHeader').textContent=hijri+' AH';
     $('hijriPanel').textContent=hijri+' AH';
-
   }catch(e){
     $('hijriHeader').textContent='Dubai, UAE';
     $('hijriPanel').textContent='';
@@ -1200,7 +810,6 @@ function updateHijri(){
 }
 
 /* PRAYER TIMES */
-
 let currentDay='';
 let times={};
 let nextTimes={};
@@ -1214,27 +823,17 @@ let lastPrayerMarkup='';
 const cacheKey='shaluq-prayer-dubai-v1';
 
 function cached(){
-  try{
-    return JSON.parse(
-      localStorage.getItem(cacheKey)||'{}'
-    );
-  }catch(e){
-    return {};
-  }
+  try{return JSON.parse(localStorage.getItem(cacheKey)||'{}')}
+  catch(e){return {}}
 }
-
 function store(o){
-  try{
-    localStorage.setItem(
-      cacheKey,JSON.stringify(o)
-    );
-  }catch(e){}
+  try{localStorage.setItem(cacheKey,JSON.stringify(o))}
+  catch(e){}
 }
 
 async function fetchDay(p){
   const key=dateKey(p);
   const cache=cached();
-
   if(cache[key])return cache[key];
 
   const url=
@@ -1243,43 +842,28 @@ async function fetchDay(p){
     `&method=16&school=0`;
 
   const controller=new AbortController();
-  const timeout=setTimeout(
-    ()=>controller.abort(),12000
-  );
+  const timeout=setTimeout(()=>controller.abort(),12000);
 
   try{
     const response=await fetch(url,{
-      cache:'no-store',
-      signal:controller.signal
+      cache:'no-store',signal:controller.signal
     });
-
-    if(!response.ok){
-      throw Error('Prayer service unavailable');
-    }
+    if(!response.ok)throw Error('Prayer service unavailable');
 
     const json=await response.json();
-
-    if(json.code!==200||!json.data?.timings){
+    if(json.code!==200||!json.data?.timings)
       throw Error('Invalid prayer data');
-    }
 
     const result={};
-
     for(const name of names){
       const value=json.data.timings[name];
-
-      if(secTime(value)===null){
-        throw Error('Missing prayer time');
-      }
-
+      if(secTime(value)===null)throw Error('Missing prayer time');
       result[name]=value;
     }
 
     cache[key]=result;
     store(cache);
-
     return result;
-
   }finally{
     clearTimeout(timeout);
   }
@@ -1287,11 +871,8 @@ async function fetchDay(p){
 
 function tomorrowParts(p){
   const d=new Date(Date.UTC(
-    Number(p.year),
-    Number(p.month)-1,
-    Number(p.day)+1
+    Number(p.year),Number(p.month)-1,Number(p.day)+1
   ));
-
   return {
     year:String(d.getUTCFullYear()),
     month:pad(d.getUTCMonth()+1),
@@ -1302,32 +883,25 @@ function tomorrowParts(p){
 async function loadPrayer(){
   const p=dubaiNow();
   const key=dateKey(p);
-
   try{
     const today=await fetchDay(p);
-
     if(key!==dateKey(dubaiNow()))return;
 
     times=today;
     activeDate=key;
     nextTimes={};
     lastLoad=Date.now();
-
     $('prayerStatus').textContent=
       'Source: AlAdhan · Dubai method 16';
-
     renderPrayer();
-
   }catch(e){
     lastLoad=Date.now();
-
     $('prayerStatus').textContent=
       'Prayer service unavailable · check connection';
 
     if(!times.Fajr){
       $('prayerRows').innerHTML=
         '<div class="notice">Unable to load prayer times.</div>';
-
       $('currentName').textContent='Unavailable';
       $('currentTime').textContent='--:--';
       $('nextName').textContent='Unavailable';
@@ -1338,70 +912,42 @@ async function loadPrayer(){
 
 function renderPrayer(){
   if(!times.Fajr)return;
-
   const p=dubaiNow();
   if(dateKey(p)!==activeDate)return;
 
   const now=secondsOf(p);
-
   const current=[...names].reverse()
     .find(n=>secTime(times[n])<=now)||null;
+  const next=names.find(n=>secTime(times[n])>now)||null;
 
-  const next=names.find(
-    n=>secTime(times[n])>now
-  )||null;
-
-  let nextName;
-  let nextTime;
-  let remaining;
-  let progress=0;
-  let currentName=current||'Isha (Previous Day)';
-  let currentTime=current?times[current]:null;
+  let nextName,nextTime,remaining,progress=0;
+  const currentName=current||'Isha (Previous Day)';
+  const currentTime=current?times[current]:null;
 
   if(next){
     nextName=next;
     nextTime=times[next];
     remaining=secTime(nextTime)-now;
-
-    const previousSeconds=current
-      ?secTime(times[current])
-      :0;
-
-    const total=secTime(nextTime)-previousSeconds;
-
-    progress=total>0
-      ?(now-previousSeconds)/total*100
-      :0;
-
+    const previous=current?secTime(times[current]):0;
+    const total=secTime(nextTime)-previous;
+    progress=total>0?(now-previous)/total*100:0;
   }else{
     nextName='Fajr (Tomorrow)';
     nextTime=nextTimes.Fajr||null;
-
     remaining=nextTime
-      ?86400-now+secTime(nextTime)
-      :null;
+      ?86400-now+secTime(nextTime):null;
 
-    const previousSeconds=secTime(times.Isha);
+    const previous=secTime(times.Isha);
     const total=nextTime
-      ?86400+secTime(nextTime)-previousSeconds
-      :0;
-
-    progress=total>0
-      ?(now-previousSeconds)/total*100
-      :0;
+      ?86400+secTime(nextTime)-previous:0;
+    progress=total>0?(now-previous)/total*100:0;
 
     if(!nextTimes.Fajr&&!tomorrowLoading){
       tomorrowLoading=true;
-
       fetchDay(tomorrowParts(p))
-        .then(x=>{
-          nextTimes=x;
-          renderPrayer();
-        })
+        .then(x=>{nextTimes=x;renderPrayer()})
         .catch(()=>{})
-        .finally(()=>{
-          tomorrowLoading=false;
-        });
+        .finally(()=>{tomorrowLoading=false});
     }
   }
 
@@ -1416,134 +962,83 @@ function renderPrayer(){
     </div>
   `).join('');
 
-  /*
-    Only update rows when their content changes.
-    This keeps the gold glow smooth.
-  */
   if(markup!==lastPrayerMarkup){
     $('prayerRows').innerHTML=markup;
     lastPrayerMarkup=markup;
   }
 
-  /*
-    Play the transition effect when the
-    active prayer actually changes.
-  */
   if(prayerInitialized&&currentName!==lastCurrentName){
     const card=$('currentCard');
-
     card.classList.remove('pulse');
     void card.offsetWidth;
     card.classList.add('pulse');
-
-    setTimeout(()=>{
-      card.classList.remove('pulse');
-    },2600);
+    setTimeout(()=>card.classList.remove('pulse'),2600);
   }
-
   lastCurrentName=currentName;
   prayerInitialized=true;
 
   $('nextName').textContent=nextName;
-
   $('nextTime').textContent=
     nextTime?displayTime(nextTime):'--:--';
-
   $('countdown').textContent=
-    remaining===null
-      ?'--:--:--'
-      :duration(Math.max(0,remaining));
-
+    remaining===null?'--:--:--':duration(Math.max(0,remaining));
   $('prayerProgress').style.width=
     Math.max(0,Math.min(100,progress))+'%';
 }
 
 /* PROMOTIONAL SLIDES */
-
-const slides=[
-  ...document.querySelectorAll('.slide')
-];
-
+const slides=[...document.querySelectorAll('.slide')];
 const video=$('intro');
-
 let slideIndex=0;
 let slideTimer=null;
 
 function isSaturday(){
   return new Intl.DateTimeFormat('en-US',{
-    timeZone:TZ,
-    weekday:'long'
+    timeZone:TZ,weekday:'long'
   }).format(new Date())==='Saturday';
 }
-
 function showSlide(i){
   clearTimeout(slideTimer);
   video.pause();
-
-  slides.forEach(s=>{
-    s.classList.remove('active');
-  });
+  slides.forEach(s=>s.classList.remove('active'));
 
   let attempts=0;
-
-  while(
-    slides[i].id==='saturday' &&
-    !isSaturday() &&
-    attempts<slides.length
-  ){
+  while(slides[i].id==='saturday'&&!isSaturday()&&attempts<slides.length){
     i=(i+1)%slides.length;
     attempts++;
   }
-
   slideIndex=i;
   const slide=slides[i];
-
   slide.classList.add('active');
 
   if(slide.dataset.type==='video'){
-    try{
-      video.currentTime=0;
-    }catch(e){}
-
+    try{video.currentTime=0}catch(e){}
     slideTimer=setTimeout(nextSlide,30000);
-
-    const playPromise=video.play();
-
-    if(playPromise&&playPromise.catch){
-      playPromise.catch(()=>{
+    const promise=video.play();
+    if(promise&&promise.catch){
+      promise.catch(()=>{
         clearTimeout(slideTimer);
         slideTimer=setTimeout(nextSlide,5000);
       });
     }
-
   }else{
     slideTimer=setTimeout(
-      nextSlide,
-      Number(slide.dataset.duration)||12000
+      nextSlide,Number(slide.dataset.duration)||12000
     );
   }
 }
-
 function nextSlide(){
-  showSlide(
-    (slideIndex+1)%slides.length
-  );
+  showSlide((slideIndex+1)%slides.length);
 }
-
 video.addEventListener('ended',()=>{
   if(slideIndex===0)nextSlide();
 });
-
 video.addEventListener('error',()=>{
   if(slideIndex===0)nextSlide();
 });
-
-$('skip').addEventListener(
-  'click',nextSlide
-);
+$('skip').addEventListener('click',nextSlide);
 
 /* LIVE NEWS */
-
 const NEWS_FEEDS=[
   {
     category:'GOLD & PRECIOUS METALS',
@@ -1562,26 +1057,20 @@ const NEWS_FEEDS=[
 let newsItems=[];
 let newsIndex=0;
 let newsStarted=0;
-
 const NEWS_INTERVAL=11000;
 
 function cleanNewsText(s){
   const div=document.createElement('div');
   div.innerHTML=String(s||'');
-
   return (div.textContent||div.innerText||'')
-    .replace(/\s+/g,' ')
-    .trim();
+    .replace(/\s+/g,' ').trim();
 }
 
 function parseRSS(xmlText,category){
   const xml=new DOMParser().parseFromString(
     xmlText,'application/xml'
   );
-
-  if(xml.querySelector('parsererror')){
-    throw Error('Invalid RSS XML');
-  }
+  if(xml.querySelector('parsererror'))throw Error('Invalid RSS XML');
 
   return [...xml.querySelectorAll('item')]
     .slice(0,8)
@@ -1589,20 +1078,15 @@ function parseRSS(xmlText,category){
       const title=cleanNewsText(
         item.querySelector('title')?.textContent
       );
-
       const pub=item.querySelector('pubDate')?.textContent;
       const date=pub?new Date(pub):null;
-
       const source=cleanNewsText(
         item.querySelector('source')?.textContent
       )||'Google News';
 
       return {
-        title,
-        category,
-        source,
-        date:date&&!isNaN(date.getTime())
-          ?date:null
+        title,category,source,
+        date:date&&!isNaN(date.getTime())?date:null
       };
     })
     .filter(item=>item.title);
@@ -1610,87 +1094,53 @@ function parseRSS(xmlText,category){
 
 async function fetchNewsFeed(feed){
   const rssUrl=feed.url;
-
   try{
     const response=await fetch(
       'https://api.allorigins.win/raw?url='+
       encodeURIComponent(rssUrl),
       {cache:'no-store'}
     );
-
-    if(!response.ok){
-      throw Error('Proxy unavailable');
-    }
-
+    if(!response.ok)throw Error('Proxy unavailable');
     const xml=await response.text();
-    const parsed=parseRSS(
-      xml,feed.category
-    );
-
+    const parsed=parseRSS(xml,feed.category);
     if(parsed.length)return parsed;
-
   }catch(e){}
 
   const url=
     'https://api.rss2json.com/v1/api.json?rss_url='+
     encodeURIComponent(rssUrl);
 
-  const response=await fetch(
-    url,{cache:'no-store'}
-  );
-
-  if(!response.ok){
-    throw Error('News service unavailable');
-  }
-
+  const response=await fetch(url,{cache:'no-store'});
+  if(!response.ok)throw Error('News service unavailable');
   const data=await response.json();
 
-  if(
-    data.status!=='ok'||
-    !Array.isArray(data.items)
-  ){
+  if(data.status!=='ok'||!Array.isArray(data.items))
     throw Error('News feed unavailable');
-  }
 
   return data.items.slice(0,8).map(item=>{
-    const date=item.pubDate
-      ?new Date(item.pubDate):null;
-
+    const date=item.pubDate?new Date(item.pubDate):null;
     return {
       title:cleanNewsText(item.title),
       category:feed.category,
       source:cleanNewsText(item.author)||'Google News',
-      date:date&&!isNaN(date.getTime())
-        ?date:null
+      date:date&&!isNaN(date.getTime())?date:null
     };
   }).filter(item=>item.title);
 }
 
 function newsAge(date){
   if(!date)return 'LATEST HEADLINE';
-
-  const minutes=Math.max(
-    0,
-    Math.floor(
-      (Date.now()-date.getTime())/60000
-    )
-  );
-
+  const minutes=Math.max(0,Math.floor(
+    (Date.now()-date.getTime())/60000
+  ));
   if(minutes<60)return `${minutes} MIN AGO`;
-
-  if(minutes<1440){
-    return `${Math.floor(minutes/60)} H AGO`;
-  }
-
+  if(minutes<1440)return `${Math.floor(minutes/60)} H AGO`;
   return `${Math.floor(minutes/1440)} D AGO`;
 }
 
 function showNews(){
   if(!newsItems.length)return;
-
-  const item=newsItems[
-    newsIndex%newsItems.length
-  ];
+  const item=newsItems[newsIndex%newsItems.length];
 
   $('newsArea').classList.remove('fade');
   void $('newsArea').offsetWidth;
@@ -1698,44 +1148,32 @@ function showNews(){
 
   $('newsCategory').textContent=item.category;
   $('newsHeadline').textContent=item.title;
-
   $('newsSource').textContent=
     item.source+' · '+newsAge(item.date);
-
   $('newsPosition').textContent=
     `${newsIndex%newsItems.length+1} / ${newsItems.length}`;
-
   $('newsProgress').style.width='0%';
   newsStarted=Date.now();
 }
-
 function rotateNews(){
   if(!newsItems.length)return;
-
-  newsIndex=
-    (newsIndex+1)%newsItems.length;
-
+  newsIndex=(newsIndex+1)%newsItems.length;
   showNews();
 }
-
 async function loadNews(){
   $('newsStatus').textContent='UPDATING';
 
   const results=await Promise.allSettled(
     NEWS_FEEDS.map(fetchNewsFeed)
   );
-
   const incoming=results
     .filter(r=>r.status==='fulfilled')
     .flatMap(r=>r.value);
 
   const seen=new Set();
-
   const unique=incoming.filter(item=>{
     const key=item.title.toLowerCase();
-
     if(seen.has(key))return false;
-
     seen.add(key);
     return true;
   });
@@ -1743,38 +1181,27 @@ async function loadNews(){
   if(unique.length){
     newsItems=unique;
     newsIndex=0;
-
     $('newsStatus').textContent='HEADLINES';
-
     showNews();
-
   }else{
     $('newsStatus').textContent='OFFLINE';
-
     if(!newsItems.length){
-      $('newsCategory').textContent=
-        'NEWS CONNECTION';
-
+      $('newsCategory').textContent='NEWS CONNECTION';
       $('newsHeadline').textContent=
         'Live headlines are temporarily unavailable. Check the internet connection or try again later.';
-
-      $('newsSource').textContent=
-        'News feed unavailable';
-
+      $('newsSource').textContent='News feed unavailable';
       $('newsPosition').textContent='-- / --';
     }
   }
 }
 
 /* INITIALIZE */
-
 updateHeader();
 showSlide(0);
 loadNews();
 
 function dashboardTick(){
   updateHeader();
-
   const p=dubaiNow();
   const key=dateKey(p);
 
@@ -1782,42 +1209,25 @@ function dashboardTick(){
     currentDay=key;
     loadPrayer();
   }
-
   if(Date.now()-lastLoad>15*60*1000){
     lastLoad=Date.now();
     loadPrayer();
   }
-
-  if(times.Fajr){
-    renderPrayer();
-  }
+  if(times.Fajr)renderPrayer();
 }
 
 dashboardTick();
-
 setInterval(dashboardTick,1000);
 
 setInterval(()=>{
   if(!newsItems.length)return;
-
   const elapsed=Date.now()-newsStarted;
-
   $('newsProgress').style.width=
-    Math.min(
-      100,
-      elapsed/NEWS_INTERVAL*100
-    )+'%';
-
-  if(elapsed>=NEWS_INTERVAL){
-    rotateNews();
-  }
+    Math.min(100,elapsed/NEWS_INTERVAL*100)+'%';
+  if(elapsed>=NEWS_INTERVAL)rotateNews();
 },250);
 
-setInterval(
-  loadNews,
-  15*60*1000
-);
-
+setInterval(loadNews,15*60*1000);
 </script>
 </body>
 </html>
