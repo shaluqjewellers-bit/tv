@@ -1,7 +1,80 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SHALUQ TV • Dubai</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet"><style>
-:root{--gold:#e6bd64;--line:#66502c;--bg:#080a0d}*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;background:var(--bg);color:#f6eddb;font-family:"Manrope",Arial,sans-serif;overflow:hidden}.screen{height:100dvh;display:grid;grid-template-rows:110px minmax(0,1fr) 62px;background:radial-gradient(ellipse at 30% 10%,#292015 0%,#080a0d 60%)}header{display:flex;align-items:center;justify-content:space-between;padding:12px 30px;border-bottom:1px solid var(--line);gap:24px}.logo{width:325px;max-height:75px;object-fit:contain;object-position:left center}.clock{text-align:right}.time{font-size:46px;font-weight:700;font-variant-numeric:tabular-nums}.date{font-size:17px;color:var(--gold);margin-top:3px}.body{min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 365px;gap:16px;padding:18px}.stage,.prayers{border:1px solid #59482b;border-radius:20px;background:#101115;overflow:hidden;min-height:0}.stage{position:relative}.slide{position:absolute;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:35px;background:radial-gradient(circle at center,#2d2111,#090a0d 72%)}.slide.active{display:flex}.slide video{width:100%;height:100%;object-fit:contain;background:#000}.slide.video{padding:0;background:#000}.eyebrow{font-size:19px;letter-spacing:4px;color:var(--gold);font-weight:700}.headline{font-size:clamp(36px,4.5vw,78px);font-weight:800;line-height:1.12;margin:22px 0;color:#fff1cf}.sub{font-size:clamp(19px,2vw,32px);color:#e4d2aa;line-height:1.5}.highlight{color:var(--gold)}.slide .mini-logo{width:min(55%,470px);max-height:155px;object-fit:contain}.slide-footer{position:absolute;bottom:25px;left:30px;right:30px;font-size:16px;color:#c7aa70}.prayers{padding:20px;display:flex;flex-direction:column;background:linear-gradient(150deg,#1d1b17,#0c0e12)}.prayers h2{font-size:27px;margin:4px 0 7px;color:var(--gold)}.location{color:#b5a587;font-size:15px;margin-bottom:16px}.prayer-row{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #3e362a;padding:17px 11px;font-size:21px}.prayer-row strong{font-variant-numeric:tabular-nums}.prayer-row.next{background:#42331b;border:1px solid #c19a50;border-radius:10px;color:#ffe2a0}.next-box{margin-top:auto;border-radius:14px;background:#2b2317;border:1px solid #80653a;padding:17px;text-align:center}.next-label{color:var(--gold);font-size:14px;text-transform:uppercase;letter-spacing:2px}.next-name{font-size:26px;font-weight:700;margin:9px 0}.countdown{font-size:34px;font-weight:700;font-variant-numeric:tabular-nums}.source{font-size:11px;color:#a89c85;text-align:center;margin-top:12px}.ticker{border-top:1px solid var(--line);background:#18140f;display:flex;align-items:center;overflow:hidden;white-space:nowrap}.ticker span{display:inline-block;padding-left:100%;animation:scroll 38s linear infinite;font-size:20px;color:#e7cf9c}@keyframes scroll{to{transform:translateX(-100%)}}.controls{position:absolute;top:14px;left:14px;z-index:3;opacity:0;transition:opacity .2s}.stage:hover .controls,.controls:focus-within{opacity:1}button{background:#a7803e;border:0;border-radius:6px;color:#111;padding:8px 12px;cursor:pointer;font-weight:bold}.notice{font-size:14px;color:#c3b393;margin-top:9px}@media(max-width:1000px){.screen{grid-template-rows:85px minmax(0,1fr) 45px}.body{grid-template-columns:minmax(0,1fr) 280px;padding:9px;gap:9px}.logo{width:240px}.time{font-size:30px}.date{font-size:13px}.prayers{padding:11px}.prayers h2{font-size:22px}.prayer-row{padding:11px 5px;font-size:17px}.next-box{padding:10px}.countdown{font-size:25px}.ticker span{font-size:15px}}@media(max-width:650px){.body{grid-template-columns:1fr;grid-template-rows:55% 45%;overflow:auto}.screen{overflow:auto}.prayers{overflow:auto}.clock .time{font-size:24px}.logo{width:160px}}
 
-/* Premium typography for Shaluq TV */
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SHALUQ TV • Dubai</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#e6bd64;--line:#66502c;--bg:#080a0d}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;background:var(--bg);color:#f6eddb;font-family:"Manrope",Arial,sans-serif;overflow:hidden}
+.screen{height:100dvh;display:grid;grid-template-rows:110px minmax(0,1fr) 62px;background:radial-gradient(ellipse at 30% 10%,#292015 0%,#080a0d 60%)}
+header{display:flex;align-items:center;justify-content:space-between;padding:12px 30px;border-bottom:1px solid var(--line);gap:24px}
+.logo{width:325px;max-height:75px;object-fit:contain;object-position:left center}
+.clock{text-align:right}
+.time{font-size:46px;font-weight:700;font-variant-numeric:tabular-nums}
+.date{font-size:17px;color:var(--gold);margin-top:3px}
+.body{min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 365px;gap:16px;padding:18px}
+.stage,.prayers{border:1px solid #59482b;border-radius:20px;background:#101115;overflow:hidden;min-height:0}
+.stage{position:relative}
+.slide{position:absolute;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:35px;background:radial-gradient(circle at center,#2d2111,#090a0d 72%)}
+.slide.active{display:flex}
+.slide video{width:100%;height:100%;object-fit:contain;background:#000}
+.slide.video{padding:0;background:#000}
+.eyebrow{font-size:19px;letter-spacing:4px;color:var(--gold);font-weight:700}
+.headline{font-size:clamp(36px,4.5vw,78px);font-weight:800;line-height:1.12;margin:22px 0;color:#fff1cf}
+.sub{font-size:clamp(19px,2vw,32px);color:#e4d2aa;line-height:1.5}
+.highlight{color:var(--gold)}
+.slide .mini-logo{width:min(55%,470px);max-height:155px;object-fit:contain}
+.slide-footer{position:absolute;bottom:25px;left:30px;right:30px;font-size:16px;color:#c7aa70}
+.prayers{padding:15px 18px;display:flex;flex-direction:column;background:linear-gradient(150deg,#1d1b17,#0c0e12)}
+.prayers h2{font-size:26px;margin:0 0 5px;color:var(--gold)}
+.location{color:#b5a587;font-size:14px;margin-bottom:7px}
+.prayer-row{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #3e362a;padding:clamp(7px,1.35vh,14px) 11px;font-size:clamp(16px,1.25vw,21px);min-height:0;gap:6px}
+.prayer-row strong{font-variant-numeric:tabular-nums}
+.prayer-row.current{background:#42331b;border:1px solid #d6a84f;border-radius:10px;color:#ffe2a0;animation:prayerGlow 2s ease-in-out infinite}
+.prayer-row.current strong{color:#ffe3a3}
+@keyframes prayerGlow{
+0%,100%{box-shadow:inset 0 0 0 rgba(230,189,100,0);background:#332819}
+50%{box-shadow:inset 0 0 18px rgba(230,189,100,.23),0 0 12px rgba(230,189,100,.16);background:#59431e}
+}
+.next-box{margin-top:auto;border-radius:14px;background:#2b2317;border:1px solid #80653a;padding:clamp(9px,1.3vh,15px);text-align:center;flex-shrink:0}
+.next-label{color:var(--gold);font-size:14px;text-transform:uppercase;letter-spacing:2px}
+.next-name{font-size:clamp(20px,1.65vw,26px);font-weight:700;margin:4px 0 2px}
+.next-time{color:#f4d99b;font-size:clamp(16px,1.2vw,20px);font-weight:700;margin-bottom:3px}
+.countdown{font-size:clamp(23px,1.9vw,31px);font-weight:700;font-variant-numeric:tabular-nums}
+.source{font-size:10px;color:#a89c85;text-align:center;margin-top:5px}
+.ticker{border-top:1px solid var(--line);background:#18140f;display:flex;align-items:center;overflow:hidden;white-space:nowrap}
+.ticker span{display:inline-block;padding-left:100%;animation:scroll 38s linear infinite;font-size:20px;color:#e7cf9c}
+@keyframes scroll{to{transform:translateX(-100%)}}
+.controls{position:absolute;top:14px;left:14px;z-index:3;opacity:0;transition:opacity .2s}
+.stage:hover .controls,.controls:focus-within{opacity:1}
+button{background:#a7803e;border:0;border-radius:6px;color:#111;padding:8px 12px;cursor:pointer;font-weight:bold}
+.notice{font-size:14px;color:#c3b393;margin-top:9px}
+@media(max-width:1000px){
+.screen{grid-template-rows:85px minmax(0,1fr) 45px}
+.body{grid-template-columns:minmax(0,1fr) 280px;padding:9px;gap:9px}
+.logo{width:240px}
+.time{font-size:30px}
+.date{font-size:13px}
+.prayers{padding:11px}
+.prayers h2{font-size:22px}
+.prayer-row{padding:11px 5px;font-size:17px}
+.next-box{padding:10px}
+.countdown{font-size:25px}
+.ticker span{font-size:15px}
+}
+@media(max-width:650px){
+.body{grid-template-columns:1fr;grid-template-rows:55% 45%;overflow:auto}
+.screen{overflow:auto}
+.prayers{overflow:auto}
+.clock .time{font-size:24px}
+.logo{width:160px}
+}
 .headline,.eyebrow,.prayers h2,.next-label{font-family:"Cinzel",Georgia,serif}
 .headline{font-weight:600;letter-spacing:.025em}
 .eyebrow{font-weight:600;letter-spacing:.15em}
@@ -9,11 +82,198 @@
 .time,.countdown{font-weight:800;font-variant-numeric:tabular-nums}
 .prayer-row strong{font-weight:800}
 [lang="ar"],.arabic{font-family:"Tajawal",Arial,sans-serif}
-</style></head><body><div class="screen"><header><img class="logo" src="logo.png" alt="Shaluq Jewellers"><div class="clock"><div class="time" id="clock">--:--:--</div><div class="date" id="date">Dubai, UAE</div></div></header><div class="body"><main class="stage" id="stage"><div class="controls"><button id="skip" type="button">Next slide ›</button></div><section class="slide video active" data-type="video"><video id="intro" src="intro.mp4" muted autoplay playsinline preload="auto"></video></section><section class="slide" data-duration="12000"><img class="mini-logo" src="logo.png" alt="Shaluq"><div class="eyebrow">DUBAI GOLD SOUK</div><div class="headline">YOUR TRUSTED <span class="highlight">BULLION PARTNER</span></div><div class="sub">Wholesale gold and silver bullion</div></section><section class="slide" data-duration="14000"><div class="eyebrow">OUR PRODUCTS</div><div class="headline">GOLD BARS <span class="highlight">& SILVER</span></div><div class="sub">TT Bars · Kilo Bars · 999.9 Fine Gold Bars<br>Silver Bullion · Raw Gold · Scrap Gold</div></section><section class="slide" data-duration="14000"><div class="eyebrow">OUR SERVICES</div><div class="headline">WE <span class="highlight">BUY & SELL</span></div><div class="sub">Gold bullion, raw gold and scrap gold<br>Contact us for business inquiries</div></section><section class="slide" data-duration="14000"><div class="eyebrow">VISIT OUR OFFICE</div><div class="headline">SHALUQ <span class="highlight">JEWELLERS L.L.C.</span></div><div class="sub">Royal Diamond Building, Office 204, 2nd Floor<br>Al Khor Street, Gold Souk, Deira, Dubai<br>Opposite Gold Souk Parking Building</div></section><section class="slide" id="saturday" data-duration="15000"><div class="eyebrow">SATURDAY NOTICE</div><div class="headline">GOLD MARKET <span class="highlight">CLOSED TODAY</span></div><div class="sub">For inquiries, please contact Shaluq Jewellers</div></section></main><aside class="prayers"><h2>Dubai Prayer Times</h2><div class="location" id="prayerDate">Dubai, United Arab Emirates</div><div id="prayerRows"><div class="notice">Loading prayer times…</div></div><div class="next-box"><div class="next-label">Upcoming prayer</div><div class="next-name" id="nextName">Loading…</div><div class="countdown" id="countdown">--:--:--</div></div><div class="source" id="prayerStatus">Source: AlAdhan · Dubai method 16</div></aside></div><footer class="ticker"><span>SHALUQ JEWELLERS L.L.C. &nbsp; ✦ &nbsp; WHOLESALE BULLION &nbsp; ✦ &nbsp; GOLD BARS · SILVER · RAW GOLD · SCRAP GOLD &nbsp; ✦ &nbsp; ROYAL DIAMOND BUILDING, OFFICE 204, DEIRA GOLD SOUK, DUBAI &nbsp; ✦ &nbsp; WWW.SHALUQJEWELLERS.COM &nbsp; ✦ &nbsp;</span></footer></div><script>
-'use strict';const TZ='Asia/Dubai',names=['Fajr','Dhuhr','Asr','Maghrib','Isha'];const $=id=>document.getElementById(id);const parts=d=>Object.fromEntries(new Intl.DateTimeFormat('en-GB',{timeZone:TZ,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'}).formatToParts(d).filter(x=>x.type!=='literal').map(x=>[x.type,x.value]));const dubaiNow=()=>parts(new Date());const dateKey=p=>`${p.year}-${p.month}-${p.day}`;const apiKey=p=>`${p.day}-${p.month}-${p.year}`;const secondsOf=p=>Number(p.hour)*3600+Number(p.minute)*60+Number(p.second);const displayTime=s=>{const m=String(s||'').match(/(\d{1,2}):(\d{2})/);if(!m)return '--';const h=Number(m[1]);return `${h%12||12}:${m[2]} ${h>=12?'PM':'AM'}`};const secTime=s=>{const m=String(s||'').match(/(\d{1,2}):(\d{2})/);return m?Number(m[1])*3600+Number(m[2])*60:null};const pad=n=>String(n).padStart(2,'0');const duration=s=>`${pad(Math.floor(s/3600))}:${pad(Math.floor(s%3600/60))}:${pad(s%60)}`;
-function tickClock(){const p=dubaiNow();$('clock').textContent=displayTime(`${p.hour}:${p.minute}`)+':'+p.second;$('date').textContent=new Intl.DateTimeFormat('en-GB',{timeZone:TZ,weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(new Date());const key=dateKey(p);if(key!==currentDay){currentDay=key;loadPrayer();}}let currentDay='',times={},nextTimes={},activeDate='',lastLoad=0;const cacheKey='shaluq-prayer-dubai-v1';function cached(){try{return JSON.parse(localStorage.getItem(cacheKey)||'{}')}catch(e){return {}}}function store(o){try{localStorage.setItem(cacheKey,JSON.stringify(o))}catch(e){}}
-async function fetchDay(p){const key=dateKey(p),cache=cached();if(cache[key])return cache[key];const u=`https://api.aladhan.com/v1/timingsByCity/${apiKey(p)}?city=Dubai&country=United%20Arab%20Emirates&method=16&school=0`;const c=new AbortController(),t=setTimeout(()=>c.abort(),12000);try{const r=await fetch(u,{cache:'no-store',signal:c.signal});if(!r.ok)throw Error('Prayer service unavailable');const j=await r.json();if(j.code!==200||!j.data?.timings)throw Error('Invalid response');const out={};for(const n of names){const val=j.data.timings[n];if(secTime(val)===null)throw Error('Missing '+n);out[n]=val;}cache[key]=out;store(cache);return out}finally{clearTimeout(t)}}
-function tomorrowParts(p){const d=new Date(Date.UTC(Number(p.year),Number(p.month)-1,Number(p.day)+1));return {year:String(d.getUTCFullYear()),month:pad(d.getUTCMonth()+1),day:pad(d.getUTCDate())}}async function loadPrayer(){const p=dubaiNow(),key=dateKey(p);try{const today=await fetchDay(p);times=today;activeDate=key;nextTimes={};lastLoad=Date.now();$('prayerStatus').textContent='Source: AlAdhan · Dubai method 16';renderPrayer();if(!names.some(n=>secTime(today[n])>secondsOf(dubaiNow()))){nextTimes=await fetchDay(tomorrowParts(p));renderPrayer()}}catch(e){$('prayerStatus').textContent='Prayer service unavailable · cached data if available';if(!times.Fajr){$('prayerRows').innerHTML='<div class="notice">Unable to load prayer times. Check internet connection.</div>'; $('nextName').textContent='Unavailable'}}}
-function renderPrayer(){if(!times.Fajr)return;const p=dubaiNow();if(dateKey(p)!==activeDate)return;const now=secondsOf(p);let next=names.find(n=>secTime(times[n])>now);let remaining,nextName;if(next){remaining=secTime(times[next])-now;nextName=next}else{nextName='Fajr (Tomorrow)';remaining=nextTimes.Fajr?86400-now+secTime(nextTimes.Fajr):null;if(!nextTimes.Fajr)fetchDay(tomorrowParts(p)).then(x=>{nextTimes=x;renderPrayer()}).catch(()=>{})} $('prayerRows').innerHTML=names.map(n=>`<div class="prayer-row ${n===next?'next':''}"><span>${n}</span><strong>${displayTime(times[n])}</strong></div>`).join('');$('nextName').textContent=nextName;$('countdown').textContent=remaining===null?'--:--:--':duration(remaining)}
-const slides=[...document.querySelectorAll('.slide')];let idx=0,timer=null;const video=$('intro');function show(i){clearTimeout(timer);video.pause();slides.forEach(s=>s.classList.remove('active'));let count=0;while(slides[i].id==='saturday'&&new Intl.DateTimeFormat('en-US',{timeZone:TZ,weekday:'long'}).format(new Date())!=='Saturday'&&count<slides.length){i=(i+1)%slides.length;count++}idx=i;const slide=slides[idx];slide.classList.add('active');if(slide.dataset.type==='video'){video.currentTime=0;const p=video.play();if(p&&p.catch)p.catch(()=>{timer=setTimeout(next,12000)});timer=setTimeout(next,30000)}else timer=setTimeout(next,Number(slide.dataset.duration)||12000)}function next(){show((idx+1)%slides.length)}video.addEventListener('ended',()=>{if(idx===0)next()});video.addEventListener('error',()=>{if(idx===0)next()});$('skip').addEventListener('click',next);tickClock();setInterval(()=>{tickClock();if(Date.now()-lastLoad>15*60*1000)loadPrayer();if(times.Fajr)renderPrayer()},1000);show(0);
-</script></body></html>
+</style>
+</head>
+<body>
+<div class="screen">
+<header>
+<img class="logo" src="logo.png" alt="Shaluq Jewellers">
+<div class="clock">
+<div class="time" id="clock">--:--:--</div>
+<div class="date" id="date">Dubai, UAE</div>
+</div>
+</header>
+<div class="body">
+<main class="stage" id="stage">
+<div class="controls"><button id="skip" type="button">Next slide ›</button></div>
+<section class="slide video active" data-type="video">
+<video id="intro" src="intro.mp4" muted autoplay playsinline preload="auto"></video>
+</section>
+<section class="slide" data-duration="12000">
+<img class="mini-logo" src="logo.png" alt="Shaluq">
+<div class="eyebrow">DUBAI GOLD SOUK</div>
+<div class="headline">YOUR TRUSTED <span class="highlight">BULLION PARTNER</span></div>
+<div class="sub">Wholesale gold and silver bullion</div>
+</section>
+<section class="slide" data-duration="14000">
+<div class="eyebrow">OUR PRODUCTS</div>
+<div class="headline">GOLD BARS <span class="highlight">& SILVER</span></div>
+<div class="sub">TT Bars · Kilo Bars · 999.9 Fine Gold Bars<br>Silver Bullion · Raw Gold · Scrap Gold</div>
+</section>
+<section class="slide" data-duration="14000">
+<div class="eyebrow">OUR SERVICES</div>
+<div class="headline">WE <span class="highlight">BUY & SELL</span></div>
+<div class="sub">Gold bullion, raw gold and scrap gold<br>Contact us for business inquiries</div>
+</section>
+<section class="slide" data-duration="14000">
+<div class="eyebrow">VISIT OUR OFFICE</div>
+<div class="headline">SHALUQ <span class="highlight">JEWELLERS L.L.C.</span></div>
+<div class="sub">Royal Diamond Building, Office 204, 2nd Floor<br>Al Khor Street, Gold Souk, Deira, Dubai<br>Opposite Gold Souk Parking Building</div>
+</section>
+<section class="slide" id="saturday" data-duration="15000">
+<div class="eyebrow">SATURDAY NOTICE</div>
+<div class="headline">GOLD MARKET <span class="highlight">CLOSED TODAY</span></div>
+<div class="sub">For inquiries, please contact Shaluq Jewellers</div>
+</section>
+</main>
+<aside class="prayers">
+<h2>Dubai Prayer Times</h2>
+<div class="location" id="prayerDate">Dubai, United Arab Emirates</div>
+<div id="prayerRows"><div class="notice">Loading prayer times…</div></div>
+<div class="next-box">
+<div class="next-label">Upcoming prayer</div>
+<div class="next-name" id="nextName">Loading…</div>
+<div class="next-time" id="nextTime">--:--</div>
+<div class="countdown" id="countdown">--:--:--</div>
+</div>
+<div class="source" id="prayerStatus">Source: AlAdhan · Dubai method 16</div>
+</aside>
+</div>
+<footer class="ticker">
+<span>SHALUQ JEWELLERS L.L.C. &nbsp; ✦ &nbsp; WHOLESALE BULLION &nbsp; ✦ &nbsp; GOLD BARS · SILVER · RAW GOLD · SCRAP GOLD &nbsp; ✦ &nbsp; ROYAL DIAMOND BUILDING, OFFICE 204, DEIRA GOLD SOUK, DUBAI &nbsp; ✦ &nbsp; WWW.SHALUQJEWELLERS.COM &nbsp; ✦ &nbsp;</span>
+</footer>
+</div>
+<script>
+'use strict';
+const TZ='Asia/Dubai',names=['Fajr','Dhuhr','Asr','Maghrib','Isha'];
+const $=id=>document.getElementById(id);
+const parts=d=>Object.fromEntries(new Intl.DateTimeFormat('en-GB',{timeZone:TZ,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'}).formatToParts(d).filter(x=>x.type!=='literal').map(x=>[x.type,x.value]));
+const dubaiNow=()=>parts(new Date());
+const dateKey=p=>`${p.year}-${p.month}-${p.day}`;
+const apiKey=p=>`${p.day}-${p.month}-${p.year}`;
+const secondsOf=p=>Number(p.hour)*3600+Number(p.minute)*60+Number(p.second);
+const displayTime=s=>{
+const m=String(s||'').match(/(\d{1,2}):(\d{2})/);
+if(!m)return '--';
+const h=Number(m[1]);
+return `${h%12||12}:${m[2]} ${h>=12?'PM':'AM'}`;
+};
+const secTime=s=>{
+const m=String(s||'').match(/(\d{1,2}):(\d{2})/);
+return m?Number(m[1])*3600+Number(m[2])*60:null;
+};
+const pad=n=>String(n).padStart(2,'0');
+const duration=s=>`${pad(Math.floor(s/3600))}:${pad(Math.floor(s%3600/60))}:${pad(s%60)}`;
+function tickClock(){
+const p=dubaiNow();
+$('clock').textContent=`${Number(p.hour)%12||12}:${p.minute}:${p.second} ${Number(p.hour)>=12?'PM':'AM'}`;
+$('date').textContent=new Intl.DateTimeFormat('en-GB',{timeZone:TZ,weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(new Date());
+const key=dateKey(p);
+if(key!==currentDay){currentDay=key;loadPrayer();}
+}
+let currentDay='',times={},nextTimes={},activeDate='',lastLoad=0;
+const cacheKey='shaluq-prayer-dubai-v1';
+function cached(){
+try{return JSON.parse(localStorage.getItem(cacheKey)||'{}')}
+catch(e){return {}}
+}
+function store(o){
+try{localStorage.setItem(cacheKey,JSON.stringify(o))}
+catch(e){}
+}
+async function fetchDay(p){
+const key=dateKey(p),cache=cached();
+if(cache[key])return cache[key];
+const u=`https://api.aladhan.com/v1/timingsByCity/${apiKey(p)}?city=Dubai&country=United%20Arab%20Emirates&method=16&school=0`;
+const c=new AbortController(),t=setTimeout(()=>c.abort(),12000);
+try{
+const r=await fetch(u,{cache:'no-store',signal:c.signal});
+if(!r.ok)throw Error('Prayer service unavailable');
+const j=await r.json();
+if(j.code!==200||!j.data?.timings)throw Error('Invalid response');
+const out={};
+for(const n of names){
+const val=j.data.timings[n];
+if(secTime(val)===null)throw Error('Missing '+n);
+out[n]=val;
+}
+cache[key]=out;store(cache);return out;
+}finally{clearTimeout(t)}
+}
+function tomorrowParts(p){
+const d=new Date(Date.UTC(Number(p.year),Number(p.month)-1,Number(p.day)+1));
+return {year:String(d.getUTCFullYear()),month:pad(d.getUTCMonth()+1),day:pad(d.getUTCDate())};
+}
+async function loadPrayer(){
+const p=dubaiNow(),key=dateKey(p);
+try{
+const today=await fetchDay(p);
+times=today;activeDate=key;nextTimes={};lastLoad=Date.now();
+$('prayerStatus').textContent='Source: AlAdhan · Dubai method 16';
+renderPrayer();
+if(!names.some(n=>secTime(today[n])>secondsOf(dubaiNow()))){
+nextTimes=await fetchDay(tomorrowParts(p));renderPrayer();
+}
+}catch(e){
+$('prayerStatus').textContent='Prayer service unavailable · cached data if available';
+if(!times.Fajr){
+$('prayerRows').innerHTML='<div class="notice">Unable to load prayer times. Check internet connection.</div>';
+$('nextName').textContent='Unavailable';$('nextTime').textContent='--:--';
+}
+}
+}
+function renderPrayer(){
+if(!times.Fajr)return;
+const p=dubaiNow();
+if(dateKey(p)!==activeDate)return;
+const now=secondsOf(p);
+const current=[...names].reverse().find(n=>secTime(times[n])<=now)||null;
+const next=names.find(n=>secTime(times[n])>now)||null;
+let remaining,nextName,nextTime;
+if(next){
+nextName=next;nextTime=times[next];remaining=secTime(nextTime)-now;
+}else{
+nextName='Fajr (Tomorrow)';
+nextTime=nextTimes.Fajr||null;
+remaining=nextTime?86400-now+secTime(nextTime):null;
+if(!nextTimes.Fajr)fetchDay(tomorrowParts(p)).then(x=>{nextTimes=x;renderPrayer()}).catch(()=>{});
+}
+$('prayerRows').innerHTML=names.map(n=>`<div class="prayer-row ${n===current?'current':''}"><span>${n}</span><strong>${displayTime(times[n])}</strong></div>`).join('');
+$('nextName').textContent=nextName;
+$('nextTime').textContent=nextTime?displayTime(nextTime):'--:--';
+$('countdown').textContent=remaining===null?'--:--:--':duration(remaining);
+}
+const slides=[...document.querySelectorAll('.slide')];
+let idx=0,timer=null;
+const video=$('intro');
+function show(i){
+clearTimeout(timer);video.pause();
+slides.forEach(s=>s.classList.remove('active'));
+let count=0;
+while(slides[i].id==='saturday'&&new Intl.DateTimeFormat('en-US',{timeZone:TZ,weekday:'long'}).format(new Date())!=='Saturday'&&count<slides.length){
+i=(i+1)%slides.length;count++;
+}
+idx=i;
+const slide=slides[idx];
+slide.classList.add('active');
+if(slide.dataset.type==='video'){
+video.currentTime=0;
+const p=video.play();
+if(p&&p.catch)p.catch(()=>{timer=setTimeout(next,12000)});
+timer=setTimeout(next,30000);
+}else timer=setTimeout(next,Number(slide.dataset.duration)||12000);
+}
+function next(){show((idx+1)%slides.length)}
+video.addEventListener('ended',()=>{if(idx===0)next()});
+video.addEventListener('error',()=>{if(idx===0)next()});
+$('skip').addEventListener('click',next);
+tickClock();
+setInterval(()=>{
+tickClock();
+if(Date.now()-lastLoad>15*60*1000)loadPrayer();
+if(times.Fajr)renderPrayer();
+},1000);
+show(0);
+</script>
+</body>
+</html>
