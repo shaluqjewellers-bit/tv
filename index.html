@@ -3,41 +3,30 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Shaluq TV | Premium Bullion Dashboard</title>
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#080a0d;
-  --gold:#e6bd64;
-  --border:#66502c;
-  --text:#f6eddb;
-  --muted:#b5a587;
+  --bg:#080a0d;--gold:#e6bd64;
+  --border:#66502c;--text:#f6eddb;--muted:#b5a587;
 }
 *{box-sizing:border-box}
 html,body{
   margin:0;width:100%;height:100%;
   background:var(--bg);color:var(--text);
-  font-family:Manrope,Arial,sans-serif;
-  overflow:hidden;
+  font-family:Manrope,Arial,sans-serif;overflow:hidden;
 }
 .screen{
-  height:100vh;height:100dvh;
-  display:grid;
+  height:100vh;height:100dvh;display:grid;
   grid-template-rows:94px minmax(0,1fr) 49px;
   background:radial-gradient(ellipse at 30% 10%,#292015,#080a0d 65%);
 }
-
-/* TOP HEADER */
 header{
-  display:grid;
-  grid-template-columns:1fr 1.15fr 1fr;
-  align-items:center;gap:12px;
-  padding:8px 25px;
+  display:grid;grid-template-columns:1fr 1.15fr 1fr;
+  align-items:center;gap:12px;padding:8px 25px;
   border-bottom:1px solid var(--border);
 }
 .logo{
@@ -46,59 +35,43 @@ header{
 }
 .header-center{text-align:center;min-width:0}
 .market-heading{
-  color:var(--gold);
-  font-family:Cinzel,Georgia,serif;
+  color:var(--gold);font-family:Cinzel,Georgia,serif;
   font-size:clamp(11px,1.15vw,16px);
   letter-spacing:1.5px;font-weight:600;
 }
 .market-status{
-  display:flex;justify-content:center;
-  align-items:center;gap:8px;
-  margin-top:5px;
-  font-size:clamp(12px,1.25vw,18px);
-  font-weight:800;
+  display:flex;justify-content:center;align-items:center;
+  gap:8px;margin-top:5px;
+  font-size:clamp(12px,1.25vw,18px);font-weight:800;
 }
 .status-dot{
   width:9px;height:9px;border-radius:50%;
   background:#999;flex-shrink:0;
 }
 .status-dot.open{
-  background:#49d98a;
-  box-shadow:0 0 11px #49d98a77;
+  background:#49d98a;box-shadow:0 0 11px #49d98a77;
   animation:dotPulse 2s infinite;
 }
 .status-dot.closed{background:#e5a650}
-.status-subtitle{
-  margin-top:3px;color:#b7a98c;font-size:10px;
-}
+.status-subtitle{margin-top:3px;color:#b7a98c;font-size:10px}
 .header-line{
-  height:2px;width:70%;
-  margin:7px auto 0;
+  height:2px;width:70%;margin:7px auto 0;
   background:linear-gradient(90deg,transparent,#9a743a,transparent);
   position:relative;overflow:hidden;
 }
 .header-line:after{
-  content:"";position:absolute;
-  width:25%;height:100%;
+  content:"";position:absolute;width:25%;height:100%;
   background:linear-gradient(90deg,transparent,#ffe3a0,transparent);
   animation:lineSweep 5s linear infinite;
 }
-@keyframes lineSweep{
-  from{left:-30%}to{left:110%}
-}
+@keyframes lineSweep{from{left:-30%}to{left:110%}}
 .clock{text-align:right}
 .time{
-  font-size:clamp(25px,2.6vw,39px);
-  font-weight:800;
-  font-variant-numeric:tabular-nums;
-  white-space:nowrap;
+  font-size:clamp(25px,2.6vw,39px);font-weight:800;
+  font-variant-numeric:tabular-nums;white-space:nowrap;
 }
 .date{font-size:13px;color:var(--gold)}
-.hijri-header{
-  margin-top:3px;font-size:11px;color:#c4b391;
-}
-
-/* MAIN LAYOUT */
+.hijri-header{margin-top:3px;font-size:11px;color:#c4b391}
 .body{
   min-height:0;display:grid;
   grid-template-columns:minmax(0,1fr) 345px;
@@ -106,7 +79,6 @@ header{
 }
 .left{
   min-height:0;display:grid;
-  /* NEW: 60% SLIDES / 40% NEWS AND MARKET */
   grid-template-rows:minmax(0,3fr) minmax(0,2fr);
   gap:12px;
 }
@@ -115,14 +87,11 @@ header{
   border:1px solid #59482b;
   border-radius:15px;background:#101115;
 }
-
-/* PROMOTIONAL SLIDES */
 .stage{position:relative}
 .slide{
   position:absolute;inset:0;display:none;
   align-items:center;justify-content:center;
-  flex-direction:column;text-align:center;
-  padding:25px;
+  flex-direction:column;text-align:center;padding:25px;
   background:radial-gradient(circle,#2d2111,#090a0d 75%);
 }
 .slide.active{display:flex}
@@ -132,8 +101,7 @@ header{
   object-fit:contain;background:#000;
 }
 .mini-logo{
-  width:min(48%,370px);max-height:110px;
-  object-fit:contain;
+  width:min(48%,370px);max-height:110px;object-fit:contain;
 }
 .eyebrow{
   font-family:Cinzel,Georgia,serif;
@@ -152,86 +120,66 @@ header{
   line-height:1.5;color:#e4d2aa;
 }
 .controls{
-  position:absolute;top:10px;left:10px;
-  z-index:5;opacity:0;
+  position:absolute;top:10px;left:10px;z-index:5;opacity:0;
 }
-.stage:hover .controls,
-.controls:focus-within{opacity:1}
+.stage:hover .controls,.controls:focus-within{opacity:1}
 button{
-  background:#a7803e;border:0;
-  border-radius:6px;color:#111;
-  padding:7px 12px;cursor:pointer;
-  font-weight:700;
+  background:#a7803e;border:0;border-radius:6px;
+  color:#111;padding:7px 12px;cursor:pointer;font-weight:700;
 }
-
-/* LARGER NEWS AND MARKET PANELS */
 .bottom-panels{
-  display:grid;
-  grid-template-columns:1fr 1fr;
+  display:grid;grid-template-columns:1fr 1fr;
   gap:12px;min-height:0;
 }
 .mini-panel{
-  display:flex;flex-direction:column;
-  min-height:0;
+  display:flex;flex-direction:column;min-height:0;
 }
 .panel-heading{
-  display:flex;align-items:center;
-  justify-content:space-between;
-  padding:11px 14px;
-  background:#1d1a15;
-  border-bottom:1px solid #473922;
-  min-height:43px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:11px 14px;background:#1d1a15;
+  border-bottom:1px solid #473922;min-height:43px;
 }
 .panel-title{
-  color:var(--gold);
-  font-size:14px;font-weight:800;
-  letter-spacing:1px;
+  color:var(--gold);font-size:14px;
+  font-weight:800;letter-spacing:1px;
 }
 .panel-tag{color:#c4b395;font-size:11px}
 .live-dot{
-  display:inline-block;
-  width:7px;height:7px;
+  display:inline-block;width:7px;height:7px;
   border-radius:50%;background:#f04444;
-  margin-right:5px;
-  animation:dotPulse 2s infinite;
+  margin-right:5px;animation:dotPulse 2s infinite;
 }
 @keyframes dotPulse{50%{opacity:.35}}
 
-/* LIVE NEWS */
+/* LARGE NEWS TEXT */
 .news-area{
   flex:1;min-height:0;
-  display:flex;flex-direction:column;
-  justify-content:center;
-  padding:17px 20px;
-  background:radial-gradient(
-    ellipse at top right,#30271a,#0b0e12 75%
-  );
+  display:flex;flex-direction:column;justify-content:center;
+  padding:18px 24px;
+  background:radial-gradient(ellipse at top right,#30271a,#0b0e12 75%);
 }
 .news-category{
-  color:var(--gold);
-  font-size:12px;letter-spacing:2px;
-  font-weight:800;margin-bottom:12px;
+  color:var(--gold);font-size:clamp(14px,1.05vw,19px);
+  letter-spacing:1.6px;font-weight:800;margin-bottom:15px;
 }
 .news-headline{
-  color:#f8f1e4;
-  font-size:clamp(17px,1.4vw,24px);
-  line-height:1.5;font-weight:700;
+  color:#fff5e4;font-size:clamp(22px,1.75vw,32px);
+  line-height:1.36;font-weight:800;
   overflow:hidden;display:-webkit-box;
-  -webkit-line-clamp:4;
-  -webkit-box-orient:vertical;
+  -webkit-line-clamp:4;-webkit-box-orient:vertical;
 }
 .news-meta{
-  display:flex;justify-content:space-between;
-  gap:6px;margin-top:15px;
-  font-size:12px;color:#c2aa7e;
+  display:flex;justify-content:space-between;gap:8px;
+  margin-top:17px;font-size:clamp(12px,.85vw,16px);
+  color:#d2b781;
 }
 .news-progress{
-  height:3px;background:#443722;
-  margin-top:13px;overflow:hidden;
+  height:4px;background:#443722;
+  margin-top:15px;overflow:hidden;border-radius:4px;
 }
 .news-progress-inner{
   height:100%;width:0;
-  background:var(--gold);
+  background:linear-gradient(90deg,#a77b37,#ffe1a0);
 }
 .news-area.fade{animation:newsFade .5s ease}
 @keyframes newsFade{
@@ -239,26 +187,44 @@ button{
   to{opacity:1;transform:translateY(0)}
 }
 
-/* GOLD AND SILVER */
+/* FIXED MARKET DISPLAY — NO SCALING OR CLIPPING */
 .market-area{
-  display:grid;grid-template-rows:1fr 1fr;
-  flex:1;min-height:0;
-  gap:5px;padding:7px;
-  background:#111317;
+  display:grid;
+  grid-template-rows:minmax(0,1fr) minmax(0,1fr);
+  flex:1;min-height:0;gap:8px;padding:9px;
+  background:linear-gradient(145deg,#121417,#1b1711);
 }
 .market-item{
-  min-height:0;overflow:hidden;
-  background:#18191c;
+  position:relative;min-height:0;min-width:0;
+  overflow:hidden;display:flex;
+  align-items:stretch;
+  border:1px solid #5b4728;border-radius:10px;
+  background:#0d0e10;
 }
-.tradingview-widget-container,
-.tradingview-widget-container__widget{
+.market-item:before{
+  content:"";position:absolute;
+  left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(#ffe2a0,#a47a36);
+  z-index:2;pointer-events:none;
+}
+.market-item .tradingview-widget-container{
+  width:100%;height:100%;
+  min-width:0;min-height:0;
+  transform:none;
+  flex:1 1 auto;
+  overflow:hidden;
+}
+.market-item .tradingview-widget-container__widget{
   width:100%;height:100%;min-height:0;
 }
+.market-item iframe{
+  width:100%;max-width:100%;
+  border:0;display:block;
+}
 
-/* PREMIUM PRAYER PANEL */
+/* PRAYER PANEL */
 .prayers{
-  padding:12px 15px;
-  display:flex;flex-direction:column;
+  padding:12px 15px;display:flex;flex-direction:column;
   background:linear-gradient(150deg,#1d1b17,#0c0e12);
 }
 .prayer-header{
@@ -267,50 +233,39 @@ button{
 }
 .prayers h2{
   font-family:Cinzel,Georgia,serif;
-  font-size:22px;margin:0 0 4px;
-  color:var(--gold);
+  font-size:22px;margin:0 0 4px;color:var(--gold);
 }
-.prayer-icon{
-  color:var(--gold);font-size:25px;line-height:1;
-}
+.prayer-icon{color:var(--gold);font-size:25px;line-height:1}
 .location{font-size:11px;color:var(--muted)}
 .hijri-panel{
   color:#d6bd8c;font-size:11px;
   margin-top:5px;margin-bottom:9px;
 }
 .current-card{
-  border:1px solid #8b6c36;
-  border-radius:10px;
+  border:1px solid #8b6c36;border-radius:10px;
   background:linear-gradient(120deg,#342819,#201b15);
   padding:10px 12px;margin-bottom:8px;
 }
-.current-card.pulse{
-  animation:prayerTransition 2.5s ease;
-}
+.current-card.pulse{animation:prayerTransition 2.5s ease}
 @keyframes prayerTransition{
   0%{box-shadow:0 0 0 transparent}
-  35%{
-    box-shadow:0 0 22px #e6bd6490;
-    background:#59431e;
-  }
+  35%{box-shadow:0 0 22px #e6bd6490;background:#59431e}
   100%{box-shadow:0 0 0 transparent}
 }
 .current-caption{
-  font-size:10px;font-weight:800;
-  color:var(--gold);letter-spacing:1.3px;
+  font-size:10px;font-weight:800;color:var(--gold);
+  letter-spacing:1.3px;
   display:flex;justify-content:space-between;
 }
 .current-content{
-  display:flex;align-items:center;
-  justify-content:space-between;
+  display:flex;align-items:center;justify-content:space-between;
   margin-top:5px;gap:8px;
 }
 .current-name{
   font-size:22px;font-weight:800;color:#ffe2a0;
 }
 .current-time{
-  font-size:21px;font-weight:800;
-  color:#ffe2a0;
+  font-size:21px;font-weight:800;color:#ffe2a0;
   font-variant-numeric:tabular-nums;
 }
 .prayer-row{
@@ -321,70 +276,54 @@ button{
   font-size:clamp(14px,1.1vw,18px);
 }
 .prayer-row strong{
-  font-weight:800;
-  font-variant-numeric:tabular-nums;
+  font-weight:800;font-variant-numeric:tabular-nums;
 }
 .prayer-row.current{
-  border:1px solid #b68a42;
-  border-radius:8px;color:#ffe2a0;
+  border:1px solid #b68a42;border-radius:8px;
+  color:#ffe2a0;
   animation:prayerGlow 3.5s ease-in-out infinite;
 }
 @keyframes prayerGlow{
-  0%,100%{
-    background:#332819;
-    box-shadow:0 0 0 transparent;
-  }
-  50%{
-    background:#4c3a20;
-    box-shadow:0 0 9px #e6bd642b;
-  }
+  0%,100%{background:#332819;box-shadow:0 0 0 transparent}
+  50%{background:#4c3a20;box-shadow:0 0 9px #e6bd642b}
 }
 .next-box{
-  margin-top:auto;flex-shrink:0;
-  border-radius:13px;
+  margin-top:auto;flex-shrink:0;border-radius:13px;
   background:linear-gradient(145deg,#332919,#211b13);
   border:1px solid #80653a;
   padding:12px 14px;text-align:center;
 }
 .next-label{
   font-family:Cinzel,Georgia,serif;
-  color:var(--gold);
-  font-size:12px;letter-spacing:1.5px;
+  color:var(--gold);font-size:12px;letter-spacing:1.5px;
 }
 .next-name{
-  font-size:25px;font-weight:700;
-  margin:5px 0 2px;
+  font-size:25px;font-weight:700;margin:5px 0 2px;
 }
 .next-time{
-  color:#f4d99b;font-size:37px;
-  font-weight:800;line-height:1.15;
-  font-variant-numeric:tabular-nums;
+  color:#f4d99b;font-size:37px;font-weight:800;
+  line-height:1.15;font-variant-numeric:tabular-nums;
   margin:5px 0 8px;
 }
 .remaining-label{
-  font-size:10px;letter-spacing:2px;
-  color:var(--muted);
+  font-size:10px;letter-spacing:2px;color:var(--muted);
 }
 .countdown{
-  font-size:18px;font-weight:600;
-  margin-top:5px;
+  font-size:18px;font-weight:600;margin-top:5px;
   font-variant-numeric:tabular-nums;
 }
 .progress-track{
-  width:100%;height:5px;
-  border-radius:20px;overflow:hidden;
-  background:#54432a;margin-top:12px;
+  width:100%;height:5px;border-radius:20px;
+  overflow:hidden;background:#54432a;margin-top:12px;
 }
 .progress-fill{
-  width:0%;height:100%;
-  border-radius:20px;
+  width:0%;height:100%;border-radius:20px;
   background:linear-gradient(90deg,#99713b,#ffe1a0);
   transition:width 1s linear;
 }
 .progress-caption{
   display:flex;justify-content:space-between;
-  margin-top:5px;color:#a99a7c;
-  font-size:9px;
+  margin-top:5px;color:#a99a7c;font-size:9px;
 }
 .source{
   text-align:center;font-size:10px;
@@ -393,12 +332,9 @@ button{
 .notice{
   font-size:13px;color:#c3b393;margin-top:10px;
 }
-
-/* BOTTOM TICKER */
 .ticker{
-  display:flex;align-items:center;
-  overflow:hidden;white-space:nowrap;
-  border-top:1px solid var(--border);
+  display:flex;align-items:center;overflow:hidden;
+  white-space:nowrap;border-top:1px solid var(--border);
   background:#18140f;
 }
 .ticker span{
@@ -406,11 +342,8 @@ button{
   animation:scroll 42s linear infinite;
   font-size:17px;color:#e7cf9c;
 }
-@keyframes scroll{
-  to{transform:translateX(-100%)}
-}
+@keyframes scroll{to{transform:translateX(-100%)}}
 
-/* SCREEN ADJUSTMENTS */
 @media(max-width:1100px){
   .body{grid-template-columns:minmax(0,1fr) 285px}
   .prayers{padding:9px}
@@ -421,7 +354,9 @@ button{
   .next-time{font-size:30px}
   .next-name{font-size:22px}
   .panel-title{font-size:11px}
-  .news-headline{font-size:15px}
+  .news-headline{font-size:20px}
+  .news-category{font-size:12px}
+  .news-area{padding:13px 15px}
   header{padding:8px 15px}
 }
 @media(max-height:750px){
@@ -435,7 +370,12 @@ button{
   .time{font-size:30px}
   .hijri-panel{margin-bottom:5px}
   .progress-track{margin-top:7px}
-  .news-area{padding:10px 14px}
+  .news-area{padding:10px 15px}
+  .news-headline{font-size:clamp(17px,1.45vw,25px)}
+  .news-category{margin-bottom:7px}
+  .news-meta{margin-top:8px}
+  .news-progress{margin-top:8px}
+  .market-area{gap:4px;padding:5px}
 }
 @media(max-height:600px){
   .prayers{padding:7px}
@@ -452,14 +392,8 @@ button{
 @media(max-width:650px){
   html,body{overflow:auto}
   .screen{height:auto;min-height:100vh}
-  header{
-    grid-template-columns:1fr 1fr;
-    gap:8px;
-  }
-  .header-center{
-    grid-column:1 / -1;
-    grid-row:2;
-  }
+  header{grid-template-columns:1fr 1fr;gap:8px}
+  .header-center{grid-column:1 / -1;grid-row:2}
   .body{display:block}
   .left{
     height:900px;margin-bottom:12px;
@@ -472,13 +406,11 @@ button{
 }
 </style>
 </head>
-
 <body>
 <div class="screen">
 
 <header>
   <img class="logo" src="logo.png" alt="Shaluq Jewellers">
-
   <div class="header-center">
     <div class="market-heading">GLOBAL BULLION MARKET</div>
     <div class="market-status">
@@ -490,7 +422,6 @@ button{
     </div>
     <div class="header-line"></div>
   </div>
-
   <div class="clock">
     <div class="time" id="clock">--:--:--</div>
     <div class="date" id="date">Dubai, UAE</div>
@@ -501,7 +432,6 @@ button{
 <div class="body">
 <div class="left">
 
-<!-- PROMOTIONAL VIDEO AND SLIDES -->
 <main class="panel stage" id="stage">
   <div class="controls">
     <button id="skip">Next slide ›</button>
@@ -566,7 +496,6 @@ button{
   </section>
 </main>
 
-<!-- ENLARGED BOTTOM PANELS -->
 <div class="bottom-panels">
 
 <section class="panel mini-panel">
@@ -599,6 +528,7 @@ button{
     <span class="panel-tag">USD / TROY OZ</span>
   </div>
   <div class="market-area">
+
     <div class="market-item">
       <div class="tradingview-widget-container">
         <div class="tradingview-widget-container__widget"></div>
@@ -615,6 +545,7 @@ button{
         </script>
       </div>
     </div>
+
     <div class="market-item">
       <div class="tradingview-widget-container">
         <div class="tradingview-widget-container__widget"></div>
@@ -631,13 +562,13 @@ button{
         </script>
       </div>
     </div>
+
   </div>
 </section>
 
 </div>
 </div>
 
-<!-- PRAYER PANEL -->
 <aside class="panel prayers">
   <div class="prayer-header">
     <div>
@@ -684,7 +615,6 @@ button{
     Source: AlAdhan · Dubai method 16
   </div>
 </aside>
-
 </div>
 
 <footer class="ticker">
@@ -718,7 +648,6 @@ function parts(d){
       .map(x=>[x.type,x.value])
   );
 }
-
 const dubaiNow=()=>parts(new Date());
 const dateKey=p=>`${p.year}-${p.month}-${p.day}`;
 const apiKey=p=>`${p.day}-${p.month}-${p.year}`;
@@ -743,7 +672,6 @@ function duration(s){
     `${pad(s%60)}`;
 }
 
-/* CLOCK AND MARKET STATUS */
 let lastHeaderDate='';
 
 function updateHeader(){
@@ -775,7 +703,6 @@ function updateMarketStatus(){
       .filter(x=>x.type!=='literal')
       .map(x=>[x.type,x.value])
   );
-
   const day=obj.weekday;
   const mins=Number(obj.hour)*60+Number(obj.minute);
   const open=
@@ -783,8 +710,7 @@ function updateMarketStatus(){
     ['Mon','Tue','Wed','Thu'].includes(day)||
     (day==='Fri'&&mins<1020);
 
-  $('marketDot').className=
-    'status-dot '+(open?'open':'closed');
+  $('marketDot').className='status-dot '+(open?'open':'closed');
   $('marketStatus').textContent=
     open?'GLOBAL MARKET OPEN':'GLOBAL MARKET CLOSED';
   $('marketSubtitle').textContent=
@@ -800,7 +726,6 @@ function updateHijri(){
         month:'long',year:'numeric'
       }
     ).format(new Date());
-
     $('hijriHeader').textContent=hijri+' AH';
     $('hijriPanel').textContent=hijri+' AH';
   }catch(e){
@@ -819,7 +744,6 @@ let tomorrowLoading=false;
 let lastCurrentName=null;
 let prayerInitialized=false;
 let lastPrayerMarkup='';
-
 const cacheKey='shaluq-prayer-dubai-v1';
 
 function cached(){
@@ -849,7 +773,6 @@ async function fetchDay(p){
       cache:'no-store',signal:controller.signal
     });
     if(!response.ok)throw Error('Prayer service unavailable');
-
     const json=await response.json();
     if(json.code!==200||!json.data?.timings)
       throw Error('Invalid prayer data');
@@ -860,7 +783,6 @@ async function fetchDay(p){
       if(secTime(value)===null)throw Error('Missing prayer time');
       result[name]=value;
     }
-
     cache[key]=result;
     store(cache);
     return result;
@@ -886,7 +808,6 @@ async function loadPrayer(){
   try{
     const today=await fetchDay(p);
     if(key!==dateKey(dubaiNow()))return;
-
     times=today;
     activeDate=key;
     nextTimes={};
@@ -898,7 +819,6 @@ async function loadPrayer(){
     lastLoad=Date.now();
     $('prayerStatus').textContent=
       'Prayer service unavailable · check connection';
-
     if(!times.Fajr){
       $('prayerRows').innerHTML=
         '<div class="notice">Unable to load prayer times.</div>';
@@ -936,7 +856,6 @@ function renderPrayer(){
     nextTime=nextTimes.Fajr||null;
     remaining=nextTime
       ?86400-now+secTime(nextTime):null;
-
     const previous=secTime(times.Isha);
     const total=nextTime
       ?86400+secTime(nextTime)-previous:0;
@@ -1065,7 +984,6 @@ function cleanNewsText(s){
   return (div.textContent||div.innerText||'')
     .replace(/\s+/g,' ').trim();
 }
-
 function parseRSS(xmlText,category){
   const xml=new DOMParser().parseFromString(
     xmlText,'application/xml'
@@ -1160,6 +1078,7 @@ function rotateNews(){
   newsIndex=(newsIndex+1)%newsItems.length;
   showNews();
 }
+
 async function loadNews(){
   $('newsStatus').textContent='UPDATING';
 
