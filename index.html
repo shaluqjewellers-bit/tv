@@ -6,7 +6,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Shaluq TV | Bullion Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -59,16 +58,7 @@ header{
 }
 .header-line{
  height:2px;width:70%;margin:7px auto 0;
- background:linear-gradient(90deg,transparent,#9a743a,transparent);
- position:relative;overflow:hidden
-}
-.header-line:after{
- content:"";position:absolute;width:25%;height:100%;
- background:linear-gradient(90deg,transparent,#ffe3a0,transparent);
- animation:lineSweep 5s linear infinite
-}
-@keyframes lineSweep{
- from{left:-30%}to{left:110%}
+ background:linear-gradient(90deg,transparent,#9a743a,transparent)
 }
 .clock{text-align:right}
 .time{
@@ -135,8 +125,6 @@ button{
  background:#a7803e;border:0;border-radius:6px;
  color:#111;padding:7px 12px;cursor:pointer;font-weight:700
 }
-
-/* AZAN VISUAL */
 .azan-overlay{
  position:absolute;inset:0;z-index:15;
  display:none;align-items:center;justify-content:center;
@@ -144,15 +132,14 @@ button{
  background:radial-gradient(circle at center,#4a3419,#100e0b 72%);
  border:2px solid #bd9552
 }
-.azan-overlay.active{display:flex;animation:azanEntrance .8s ease}
-@keyframes azanEntrance{from{opacity:0}to{opacity:1}}
+.azan-overlay.active{display:flex}
 .azan-symbol{
  font-size:clamp(36px,5vw,70px);
  color:var(--gold);
  animation:azanPulse 3s ease-in-out infinite
 }
 @keyframes azanPulse{
- 0%,100%{transform:scale(1);text-shadow:0 0 8px #d8a75055}
+ 0%,100%{transform:scale(1)}
  50%{transform:scale(1.08);text-shadow:0 0 35px #ffe0a0aa}
 }
 .azan-title{
@@ -183,35 +170,43 @@ button{
 .azan-animation span:nth-child(5){height:14px;animation-delay:.8s}
 @keyframes azanWave{to{height:5px;opacity:.5}}
 
-/* COMPACT AZAN SWITCH */
-.audio-control{
- position:fixed;bottom:54px;right:15px;z-index:100;
- display:flex;align-items:center;justify-content:center;
- gap:5px;min-width:72px;height:29px;
- padding:4px 9px;border-radius:8px;
+/* COMPACT AZAN CONTROLS */
+.audio-controls{
+ position:fixed;bottom:54px;right:12px;
+ z-index:100;display:flex;gap:5px;
+ align-items:center
+}
+.audio-controls button{
+ height:30px;padding:4px 9px;border-radius:7px;
  border:1px solid #b99551;
  background:#183727;color:#d6f0d8;
  font:800 11px Manrope,Arial,sans-serif;
- letter-spacing:.5px;cursor:pointer;
+ white-space:nowrap;cursor:pointer;
  box-shadow:0 3px 12px #0008
 }
-.audio-control.off{
+.audio-controls .off{
  background:#412020;color:#ffc7c7;border-color:#b45b5b
 }
-.audio-control.blocked{
+.audio-controls .blocked{
  background:#51351c;color:#ffe1a3;border-color:#d2a45a
 }
-.audio-control:focus{
- outline:2px solid #ffe1a0;outline-offset:3px
+.audio-controls .test{
+ background:#302719;color:#ffe0a0
+}
+.audio-controls .stop{
+ background:#502323;color:#ffd4d4;
+ border-color:#bd6767
+}
+.audio-controls button:focus{
+ outline:2px solid #ffe1a0;outline-offset:2px
 }
 .azan-notice{
  position:fixed;left:50%;top:105px;
  transform:translateX(-50%);z-index:101;
- max-width:90vw;
- background:#2b2116;color:#ffe2a0;
- border:1px solid #ab8246;border-radius:10px;
- padding:12px 20px;font-size:13px;
- display:none;text-align:center
+ max-width:90vw;background:#2b2116;
+ color:#ffe2a0;border:1px solid #ab8246;
+ border-radius:10px;padding:12px 20px;
+ font-size:13px;display:none;text-align:center
 }
 .azan-notice.show{display:block}
 
@@ -288,8 +283,7 @@ button{
 }
 .market-item:before{
  content:"";position:absolute;left:0;top:0;bottom:0;
- width:3px;
- background:linear-gradient(#ffe2a0,#a47a36);
+ width:3px;background:linear-gradient(#ffe2a0,#a47a36);
  z-index:2;pointer-events:none
 }
 .market-item .tradingview-widget-container{
@@ -439,7 +433,7 @@ button{
 }
 @media(max-height:750px){
  .screen{grid-template-rows:78px minmax(0,1fr) 38px}
- .audio-control{bottom:43px}
+ .audio-controls{bottom:43px}
  .prayer-row{padding:5px 8px}
  .current-card{padding:7px 9px}
  .next-box{padding:8px}
@@ -572,9 +566,11 @@ button{
 
  <div class="azan-overlay" id="azanOverlay">
   <div class="azan-symbol">☪</div>
-  <div class="azan-title">AZAN NOW</div>
+  <div class="azan-title" id="azanTitle">AZAN NOW</div>
   <div class="azan-prayer" id="azanPrayer">Prayer Time</div>
-  <div class="azan-message">Dubai, United Arab Emirates</div>
+  <div class="azan-message" id="azanMessage">
+   Dubai, United Arab Emirates
+  </div>
   <div class="azan-animation">
    <span></span><span></span><span></span>
    <span></span><span></span>
@@ -707,10 +703,17 @@ button{
 
 <audio id="azanAudio" src="azan.mp3" preload="auto"></audio>
 
-<button class="audio-control" id="audioControl"
- type="button" title="Click to turn Azan on or off">
- 🔊 AZAN
-</button>
+<div class="audio-controls">
+ <button id="audioControl" type="button"
+  title="Turn scheduled Azan on or off">🔊 AZAN</button>
+ <button id="testAzan" class="test" type="button"
+  title="Play a manual Azan test">▶ TEST AZAN</button>
+ <button id="stopAzan" class="stop" type="button"
+  title="Stop current Azan" style="display:none">
+  ■ STOP
+ </button>
+</div>
+
 <div class="azan-notice" id="azanNotice" role="status"></div>
 
 <script>
@@ -735,6 +738,7 @@ function parts(d){
 const dubaiNow=()=>parts(new Date());
 const dateKey=p=>`${p.year}-${p.month}-${p.day}`;
 const apiKey=p=>`${p.day}-${p.month}-${p.year}`;
+
 function secondsOf(p){
  return Number(p.hour)*3600+
   Number(p.minute)*60+Number(p.second);
@@ -954,7 +958,7 @@ video.addEventListener('error',()=>{
 });
 $('skip').addEventListener('click',nextSlide);
 
-/* AUTOMATIC AZAN — ON BY DEFAULT */
+/* AZAN — ENABLED BY DEFAULT */
 const azanAudio=$('azanAudio');
 const AZAN_PREF='shaluq-azan-enabled-v2';
 const AZAN_PLAYED='shaluq-azan-played-v2';
@@ -973,6 +977,8 @@ let azanTimer=null;
 let savedVideoPosition=0;
 let savedSlideRemaining=1000;
 let pausedForAzan=false;
+let azanMode=null;
+let azanAttempt=0;
 
 function saveAzanPreference(){
  try{
@@ -993,16 +999,18 @@ function markPlayed(key){
 }
 function updateAudioButton(){
  const b=$('audioControl');
- b.className='audio-control'+(
-  !audioEnabled?' off':azanBlocked?' blocked':''
- );
+ b.className=!audioEnabled?'off':azanBlocked?'blocked':'';
  b.textContent=audioEnabled?'🔊 AZAN':'🔇 AZAN';
  b.title=!audioEnabled
   ?'Azan OFF — click to enable'
   :azanBlocked
-   ?'Azan ON — click to retry sound permission'
+   ?'Azan ON — sound was blocked'
    :'Azan ON — click to disable';
  b.setAttribute('aria-pressed',String(audioEnabled));
+}
+function updateTestButtons(){
+ $('testAzan').style.display=azanPlaying?'none':'';
+ $('stopAzan').style.display=azanPlaying?'':'none';
 }
 function showNotice(message){
  $('azanNotice').textContent=message;
@@ -1013,12 +1021,15 @@ function showNotice(message){
  },5500);
 }
 function stopAzan(){
- if(!azanPlaying)return;
+ azanAttempt++;
  clearTimeout(azanTimer);
+ azanTimer=null;
  azanPlaying=false;
+ azanMode=null;
  azanAudio.pause();
  try{azanAudio.currentTime=0}catch(e){}
  $('azanOverlay').classList.remove('active');
+
  if(pausedForAzan){
   pausedForAzan=false;
   if(slideIndex===0){
@@ -1030,6 +1041,7 @@ function stopAzan(){
   slideDeadline=Date.now()+savedSlideRemaining;
   slideTimer=setTimeout(nextSlide,savedSlideRemaining);
  }
+ updateTestButtons();
 }
 function pauseForAzan(){
  pausedForAzan=true;
@@ -1042,29 +1054,57 @@ function pauseForAzan(){
   video.pause();
  }
 }
-async function playAzan(prayer){
- if(!audioEnabled||azanPlaying)return false;
+function playAzan(prayer,isTest=false){
+ if(azanPlaying)return;
+ if(!isTest&&!audioEnabled)return;
+
+ const attempt=++azanAttempt;
  azanPlaying=true;
+ azanMode=isTest?'test':'scheduled';
+
+ $('azanTitle').textContent=isTest?'AZAN TEST':'AZAN NOW';
  $('azanPrayer').textContent=prayer+' Prayer';
+ $('azanMessage').textContent=isTest
+  ?'Manual Audio Test · Dubai'
+  :'Dubai, United Arab Emirates';
+
  pauseForAzan();
  $('azanOverlay').classList.add('active');
+ updateTestButtons();
+
  azanAudio.muted=false;
  azanAudio.volume=1;
  try{azanAudio.currentTime=0}catch(e){}
  azanTimer=setTimeout(stopAzan,AZAN_MAX_MS);
+
+ let promise;
  try{
-  await azanAudio.play();
-  azanBlocked=false;
-  updateAudioButton();
-  return true;
+  promise=azanAudio.play();
  }catch(e){
   azanBlocked=true;
   updateAudioButton();
-  showNotice(
-   'TV browser blocked Azan sound. Click AZAN to allow audio.'
-  );
+  showNotice('Azan playback failed: '+e.message);
   stopAzan();
-  return false;
+  return;
+ }
+
+ if(promise&&promise.then){
+  promise.then(()=>{
+   if(attempt!==azanAttempt)return;
+   azanBlocked=false;
+   updateAudioButton();
+   if(isTest){
+    showNotice('Azan test is playing through the TV.');
+   }
+  }).catch(e=>{
+   if(attempt!==azanAttempt)return;
+   azanBlocked=true;
+   updateAudioButton();
+   showNotice(
+    'Audio blocked by TV browser. Manual test could not start.'
+   );
+   stopAzan();
+  });
  }
 }
 azanAudio.addEventListener('ended',stopAzan);
@@ -1075,50 +1115,31 @@ azanAudio.addEventListener('error',()=>{
  }
 });
 
-/*
- On load, Azan is enabled logically.
- The browser alone decides whether scheduled
- audio is allowed without a user interaction.
- Clicking the compact button retries permission.
-*/
+/* AZAN ON/OFF SWITCH */
 $('audioControl').addEventListener('click',()=>{
- if(audioEnabled&&!azanBlocked){
-  audioEnabled=false;
-  saveAzanPreference();
-  stopAzan();
-  updateAudioButton();
-  showNotice('Azan switched OFF.');
-  return;
- }
-
- audioEnabled=true;
- azanBlocked=false;
+ audioEnabled=!audioEnabled;
  saveAzanPreference();
- updateAudioButton();
 
- // Try to unlock audio during the user click.
- azanAudio.muted=false;
- azanAudio.volume=1;
- const attempt=azanAudio.play();
-
- if(attempt&&attempt.then){
-  attempt.then(()=>{
-   if(!azanPlaying){
-    azanAudio.pause();
-    try{azanAudio.currentTime=0}catch(e){}
-   }
-   showNotice('Azan enabled.');
-  }).catch(()=>{
-   azanBlocked=true;
-   updateAudioButton();
-   showNotice(
-    'Sound blocked. Check azan.mp3 and TV browser settings.'
-   );
-  });
+ if(!audioEnabled){
+  if(azanPlaying&&azanMode==='scheduled')stopAzan();
+  azanBlocked=false;
+  showNotice('Scheduled Azan switched OFF.');
  }else{
-  azanAudio.pause();
-  showNotice('Azan enabled.');
+  azanBlocked=false;
+  showNotice('Scheduled Azan switched ON.');
  }
+ updateAudioButton();
+});
+
+/* MANUAL TEST — DOES NOT CHANGE PRAYER SCHEDULE */
+$('testAzan').addEventListener('click',()=>{
+ if(azanPlaying)return;
+ playAzan('Asr',true);
+});
+$('stopAzan').addEventListener('click',()=>{
+ if(!azanPlaying)return;
+ stopAzan();
+ showNotice('Azan stopped. Dashboard resumed.');
 });
 
 function checkAzan(){
@@ -1136,9 +1157,8 @@ function checkAzan(){
   const key=dateKey(p)+'-'+prayer;
   if(playedAzans()[key])continue;
 
-  // Avoid repeating if the browser refuses playback.
   markPlayed(key);
-  playAzan(prayer);
+  playAzan(prayer,false);
   break;
  }
 }
@@ -1367,6 +1387,7 @@ async function loadNews(){
 /* INITIALIZE */
 updateHeader();
 updateAudioButton();
+updateTestButtons();
 showSlide(0);
 loadNews();
 
