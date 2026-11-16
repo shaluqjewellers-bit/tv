@@ -712,7 +712,7 @@ button{
  </div>
  <div class="current-card" id="currentCard">
   <div class="current-caption">
-   <span>CURRENT PRAYER</span><span>✦</span>
+   <span id="prayerStatusLabel">CURRENT PRAYER</span><span>✦</span>
   </div>
   <div class="current-content">
    <span class="current-name" id="currentName">Loading…</span>
@@ -1028,24 +1028,31 @@ function isWeekendDubai(){
 }
 function updateDisplayMode(){
  const weekend=isWeekendDubai();
- if(lastDisplayMode===weekend)return;
- lastDisplayMode=weekend;
- clearTimeout(slideTimer);slideTimer=null;
- video.pause();
- slides.forEach(slide=>slide.classList.remove('active'));
+ /* During Azan the small panel always shows TradingView, even on weekdays.
+    Keep the Samsung audio player and prayer overlay completely unchanged. */
+ const showMarket=weekend||azanPlaying;
+ const mode=(weekend?'weekend':'weekday')+(azanPlaying?'-azan':'');
+ if(lastDisplayMode===mode)return;
+ lastDisplayMode=mode;
+
+ /* Move the single promo playlist only when the weekday changes.
+    Do not interrupt or restart the video simply because Azan begins. */
  const target=weekend?$('stage'):$('miniPromo');
- /* Move the same promotional elements, not copies. Their video and
-    slide events continue working on both weekdays and weekends. */
- slides.forEach(slide=>target.appendChild(slide));
+ if(slides.length&&slides[0].parentElement!==target){
+  clearTimeout(slideTimer);slideTimer=null;
+  video.pause();
+  slides.forEach(slide=>slide.classList.remove('active'));
+  slides.forEach(slide=>target.appendChild(slide));
+  if(!azanPlaying)showSlide(0);
+ }
  $('ratesEmbed').style.display=weekend?'none':'block';
- $('marketArea').style.display=weekend?'grid':'none';
- $('miniPromo').style.display=weekend?'none':'block';
+ $('marketArea').style.display=showMarket?'grid':'none';
+ $('miniPromo').style.display=showMarket?'none':'block';
  $('skip').style.display=weekend?'':'none';
  const title=document.querySelector('.mini-panel .panel-title');
  const tag=document.querySelector('.mini-panel .panel-tag');
- if(title)title.textContent=weekend?'GOLD & SILVER MARKET':'SHALUQ JEWELLERS · PROMOTIONS';
- if(tag)tag.textContent=weekend?'USD / TROY OZ':'WHOLESALE BULLION';
- if(!azanPlaying)showSlide(0);
+ if(title)title.textContent=showMarket?'GOLD & SILVER MARKET':'SHALUQ JEWELLERS · PROMOTIONS';
+ if(tag)tag.textContent=showMarket?'USD / TROY OZ':'WHOLESALE BULLION';
 }
 
 /* AZAN — ENABLED BY DEFAULT. Samsung Tizen safe audio lifecycle. */
@@ -1131,6 +1138,7 @@ function stopAzan(){
   slideTimer=setTimeout(nextSlide,savedSlideRemaining);
  }
  updateTestButtons();azanStopping=false;
+ updateDisplayMode();
  if(!slideTimer)showSlide(0);
 }
 function pauseForAzan(){
@@ -1153,6 +1161,7 @@ function playAzan(prayer,isTest=false){
  $('azanPrayer').textContent=prayer+' Prayer';
  $('azanMessage').textContent=isTest?'Manual Audio Test · Dubai':'Dubai, United Arab Emirates';
  pauseForAzan();$('azanOverlay').classList.add('active');updateTestButtons();
+ updateDisplayMode();
  /* Create a fresh media element for each playback, preventing Tizen's
     completed element from seeking/restarting by itself. */
  const player=document.createElement('audio');
@@ -1214,6 +1223,12 @@ function renderPrayer(){
  let nextName,nextTime,remaining,progress=0;
  const currentName=current||'Isha (Previous Day)';
  const currentTime=current?times[current]:null;
+
+ // Show CURRENT PRAYER only during the first 60 minutes after its start.
+ // Thereafter label it PREVIOUS PRAYER until the next prayer begins.
+ const currentStart=current?secTime(times[current]):null;
+ const isCurrentHour=currentStart!==null&&now-currentStart<3600;
+ $('prayerStatusLabel').textContent=isCurrentHour?'CURRENT PRAYER':'PREVIOUS PRAYER';
 
  if(next){
   nextName=next;
@@ -1447,6 +1462,7 @@ updateHeader();
 updateAudioButton();
 updateTestButtons();
 updateDisplayMode();
+if(!azanPlaying)showSlide(0);
 loadNews();
 
 function dashboardTick(){
