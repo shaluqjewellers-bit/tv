@@ -340,6 +340,15 @@ button{
  width:100%;max-width:100%;border:0;display:block
 }
 
+/* Weekday compact promotional player in the market panel */
+.mini-panel{display:flex;flex-direction:column}
+.mini-promo{position:relative;flex:1;min-height:0;overflow:hidden;background:#08090b}
+.mini-promo .slide{padding:12px 20px}
+.mini-promo .mini-logo{max-height:38px;width:auto;max-width:45%}
+.mini-promo .eyebrow{font-size:11px;letter-spacing:1.5px}
+.mini-promo .headline{font-size:clamp(17px,2.0vw,30px);margin:6px 0;line-height:1.15}
+.mini-promo .sub{font-size:clamp(11px,1.1vw,16px);line-height:1.3}
+.mini-promo .slide video{object-fit:contain}
 /* PRAYER PANEL */
 .prayers{
  padding:12px 15px;display:flex;flex-direction:column;
@@ -651,7 +660,8 @@ button{
   <span class="panel-title">GOLD & SILVER MARKET</span>
   <span class="panel-tag">USD / TROY OZ</span>
  </div>
- <div class="market-area">
+ <div class="mini-promo" id="miniPromo" style="display:none"></div>
+ <div class="market-area" id="marketArea">
   <div class="market-item">
    <div class="tradingview-widget-container">
     <div class="tradingview-widget-container__widget"></div>
@@ -963,7 +973,7 @@ function isSaturday(){
  }).format(new Date())==='Saturday';
 }
 function showSlide(i){
- if(azanPlaying||!isWeekendDubai())return;
+ if(azanPlaying)return;
  clearTimeout(slideTimer);
  video.pause();
  slides.forEach(s=>s.classList.remove('active'));
@@ -1000,7 +1010,7 @@ function showSlide(i){
  }
 }
 function nextSlide(){
- if(!azanPlaying&&isWeekendDubai())showSlide((slideIndex+1)%slides.length);
+ if(!azanPlaying)showSlide((slideIndex+1)%slides.length);
 }
 video.addEventListener('ended',()=>{
  if(slideIndex===0&&!azanPlaying)nextSlide();
@@ -1020,18 +1030,23 @@ function updateDisplayMode(){
  const weekend=isWeekendDubai();
  if(lastDisplayMode===weekend)return;
  lastDisplayMode=weekend;
+ clearTimeout(slideTimer);slideTimer=null;
+ video.pause();
+ slides.forEach(slide=>slide.classList.remove('active'));
+ const target=weekend?$('stage'):$('miniPromo');
+ /* Move the same promotional elements, not copies. Their video and
+    slide events continue working on both weekdays and weekends. */
+ slides.forEach(slide=>target.appendChild(slide));
  $('ratesEmbed').style.display=weekend?'none':'block';
+ $('marketArea').style.display=weekend?'grid':'none';
+ $('miniPromo').style.display=weekend?'none':'block';
  $('skip').style.display=weekend?'':'none';
- if(weekend){
-  if(!azanPlaying)showSlide(0);
- }else{
-  clearTimeout(slideTimer);
-  slideTimer=null;
-  video.pause();
-  slides.forEach(slide=>slide.classList.remove('active'));
- }
+ const title=document.querySelector('.mini-panel .panel-title');
+ const tag=document.querySelector('.mini-panel .panel-tag');
+ if(title)title.textContent=weekend?'GOLD & SILVER MARKET':'SHALUQ JEWELLERS · PROMOTIONS';
+ if(tag)tag.textContent=weekend?'USD / TROY OZ':'WHOLESALE BULLION';
+ if(!azanPlaying)showSlide(0);
 }
-
 
 /* AZAN — ENABLED BY DEFAULT. Samsung Tizen safe audio lifecycle. */
 const AZAN_PREF='shaluq-azan-enabled-v2';
@@ -1111,14 +1126,12 @@ function stopAzan(){
  $('azanOverlay').classList.remove('active','ending');
  if(pausedForAzan){
   pausedForAzan=false;
-  if(isWeekendDubai()){
-   if(slideIndex===0){try{video.currentTime=savedVideoPosition}catch(e){}const p=video.play();if(p&&p.catch)p.catch(()=>{})}
-   clearTimeout(slideTimer);slideDeadline=Date.now()+savedSlideRemaining;
-   slideTimer=setTimeout(nextSlide,savedSlideRemaining);
-  }
+  if(slideIndex===0){try{video.currentTime=savedVideoPosition}catch(e){}const p=video.play();if(p&&p.catch)p.catch(()=>{})}
+  clearTimeout(slideTimer);slideDeadline=Date.now()+savedSlideRemaining;
+  slideTimer=setTimeout(nextSlide,savedSlideRemaining);
  }
  updateTestButtons();azanStopping=false;
- if(isWeekendDubai()&&!slideTimer)showSlide(0);
+ if(!slideTimer)showSlide(0);
 }
 function pauseForAzan(){
  pausedForAzan=true;savedSlideRemaining=Math.max(1000,slideDeadline-Date.now());
