@@ -1322,107 +1322,87 @@ function renderPrayer(){
   Math.max(0,Math.min(100,progress))+'%';
 }
 
-/* LIVE NEWS */
+/* LIVE NEWS — maximum 48 hours old, refresh every 10 minutes */
+const NEWS_MAX_AGE_MS=48*60*60*1000;
+const NEWS_INTERVAL=15000;
 const NEWS_FEEDS=[
- {
-  category:'GOLD & PRECIOUS METALS',
-  url:'https://news.google.com/rss/search?q=gold+silver+prices+bullion+markets&hl=en-US&gl=US&ceid=US:en'
- },
- {
-  category:'GLOBAL ECONOMY',
-  url:'https://news.google.com/rss/search?q=global+economy+Federal+Reserve+inflation+markets&hl=en-US&gl=US&ceid=US:en'
- },
- {
-  category:'WORLD BUSINESS NEWS',
-  url:'https://news.google.com/rss/search?q=world+business+financial+markets&hl=en-US&gl=US&ceid=US:en'
- }
-];
-let newsItems=[],newsIndex=0,newsStarted=0;
-const NEWS_INTERVAL=11000;
-
+ {category:'GOLD & SILVER',query:'(gold OR silver OR bullion OR precious metals) prices when:2d'},
+ {category:'OIL & ENERGY',query:'(crude oil OR Brent OR WTI OR OPEC) markets when:2d'},
+ {category:'USD & CURRENCIES',query:'(US dollar OR dollar index OR forex OR Federal Reserve OR USD AED) markets when:2d'},
+ {category:'GEOPOLITICS',query:'(war OR conflict OR sanctions OR geopolitical) (oil OR gold OR markets OR economy) when:2d'},
+ {category:'UAE GOLD MARKET',query:'(Dubai gold OR UAE gold OR Dubai Gold Souk OR UAE bullion) when:2d'}
+].map(feed=>({
+ category:feed.category,
+ url:'https://news.google.com/rss/search?q='+encodeURIComponent(feed.query)+'&hl=en-US&gl=AE&ceid=AE:en'
+}));
+let newsItems=[],newsIndex=0,newsStarted=0,newsLoading=false;
 function cleanNewsText(s){
  const div=document.createElement('div');
  div.innerHTML=String(s||'');
- return(div.textContent||div.innerText||'')
-  .replace(/\s+/g,' ').trim();
+ return(div.textContent||div.innerText||'').replace(/\s+/g,' ').trim();
+}
+function validNewsDate(date){
+ return date instanceof Date&&!isNaN(date.getTime())&&
+  date.getTime()<=Date.now()+5*60*1000&&
+  Date.now()-date.getTime()<=NEWS_MAX_AGE_MS;
 }
 function parseRSS(xmlText,category){
- const xml=new DOMParser().parseFromString(
-  xmlText,'application/xml'
- );
- if(xml.querySelector('parsererror'))
-  throw Error('Invalid RSS XML');
-
- return[...xml.querySelectorAll('item')]
-  .slice(0,8).map(item=>{
-   const title=cleanNewsText(
-    item.querySelector('title')?.textContent
-   );
-   const pub=item.querySelector('pubDate')?.textContent;
-   const date=pub?new Date(pub):null;
-   const source=cleanNewsText(
-    item.querySelector('source')?.textContent
-   )||'Google News';
-   return{
-    title,category,source,
-    date:date&&!isNaN(date.getTime())?date:null
-   };
-  }).filter(item=>item.title);
+ const xml=new DOMParser().parseFromString(xmlText,'application/xml');
+ if(xml.querySelector('parsererror'))throw Error('Invalid RSS XML');
+ return [...xml.querySelectorAll('item')].slice(0,25).map(item=>{
+  const title=cleanNewsText(item.querySelector('title')?.textContent);
+  const pub=item.querySelector('pubDate')?.textContent;
+  const date=pub?new Date(pub):null;
+  const source=cleanNewsText(item.querySelector('source')?.textContent)||'Google News';
+  return {title,category,source,date};
+ }).filter(item=>item.title&&validNewsDate(item.date));
 }
 async function fetchNewsFeed(feed){
  const rssUrl=feed.url;
  try{
-  const response=await fetch(
-   'https://api.allorigins.win/raw?url='+
-   encodeURIComponent(rssUrl),
-   {cache:'no-store'}
-  );
+  const response=await fetch('https://api.allorigins.win/raw?url='+encodeURIComponent(rssUrl),{cache:'no-store'});
   if(!response.ok)throw Error('Proxy unavailable');
-  const xml=await response.text();
-  const parsed=parseRSS(xml,feed.category);
+  const parsed=parseRSS(await response.text(),feed.category);
   if(parsed.length)return parsed;
  }catch(e){}
-
- const url=
-  'https://api.rss2json.com/v1/api.json?rss_url='+
-  encodeURIComponent(rssUrl);
+ const url='https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent(rssUrl);
  const response=await fetch(url,{cache:'no-store'});
  if(!response.ok)throw Error('News service unavailable');
  const data=await response.json();
- if(data.status!=='ok'||!Array.isArray(data.items))
-  throw Error('News feed unavailable');
-
- return data.items.slice(0,8).map(item=>{
-  const date=item.pubDate?new Date(item.pubDate):null;
-  return{
-   title:cleanNewsText(item.title),
-   category:feed.category,
-   source:cleanNewsText(item.author)||'Google News',
-   date:date&&!isNaN(date.getTime())?date:null
-  };
- }).filter(item=>item.title);
+ if(data.status!=='ok'||!Array.isArray(data.items))throw Error('News feed unavailable');
+ return data.items.slice(0,25).map(item=>({
+  title:cleanNewsText(item.title),category:feed.category,
+  source:cleanNewsText(item.author)||'Google News',
+  date:item.pubDate?new Date(item.pubDate):null
+ })).filter(item=>item.title&&validNewsDate(item.date));
 }
 function newsAge(date){
- if(!date)return 'LATEST HEADLINE';
- const minutes=Math.max(0,Math.floor(
-  (Date.now()-date.getTime())/60000
- ));
+ const minutes=Math.max(0,Math.floor((Date.now()-date.getTime())/60000));
  if(minutes<60)return `${minutes} MIN AGO`;
  if(minutes<1440)return `${Math.floor(minutes/60)} H AGO`;
  return `${Math.floor(minutes/1440)} D AGO`;
 }
 function showNews(){
- if(!newsItems.length)return;
- const item=newsItems[newsIndex%newsItems.length];
+ newsItems=newsItems.filter(item=>validNewsDate(item.date));
+ if(!newsItems.length){showNewsEmpty();return;}
+ newsIndex=newsIndex%newsItems.length;
+ const item=newsItems[newsIndex];
  $('newsArea').classList.remove('fade');
  void $('newsArea').offsetWidth;
  $('newsArea').classList.add('fade');
  $('newsCategory').textContent=item.category;
  $('newsHeadline').textContent=item.title;
- $('newsSource').textContent=
-  item.source+' · '+newsAge(item.date);
- $('newsPosition').textContent=
-  `${newsIndex%newsItems.length+1} / ${newsItems.length}`;
+ $('newsSource').textContent=item.source+' · '+newsAge(item.date);
+ $('newsPosition').textContent=`${newsIndex+1} / ${newsItems.length}`;
+ $('newsProgress').style.width='0%';
+ newsStarted=Date.now();
+}
+function showNewsEmpty(){
+ newsItems=[];newsIndex=0;
+ $('newsCategory').textContent='LATEST MARKET NEWS';
+ $('newsHeadline').textContent='Waiting for the latest market headlines (last 48 hours).';
+ $('newsSource').textContent='Gold · Silver · Oil · USD · Geopolitics · UAE';
+ $('newsPosition').textContent='0 / 0';
  $('newsProgress').style.width='0%';
  newsStarted=Date.now();
 }
@@ -1432,35 +1412,34 @@ function rotateNews(){
  showNews();
 }
 async function loadNews(){
+ if(newsLoading)return;
+ newsLoading=true;
  $('newsStatus').textContent='UPDATING';
- const results=await Promise.allSettled(
-  NEWS_FEEDS.map(fetchNewsFeed)
- );
- const incoming=results
-  .filter(r=>r.status==='fulfilled')
-  .flatMap(r=>r.value);
- const seen=new Set();
- const unique=incoming.filter(item=>{
-  const key=item.title.toLowerCase();
-  if(seen.has(key))return false;
-  seen.add(key);
-  return true;
- });
- if(unique.length){
-  newsItems=unique;
-  newsIndex=0;
-  $('newsStatus').textContent='HEADLINES';
-  showNews();
- }else{
-  $('newsStatus').textContent='OFFLINE';
-  if(!newsItems.length){
-   $('newsCategory').textContent='NEWS CONNECTION';
-   $('newsHeadline').textContent=
-    'Live headlines are temporarily unavailable. Check the internet connection or try again later.';
-   $('newsSource').textContent='News feed unavailable';
-   $('newsPosition').textContent='-- / --';
+ try{
+  const results=await Promise.allSettled(NEWS_FEEDS.map(fetchNewsFeed));
+  const incoming=results.filter(r=>r.status==='fulfilled').flatMap(r=>r.value);
+  const seen=new Set();
+  const unique=incoming.filter(item=>{
+   if(!validNewsDate(item.date))return false;
+   const key=item.title.toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
+   if(seen.has(key))return false;
+   seen.add(key);return true;
+  });
+  // Interleave categories so the screen does not show only gold headlines.
+  const grouped=NEWS_FEEDS.map(feed=>unique.filter(item=>item.category===feed.category).sort((a,b)=>b.date-a.date));
+  const balanced=[];
+  while(grouped.some(group=>group.length)){
+   for(const group of grouped)if(group.length)balanced.push(group.shift());
   }
- }
+  newsItems=balanced;
+  newsIndex=0;
+  $('newsStatus').textContent=balanced.length?'HEADLINES':'NO RECENT NEWS';
+  if(balanced.length)showNews();else showNewsEmpty();
+ }catch(e){
+  newsItems=newsItems.filter(item=>validNewsDate(item.date));
+  $('newsStatus').textContent='NEWS UNAVAILABLE';
+  if(newsItems.length)showNews();else showNewsEmpty();
+ }finally{newsLoading=false;}
 }
 
 /* Remote website top section cropped into the promotional box. */
@@ -1521,7 +1500,7 @@ setInterval(()=>{
  if(elapsed>=NEWS_INTERVAL)rotateNews();
 },250);
 
-setInterval(loadNews,15*60*1000);
+setInterval(loadNews,10*60*1000);
 </script>
 </body>
 </html>
