@@ -963,7 +963,7 @@ function isSaturday(){
  }).format(new Date())==='Saturday';
 }
 function showSlide(i){
- if(azanPlaying)return;
+ if(azanPlaying||!isWeekendDubai())return;
  clearTimeout(slideTimer);
  video.pause();
  slides.forEach(s=>s.classList.remove('active'));
@@ -1000,7 +1000,7 @@ function showSlide(i){
  }
 }
 function nextSlide(){
- if(!azanPlaying)showSlide((slideIndex+1)%slides.length);
+ if(!azanPlaying&&isWeekendDubai())showSlide((slideIndex+1)%slides.length);
 }
 video.addEventListener('ended',()=>{
  if(slideIndex===0&&!azanPlaying)nextSlide();
@@ -1009,6 +1009,29 @@ video.addEventListener('error',()=>{
  if(slideIndex===0&&!azanPlaying)nextSlide();
 });
 $('skip').addEventListener('click',nextSlide);
+
+/* Dubai-time weekday/weekend switching. No page reload. */
+let lastDisplayMode=null;
+function isWeekendDubai(){
+ const day=new Intl.DateTimeFormat('en-US',{timeZone:TZ,weekday:'short'}).format(new Date());
+ return day==='Sat'||day==='Sun';
+}
+function updateDisplayMode(){
+ const weekend=isWeekendDubai();
+ if(lastDisplayMode===weekend)return;
+ lastDisplayMode=weekend;
+ $('ratesEmbed').style.display=weekend?'none':'block';
+ $('skip').style.display=weekend?'':'none';
+ if(weekend){
+  if(!azanPlaying)showSlide(0);
+ }else{
+  clearTimeout(slideTimer);
+  slideTimer=null;
+  video.pause();
+  slides.forEach(slide=>slide.classList.remove('active'));
+ }
+}
+
 
 /* AZAN — ENABLED BY DEFAULT. Samsung Tizen safe audio lifecycle. */
 const AZAN_PREF='shaluq-azan-enabled-v2';
@@ -1088,11 +1111,14 @@ function stopAzan(){
  $('azanOverlay').classList.remove('active','ending');
  if(pausedForAzan){
   pausedForAzan=false;
-  if(slideIndex===0){try{video.currentTime=savedVideoPosition}catch(e){}const p=video.play();if(p&&p.catch)p.catch(()=>{})}
-  clearTimeout(slideTimer);slideDeadline=Date.now()+savedSlideRemaining;
-  slideTimer=setTimeout(nextSlide,savedSlideRemaining);
+  if(isWeekendDubai()){
+   if(slideIndex===0){try{video.currentTime=savedVideoPosition}catch(e){}const p=video.play();if(p&&p.catch)p.catch(()=>{})}
+   clearTimeout(slideTimer);slideDeadline=Date.now()+savedSlideRemaining;
+   slideTimer=setTimeout(nextSlide,savedSlideRemaining);
+  }
  }
  updateTestButtons();azanStopping=false;
+ if(isWeekendDubai()&&!slideTimer)showSlide(0);
 }
 function pauseForAzan(){
  pausedForAzan=true;savedSlideRemaining=Math.max(1000,slideDeadline-Date.now());
@@ -1407,11 +1433,12 @@ fitRatesFrame();
 updateHeader();
 updateAudioButton();
 updateTestButtons();
-showSlide(0);
+updateDisplayMode();
 loadNews();
 
 function dashboardTick(){
  updateHeader();
+ updateDisplayMode();
  const p=dubaiNow();
  const key=dateKey(p);
  if(key!==currentDay){
