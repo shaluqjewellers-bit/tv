@@ -573,9 +573,8 @@ button{
   <button id="skip">Next slide ›</button>
  </div>
 
- <section class="slide video active" data-type="video">
-  <video id="intro" src="intro.mp4"
-   muted playsinline preload="auto"></video>
+ <section class="slide video active" data-type="gif" data-duration="9000">
+  <img id="intro" class="promo-gif" src="s1.gif" alt="Shaluq introductory animation">
  </section>
  <section class="slide" data-duration="12000">
   <img class="mini-logo" src="logo.png" alt="Shaluq">
@@ -585,8 +584,8 @@ button{
   </div>
   <div class="sub">Wholesale Gold and Silver Bullion</div>
  </section>
- <section class="slide video" data-type="video">
-  <video src="S1%20LOGO.mp4" muted playsinline preload="auto"></video>
+ <section class="slide video" data-type="gif" data-duration="8000">
+  <img class="promo-gif" src="s2.gif" alt="Shaluq logo animation 2">
  </section>
  <section class="slide" data-duration="14000">
   <div class="eyebrow">OUR PRODUCTS</div>
@@ -598,8 +597,8 @@ button{
    Silver Bullion · Raw Gold · Scrap Gold
   </div>
  </section>
- <section class="slide video" data-type="video">
-  <video src="S2%20LOGO.mp4" muted playsinline preload="auto"></video>
+ <section class="slide video" data-type="gif" data-duration="7000">
+  <img class="promo-gif" src="s3.gif" alt="Shaluq logo animation 3">
  </section>
  <section class="slide" data-duration="14000">
   <div class="eyebrow">OUR SERVICES</div>
@@ -983,7 +982,7 @@ async function loadPrayer(){
    s1.gif → Message 1 → s2.gif → Message 2 → s3.gif → Message 3.
    Each GIF is reloaded when its slide becomes active so it starts at frame 1. */
 const slides=[...document.querySelectorAll('.slide')];
-const video=$('intro'); // Existing reference retained for dashboard compatibility.
+const video=$('intro'); // Intro GIF image reference.
 let slideIndex=0,slideTimer=null,slideDeadline=0;
 function isSaturday(){
  return new Intl.DateTimeFormat('en-US',{
@@ -1011,9 +1010,8 @@ function showSlide(i){
   const img=slide.querySelector('.promo-gif');
   if(img){
    // Refresh image to restart animation; cache-busting is unnecessary.
-   const src=img.getAttribute('src').split('?')[0];
-   img.removeAttribute('src');
-   img.setAttribute('src',src);
+   const src=img.getAttribute('src');
+   if(src){img.removeAttribute('src');img.setAttribute('src',src);}
   }
  }
  slide.classList.add('active');
@@ -1143,7 +1141,7 @@ function stopAzan(){
    const activeSlide=slides[slideIndex];
    if(activeSlide&&activeSlide.dataset.type==='gif'){
     const img=activeSlide.querySelector('.promo-gif');
-    if(img){const src=img.getAttribute('src').split('?')[0];img.removeAttribute('src');img.setAttribute('src',src);}
+    if(img){const src=img.getAttribute('src');if(src){img.removeAttribute('src');img.setAttribute('src',src);}}
    }
   clearTimeout(slideTimer);slideDeadline=Date.now()+savedSlideRemaining;
   slideTimer=setTimeout(nextSlide,savedSlideRemaining);
