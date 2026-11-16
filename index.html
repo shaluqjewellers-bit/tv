@@ -99,8 +99,8 @@ header{
 }
 .slide.active{display:flex}
 .slide.video{padding:0;background:#000}
-.slide video{
- width:100%;height:100%;object-fit:contain;background:#000
+.slide .promo-gif{
+ width:100%;height:100%;object-fit:contain;background:#000;display:block
 }
 .mini-logo{
  width:min(48%,370px);max-height:110px;object-fit:contain
@@ -353,7 +353,7 @@ button{
 .mini-promo .eyebrow{font-size:11px;letter-spacing:1.5px}
 .mini-promo .headline{font-size:clamp(17px,2.0vw,30px);margin:6px 0;line-height:1.15}
 .mini-promo .sub{font-size:clamp(11px,1.1vw,16px);line-height:1.3}
-.mini-promo .slide video{object-fit:contain}
+.mini-promo .slide .promo-gif{object-fit:contain}
 /* PRAYER PANEL */
 .prayers{
  padding:12px 15px;display:flex;flex-direction:column;
@@ -979,125 +979,49 @@ async function loadPrayer(){
  }finally{prayerLoading=false}
 }
 
-/* PROMOTIONAL SLIDES — reliable muted playback for Samsung / Philips TVs.
-   Video 1 → Message 1 → Video 2 → Message 2 → Video 3 → Message 3 */
+/* PROMOTIONAL SLIDES — GIF animations, no video decoding required.
+   s1.gif → Message 1 → s2.gif → Message 2 → s3.gif → Message 3.
+   Each GIF is reloaded when its slide becomes active so it starts at frame 1. */
 const slides=[...document.querySelectorAll('.slide')];
-const video=$('intro');
-const promoVideos=[...document.querySelectorAll('.slide[data-type="video"] video')];
+const video=$('intro'); // Existing reference retained for dashboard compatibility.
 let slideIndex=0,slideTimer=null,slideDeadline=0;
-let promoSession=0,promoWatchdog=null,promoStartTimer=null;
-let promoLastTime=-1,promoLastProgress=0,promoRetries=0;
-
-/* Every promotional video is ALWAYS silent. Azan audio is separate. */
-promoVideos.forEach(player=>{
- player.muted=true;
- player.defaultMuted=true;
- player.volume=0;
- player.autoplay=false;
- player.loop=false;
- player.setAttribute('muted','');
- player.setAttribute('playsinline','');
- player.setAttribute('webkit-playsinline','');
- player.setAttribute('preload','auto');
- player.setAttribute('disablepictureinpicture','');
-});
 function isSaturday(){
  return new Intl.DateTimeFormat('en-US',{
   timeZone:TZ,weekday:'long'
  }).format(new Date())==='Saturday';
 }
-function activePromoVideo(){
- const slide=slides[slideIndex];
- return slide&&slide.dataset.type==='video'?slide.querySelector('video'):null;
-}
-function cancelPromoChecks(){
- clearTimeout(promoStartTimer);promoStartTimer=null;
- clearInterval(promoWatchdog);promoWatchdog=null;
-}
-function pauseAllPromoVideos(){
- cancelPromoChecks();
- ++promoSession;
- promoVideos.forEach(v=>{try{v.pause()}catch(e){}});
-}
+function activePromoVideo(){return null;} // GIFs are images, not video elements.
+function pauseAllPromoVideos(){} // No video decoder or playback to pause.
 function schedulePromoNext(ms){
  clearTimeout(slideTimer);
  slideDeadline=Date.now()+ms;
  slideTimer=setTimeout(nextSlide,ms);
 }
-function playPromoVideo(player,session){
- if(session!==promoSession||azanPlaying||activePromoVideo()!==player)return;
- player.muted=true;player.defaultMuted=true;player.volume=0;
- let result;
- try{result=player.play()}catch(e){promoPlaybackFailed(player,session);return;}
- if(result&&typeof result.catch==='function'){
-  result.catch(()=>{promoPlaybackFailed(player,session)});
- }
-}
-function promoPlaybackFailed(player,session){
- if(session!==promoSession||azanPlaying||activePromoVideo()!==player)return;
- if(promoRetries++<1){
-  try{player.pause();player.load()}catch(e){}
-  clearTimeout(promoStartTimer);
-  promoStartTimer=setTimeout(()=>playPromoVideo(player,session),1200);
- }else{
-  /* Never leave a black panel on screen: move to the following message. */
-  nextSlide();
- }
-}
 function showSlide(i){
  if(azanPlaying)return;
  clearTimeout(slideTimer);
- pauseAllPromoVideos();
- slides.forEach(s=>s.classList.remove('active'));
+ slides.forEach(slide=>slide.classList.remove('active'));
  let attempts=0;
  while(slides[i].id==='saturday'&&!isSaturday()&&attempts<slides.length){
   i=(i+1)%slides.length;attempts++;
  }
  slideIndex=i;
  const slide=slides[i];
- slide.classList.add('active');
- if(slide.dataset.type==='video'){
-  const player=slide.querySelector('video');
-  const session=promoSession;
-  promoRetries=0;
-  promoLastTime=-1;
-  promoLastProgress=Date.now();
-  try{player.currentTime=0}catch(e){}
-  /* Hard upper bound, including a loading stall. */
-  schedulePromoNext(120000);
-  playPromoVideo(player,session);
-  /* Monitor actual progress rather than assuming play() means visible frames. */
-  promoWatchdog=setInterval(()=>{
-   if(session!==promoSession||azanPlaying||activePromoVideo()!==player){
-    cancelPromoChecks();return;
-   }
-   if(!player.paused&&player.readyState>=2&&player.currentTime>promoLastTime+0.12){
-    promoLastTime=player.currentTime;
-    promoLastProgress=Date.now();
-   }
-   if(Date.now()-promoLastProgress>8500){
-    promoLastProgress=Date.now();
-    promoPlaybackFailed(player,session);
-   }
-  },2000);
- }else{
-  schedulePromoNext(Number(slide.dataset.duration)||12000);
+ if(slide.dataset.type==='gif'){
+  const img=slide.querySelector('.promo-gif');
+  if(img){
+   // Refresh image to restart animation; cache-busting is unnecessary.
+   const src=img.getAttribute('src').split('?')[0];
+   img.removeAttribute('src');
+   img.setAttribute('src',src);
+  }
  }
+ slide.classList.add('active');
+ schedulePromoNext(Number(slide.dataset.duration)||12000);
 }
 function nextSlide(){
  if(!azanPlaying)showSlide((slideIndex+1)%slides.length);
 }
-promoVideos.forEach(player=>{
- player.addEventListener('ended',()=>{
-  if(!azanPlaying&&activePromoVideo()===player)nextSlide();
- });
- player.addEventListener('error',()=>{
-  if(!azanPlaying&&activePromoVideo()===player)promoPlaybackFailed(player,promoSession);
- });
- player.addEventListener('playing',()=>{
-  if(activePromoVideo()===player){promoLastProgress=Date.now();promoLastTime=player.currentTime||0;}
- });
-});
 $('skip').addEventListener('click',nextSlide);
 
 /* Dubai-time weekday/weekend switching. No page reload. */
@@ -1215,7 +1139,12 @@ function stopAzan(){
  if(pausedForAzan){
   pausedForAzan=false;
   const player=activePromoVideo();
-  if(player){player.muted=true;player.volume=0;try{player.currentTime=savedVideoPosition}catch(e){}const p=player.play();if(p&&p.catch)p.catch(()=>{})}
+  /* Restart GIF from its first frame after the Azan overlay closes. */
+   const activeSlide=slides[slideIndex];
+   if(activeSlide&&activeSlide.dataset.type==='gif'){
+    const img=activeSlide.querySelector('.promo-gif');
+    if(img){const src=img.getAttribute('src').split('?')[0];img.removeAttribute('src');img.setAttribute('src',src);}
+   }
   clearTimeout(slideTimer);slideDeadline=Date.now()+savedSlideRemaining;
   slideTimer=setTimeout(nextSlide,savedSlideRemaining);
  }
@@ -1227,7 +1156,7 @@ function pauseForAzan(){
  pausedForAzan=true;savedSlideRemaining=Math.max(1000,slideDeadline-Date.now());
  clearTimeout(slideTimer);
  const player=activePromoVideo();
- if(player){savedVideoPosition=player.currentTime||0;player.pause()}
+ /* GIF animation is hidden by the Azan overlay. */
 }
 function playAzan(prayer,isTest=false){
  if(azanPlaying||azanStopping||(!isTest&&!audioEnabled))return false;
