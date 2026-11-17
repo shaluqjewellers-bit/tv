@@ -375,6 +375,12 @@ button{
  font-size:22px;margin:0 0 4px;color:var(--gold)
 }
 .prayer-icon{color:var(--gold);font-size:25px;line-height:1}
+ /* Compact, TV-friendly prayer location controls. */
+ .prayer-location-controls{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;margin:7px 0 3px}
+ .prayer-location-controls button{min-width:0;padding:6px 1px;font:800 clamp(8px,.62vw,10px) Manrope,Arial,sans-serif;letter-spacing:.15px;color:#d7c9aa;background:#24221e;border:1px solid #645131;border-radius:6px;white-space:nowrap}
+ .prayer-location-controls button.active{background:#b88b42;border-color:#e6bd64;color:#111}
+ .prayer-location-controls button:focus{outline:2px solid #f4d99b;outline-offset:1px}
+ .prayer-location-status{color:#bca87e;font-size:10px;line-height:1.2;min-height:12px;margin:2px 0 3px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .location{font-size:11px;color:var(--muted)}
 .hijri-panel{
  color:#d6bd8c;font-size:11px;
@@ -767,12 +773,19 @@ html.shaluq-phone #shaluq-mobile-notice{
 <aside class="panel prayers">
  <div class="prayer-header">
   <div>
-   <h2>Dubai Prayer Times</h2>
-   <div class="location">Dubai, United Arab Emirates</div>
+    <h2 id="prayerPanelTitle">Dubai Prayer Times</h2>
+    <div class="location" id="prayerPanelLocation">Dubai, United Arab Emirates</div>
   </div>
   <div class="prayer-icon">☪</div>
  </div>
- <div class="hijri-panel" id="hijriPanel">
+  <div class="prayer-location-controls" role="group" aria-label="Choose prayer time location">
+   <button type="button" data-prayer-location="auto" class="active">AUTO</button>
+   <button type="button" data-prayer-location="dubai">DUBAI</button>
+   <button type="button" data-prayer-location="tanzania">TANZANIA</button>
+   <button type="button" data-prayer-location="india">INDIA</button>
+  </div>
+  <div class="prayer-location-status" id="prayerLocationStatus">Detecting visitor location…</div>
+  <div class="hijri-panel" id="hijriPanel">
   Loading Hijri date…
  </div>
  <div class="current-card" id="currentCard">
@@ -837,7 +850,24 @@ html.shaluq-phone #shaluq-mobile-notice{
 <script>
 'use strict';
 
-const TZ='Asia/Dubai';
+const TZ='Asia/Dubai'; // Dashboard and market clock stay in Dubai time.
+const PRAYER_PRESETS={
+ dubai:{city:'Dubai',country:'United Arab Emirates',countryCode:'AE',latitude:25.2048,longitude:55.2708,timezone:'Asia/Dubai',method:16},
+ tanzania:{city:'Dar es Salaam',country:'Tanzania',countryCode:'TZ',latitude:-6.7924,longitude:39.2083,timezone:'Africa/Dar_es_Salaam',method:3},
+ india:{city:'Chennai',country:'India',countryCode:'IN',latitude:13.0827,longitude:80.2707,timezone:'Asia/Kolkata',method:1}
+};
+const PRAYER_LOCATION_PREF='shaluq-prayer-location-v1';
+let prayerLocation={...PRAYER_PRESETS.dubai};
+let prayerLocationMode='auto';
+let prayerLocationRevision=0;
+let prayerDetectionRequest=0;
+function prayerNow(){return parts(new Date(),prayerLocation.timezone)}
+function prayerLocationId(){return [prayerLocation.countryCode,prayerLocation.city,prayerLocation.latitude.toFixed(3),prayerLocation.longitude.toFixed(3)].join('|')}
+function safePrayerZone(zone,fallback){
+ try{new Intl.DateTimeFormat('en-US',{timeZone:zone}).format(new Date());return zone}catch(e){return fallback||TZ}
+}
+function prayerMethod(countryCode){return countryCode==='AE'?16:countryCode==='IN'?1:3}
+
 const names=['Fajr','Dhuhr','Asr','Maghrib','Isha'];
 const AZAN_IMAGES={
  Fajr:'azan-fajr.png',Dhuhr:'azan-dhuhr.png',Asr:'azan-asr.png',
@@ -851,10 +881,10 @@ const AZAN_ARABIC={
 const $=id=>document.getElementById(id);
 const pad=n=>String(n).padStart(2,'0');
 
-function parts(d){
+function parts(d,zone=TZ){
  return Object.fromEntries(
   new Intl.DateTimeFormat('en-GB',{
-   timeZone:TZ,year:'numeric',month:'2-digit',
+    timeZone:zone,year:'numeric',month:'2-digit',
    day:'2-digit',hour:'2-digit',minute:'2-digit',
    second:'2-digit',hourCycle:'h23'
   }).formatToParts(d)
@@ -941,14 +971,14 @@ function updateMarketStatus(){
 }
 function updateHijri(){
  try{
-  const hijri=new Intl.DateTimeFormat(
+  const formatHijri=zone=>new Intl.DateTimeFormat(
    'en-u-ca-islamic-umalqura',{
-    timeZone:TZ,day:'numeric',
-    month:'long',year:'numeric'
+    timeZone:zone,day:'numeric',month:'long',year:'numeric'
    }
   ).format(new Date());
-  $('hijriHeader').textContent=hijri+' AH';
-  $('hijriPanel').textContent=hijri+' AH';
+  // Keep the main Dubai clock header unchanged; prayer panel follows location.
+  $('hijriHeader').textContent=formatHijri(TZ)+' AH';
+  $('hijriPanel').textContent=formatHijri(prayerLocation.timezone)+' AH';
  }catch(e){
   $('hijriHeader').textContent='Dubai, UAE';
   $('hijriPanel').textContent='';
@@ -961,7 +991,7 @@ let lastLoad=0,prayerLoading=false;
 let tomorrowLoading=false,tomorrowRetryAfter=0;
 let lastCurrentName=null,prayerInitialized=false;
 let lastPrayerMarkup='';
-const cacheKey='shaluq-prayer-dubai-v1';
+const cacheKey='shaluq-prayer-multilocation-v1';
 
 function cached(){
  try{return JSON.parse(localStorage.getItem(cacheKey)||'{}')}
@@ -974,12 +1004,15 @@ function store(o){
 async function fetchDay(p){
  const key=dateKey(p);
  const cache=cached();
- if(cache[key])return cache[key];
+  const loc=prayerLocation;
+  const cacheId=prayerLocationId()+'@'+key;
+  if(cache[cacheId])return cache[cacheId];
 
- const url=
-  `https://api.aladhan.com/v1/timingsByCity/${apiKey(p)}`+
-  `?city=Dubai&country=United%20Arab%20Emirates`+
-  `&method=16&school=0`;
+  const url=
+   `https://api.aladhan.com/v1/timings/${apiKey(p)}`+
+   `?latitude=${encodeURIComponent(loc.latitude)}`+
+   `&longitude=${encodeURIComponent(loc.longitude)}`+
+   `&method=${loc.method}&school=0`;
 
  const controller=new AbortController();
  const timeout=setTimeout(()=>controller.abort(),12000);
@@ -998,8 +1031,11 @@ async function fetchDay(p){
    if(secTime(value)===null)throw Error('Missing prayer time');
    result[name]=value;
   }
-  cache[key]=result;
-  store(cache);
+   cache[cacheId]=result;
+   /* Keep only recent cache entries so a long-running TV stays lightweight. */
+   const cacheIds=Object.keys(cache);
+   if(cacheIds.length>80){for(const old of cacheIds.slice(0,cacheIds.length-80))delete cache[old]}
+   store(cache);
   return result;
  }finally{clearTimeout(timeout)}
 }
@@ -1016,19 +1052,21 @@ function tomorrowParts(p){
 async function loadPrayer(){
  if(prayerLoading)return;
  prayerLoading=true;
- const p=dubaiNow();
- const key=dateKey(p);
+  const p=prayerNow();
+  const key=dateKey(p);
+  const revision=prayerLocationRevision;
  try{
-  const today=await fetchDay(p);
-  if(key!==dateKey(dubaiNow()))return;
+   const today=await fetchDay(p);
+   if(revision!==prayerLocationRevision||key!==dateKey(prayerNow()))return;
   times=today;
   activeDate=key;
   nextTimes={};
   lastLoad=Date.now();
   $('prayerStatus').textContent=
-   'Source: AlAdhan · Dubai method 16';
+    'Source: AlAdhan · '+prayerLocation.city+' · method '+prayerLocation.method;
   renderPrayer();
  }catch(e){
+  if(revision!==prayerLocationRevision)return;
   lastLoad=Date.now();
   $('prayerStatus').textContent=
    'Prayer service unavailable · check connection';
@@ -1036,8 +1074,12 @@ async function loadPrayer(){
    $('prayerRows').innerHTML=
     '<div class="notice">Unable to load prayer times.</div>';
   }
- }finally{prayerLoading=false}
+  }finally{
+   prayerLoading=false;
+   if(revision!==prayerLocationRevision)loadPrayer();
+  }
 }
+
 
 /* Weekend-only HD MP4 promotional playlist; no GIFs are used. */
 const slides=[...document.querySelectorAll('.slide')];
@@ -1328,7 +1370,7 @@ function pauseForAzan(){
 }
 function playAzan(prayer,isTest=false){
  if(azanPlaying||azanStopping||(!isTest&&!audioEnabled))return false;
- const prayerKey=dateKey(dubaiNow())+'-'+prayer;
+const prayerKey=prayerLocationId()+'-'+dateKey(prayerNow())+'-'+prayer;
  if(!isTest){
   if(prayerIsLocked(prayerKey)||prayerCompleted(prayerKey)||playedAzans()[prayerKey])return false;
   if(Date.now()-lastAudioStop<AZAN_COOLDOWN_MS)return false;
@@ -1339,7 +1381,7 @@ function playAzan(prayer,isTest=false){
  setPrayerBackground(prayer);
  $('azanTitle').textContent=isTest?'AZAN TEST':'AZAN NOW';
  $('azanPrayer').textContent=prayer+' Prayer';
- $('azanMessage').textContent=isTest?'Manual Audio Test · Dubai':'Dubai, United Arab Emirates';
+$('azanMessage').textContent=isTest?'Manual Audio Test · '+prayerLocation.city:prayerLocation.city+', '+prayerLocation.country;
  pauseForAzan();$('azanOverlay').classList.add('active');updateTestButtons();
  updateDisplayMode();
  /* Create a fresh media element for each playback, preventing Tizen's
@@ -1378,12 +1420,12 @@ $('testAzan').addEventListener('click',()=>{
 $('stopAzan').addEventListener('click',()=>{if(!azanPlaying)return;stopAzan();showNotice('Azan stopped. Dashboard resumed.')});
 function checkAzan(){
  if(!times.Fajr||!audioEnabled||azanPlaying||azanStopping)return;
- const p=dubaiNow();if(dateKey(p)!==activeDate)return;
+ const p=prayerNow();if(dateKey(p)!==activeDate)return;
  const now=secondsOf(p);
  for(const prayer of names){
   const at=secTime(times[prayer]);if(at===null)continue;
   const difference=now-at;if(difference<0||difference>AZAN_GRACE)continue;
-  const key=dateKey(p)+'-'+prayer;
+  const key=prayerLocationId()+'-'+dateKey(p)+'-'+prayer;
   if(playedAzans()[key]||prayerCompleted(key)||prayerIsLocked(key))continue;
   if(playAzan(prayer,false))break;
  }
@@ -1392,7 +1434,7 @@ function checkAzan(){
 /* PRAYER DISPLAY */
 function renderPrayer(){
  if(!times.Fajr)return;
- const p=dubaiNow();
+ const p=prayerNow();
  if(dateKey(p)!==activeDate)return;
  const now=secondsOf(p);
 
@@ -1432,8 +1474,9 @@ function renderPrayer(){
    Date.now()>=tomorrowRetryAfter
   ){
    tomorrowLoading=true;
+   const revision=prayerLocationRevision;
    fetchDay(tomorrowParts(p))
-    .then(x=>{nextTimes=x;renderPrayer()})
+    .then(x=>{if(revision===prayerLocationRevision){nextTimes=x;renderPrayer()}})
     .catch(()=>{
      tomorrowRetryAfter=Date.now()+60000;
     })
@@ -1473,6 +1516,98 @@ function renderPrayer(){
   ?'--:--:--':duration(Math.max(0,remaining));
  $('prayerProgress').style.width=
   Math.max(0,Math.min(100,progress))+'%';
+}
+
+/* Automatic visitor location with a manual Dubai / Tanzania / India override.
+   IP-based city detection does not request TV browser GPS permissions.
+   If it is blocked, use the device timezone; Dubai is the safe fallback. */
+function updatePrayerLocationControls(){
+ document.querySelectorAll('[data-prayer-location]').forEach(b=>{
+  const selected=b.dataset.prayerLocation===prayerLocationMode;
+  b.classList.toggle('active',selected);
+  b.setAttribute('aria-pressed',String(selected));
+ });
+ $('prayerPanelTitle').textContent=prayerLocation.city+' Prayer Times';
+ $('prayerPanelLocation').textContent=prayerLocation.city+', '+prayerLocation.country;
+ $('prayerLocationStatus').textContent=(prayerLocationMode==='auto'?'AUTO DETECTED':'MANUAL LOCATION')+' · '+prayerLocation.city;
+}
+function applyPrayerLocation(location,mode){
+ if(!location||!Number.isFinite(Number(location.latitude))||!Number.isFinite(Number(location.longitude)))return;
+ const next={...location,latitude:Number(location.latitude),longitude:Number(location.longitude)};
+ next.timezone=safePrayerZone(next.timezone,TZ);
+ next.method=Number(next.method)||3;
+ const changed=prayerLocationId()!==[next.countryCode,next.city,next.latitude.toFixed(3),next.longitude.toFixed(3)].join('|')||prayerLocation.timezone!==next.timezone;
+ prayerLocationMode=mode;
+ if(changed){
+  if(azanPlaying)stopAzan();
+  prayerLocation=next;
+  prayerLocationRevision++;
+  times={};nextTimes={};activeDate='';currentDay='';lastLoad=0;
+  tomorrowRetryAfter=0;tomorrowLoading=false;
+  lastPrayerMarkup='';lastCurrentName=null;prayerInitialized=false;
+  $('prayerRows').innerHTML='<div class="notice">Loading local prayer times…</div>';
+  $('currentName').textContent='Loading…';$('currentTime').textContent='--:--';
+  $('nextName').textContent='Loading…';$('nextTime').textContent='--:--';
+  $('countdown').textContent='--:--:--';
+  updateHijri();
+  loadPrayer();
+ }
+ updatePrayerLocationControls();
+}
+function savedPrayerMode(){
+ try{return localStorage.getItem(PRAYER_LOCATION_PREF)||'auto'}catch(e){return 'auto'}
+}
+function savePrayerMode(mode){
+ try{localStorage.setItem(PRAYER_LOCATION_PREF,mode)}catch(e){}
+}
+async function detectPrayerLocation(){
+ const revision=prayerLocationRevision;
+ const request=++prayerDetectionRequest;
+ let detected=null;
+ try{
+  const controller=new AbortController();
+  const timer=setTimeout(()=>controller.abort(),7000);
+  let data;
+  try{
+   const res=await fetch('https://ipwho.is/',{cache:'no-store',signal:controller.signal});
+   if(!res.ok)throw Error('Location service unavailable');
+   data=await res.json();
+  }finally{clearTimeout(timer)}
+  if(data&&data.success!==false&&Number.isFinite(Number(data.latitude))&&Number.isFinite(Number(data.longitude))){
+   const code=String(data.country_code||'').toUpperCase();
+   const country=String(data.country||'').trim();
+   const city=String(data.city||'').trim()||country||'Your Location';
+   const zone=data.timezone&&data.timezone.id;
+   detected={city,country,countryCode:code||'OTHER',latitude:Number(data.latitude),longitude:Number(data.longitude),timezone:safePrayerZone(zone,TZ),method:prayerMethod(code)};
+  }
+ }catch(e){}
+ if(!detected){
+  const zone=Intl.DateTimeFormat().resolvedOptions().timeZone||'';
+  if(zone==='Asia/Kolkata'||zone==='Asia/Calcutta')detected={...PRAYER_PRESETS.india};
+  else if(zone==='Africa/Dar_es_Salaam')detected={...PRAYER_PRESETS.tanzania};
+  else detected={...PRAYER_PRESETS.dubai};
+ }
+ if(prayerLocationMode==='auto'&&revision===prayerLocationRevision&&request===prayerDetectionRequest)applyPrayerLocation(detected,'auto');
+}
+function initializePrayerLocation(){
+ const saved=savedPrayerMode();
+ if(PRAYER_PRESETS[saved])applyPrayerLocation(PRAYER_PRESETS[saved],saved);
+ else{
+  prayerLocationMode='auto';
+  updatePrayerLocationControls();
+  detectPrayerLocation();
+ }
+ document.querySelectorAll('[data-prayer-location]').forEach(button=>{
+  button.addEventListener('click',()=>{
+   const mode=button.dataset.prayerLocation;
+   savePrayerMode(mode);
+   if(mode==='auto'){
+    prayerLocationMode='auto';updatePrayerLocationControls();
+    $('prayerLocationStatus').textContent='Detecting visitor location…';
+    detectPrayerLocation();
+   }else if(PRAYER_PRESETS[mode])applyPrayerLocation(PRAYER_PRESETS[mode],mode);
+  });
+ });
 }
 
 /* LIVE NEWS — maximum 48 hours old, refresh every 10 minutes */
@@ -1623,6 +1758,7 @@ window.addEventListener('resize',fitRatesFrame);setInterval(fitRatesFrame,5000);
 /* INITIALIZE */
 fitRatesFrame();
 updateHeader();
+initializePrayerLocation();
 updateAudioButton();
 updateTestButtons();
 updateDisplayMode();
@@ -1632,7 +1768,7 @@ loadNews();
 function dashboardTick(){
  updateHeader();
  updateDisplayMode();
- const p=dubaiNow();
+ const p=prayerNow();
  const key=dateKey(p);
  if(key!==currentDay){
   currentDay=key;
