@@ -7,6 +7,14 @@
 <title>Shaluq TV | Bullion Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+/* Phone-only notice. Desktop browsers and smart TVs keep the normal dashboard. */
+(function(){
+ var ua=navigator.userAgent||'';
+ var phone=/iPhone|iPod|Windows Phone|Android.*Mobile|Mobile.*Android|BlackBerry|BB10|Opera Mini|IEMobile/i.test(ua);
+ if(phone)document.documentElement.className+=' shaluq-phone';
+})();
+</script>
 <style>
 :root{
  --gold:#e6bd64;--border:#66502c;
@@ -548,9 +556,37 @@ button{
 .gram-rate-card.silver .gram-rate-prices strong{color:#f1f3f7}
 .gram-rate-note{font:700 10px Manrope,Arial,sans-serif;color:#a8aaae;text-align:right}
 
+
+/* Phone visitor notice — no layout changes for PC, laptop or smart TV. */
+#shaluq-mobile-notice{display:none}
+html.shaluq-phone body{overflow:hidden!important}
+html.shaluq-phone body > :not(#shaluq-mobile-notice):not(script){display:none!important}
+html.shaluq-phone #shaluq-mobile-notice{
+ display:flex!important;position:fixed;inset:0;z-index:2147483647;
+ padding:28px 22px;align-items:center;justify-content:center;
+ background:radial-gradient(ellipse at 50% 20%,#302513 0%,#101113 56%,#070809 100%);
+ color:#f6eddb;text-align:center;font-family:Manrope,Arial,sans-serif;overflow:auto;
+}
+.shaluq-mobile-card{width:100%;max-width:390px;padding:38px 24px;border:1px solid #a77d37;
+ border-radius:24px;background:linear-gradient(160deg,#191a1c,#0c0e11);box-shadow:0 20px 70px #0009}
+.shaluq-mobile-mark{font-size:48px;color:#e6bd64;line-height:1.2;margin-bottom:20px}
+.shaluq-mobile-brand{font-family:Cinzel,Georgia,serif;font-size:22px;font-weight:700;letter-spacing:1.5px;color:#e6bd64}
+.shaluq-mobile-heading{font-size:20px;font-weight:800;margin:25px 0 14px}
+.shaluq-mobile-desc{font-size:14px;line-height:1.85;color:#c8c0b2;margin:0}
+.shaluq-mobile-devices{margin-top:25px;font-size:13px;font-weight:700;letter-spacing:.5px;color:#e6bd64}
 </style>
 </head>
 <body>
+<div id="shaluq-mobile-notice" role="status" aria-label="Desktop viewing recommended">
+  <div class="shaluq-mobile-card">
+    <div class="shaluq-mobile-mark" aria-hidden="true">▣</div>
+    <div class="shaluq-mobile-brand">SHALUQ JEWELLERS</div>
+    <div class="shaluq-mobile-heading">Best Viewed on a Larger Screen</div>
+    <p class="shaluq-mobile-desc">Shaluq TV is designed for desktop computers, laptops, and smart TVs. This dashboard is not optimized for mobile phones.<br><br>Please open this page on a larger screen for the best viewing experience.</p>
+    <div class="shaluq-mobile-devices">DESKTOP · LAPTOP · SMART TV</div>
+  </div>
+</div>
+
 <div class="screen">
 <header>
  <img class="logo" src="logo.png" alt="Shaluq Jewellers">
