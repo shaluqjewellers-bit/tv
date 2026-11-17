@@ -1483,10 +1483,15 @@ const NEWS_FEEDS=[
  {category:'OIL & ENERGY',query:'(crude oil OR Brent OR WTI OR OPEC) markets when:2d'},
  {category:'USD & CURRENCIES',query:'(US dollar OR dollar index OR forex OR Federal Reserve OR USD AED) markets when:2d'},
  {category:'GEOPOLITICS',query:'(war OR conflict OR sanctions OR geopolitical) (oil OR gold OR markets OR economy) when:2d'},
- {category:'UAE GOLD MARKET',query:'(Dubai gold OR UAE gold OR Dubai Gold Souk OR UAE bullion) when:2d'}
+ {category:'UAE GOLD MARKET',query:'(Dubai gold OR UAE gold OR Dubai Gold Souk OR UAE bullion) when:2d'},
+ {category:'INDIA GOLD NEWS',query:'(India gold price OR Indian gold market OR MCX gold OR gold import duty India) when:2d',india:true},
+ {category:'INDIA SILVER NEWS',query:'(India silver price OR Indian silver market OR MCX silver OR silver demand India) when:2d',india:true},
+ {category:'INDIA GOLD IMPORT DUTY',query:'(India gold import duty OR gold customs duty India OR gold import tax India OR CBIC gold duty) when:2d',india:true},
+ {category:'INDIA AIRPORT GOLD RULES',query:'(India airport gold carrying rules OR gold baggage allowance India airport OR gold declaration Indian customs OR passenger gold import rules India) when:2d',india:true},
+ {category:'INDIA GOLD SMUGGLING',query:'(gold smuggling India airport OR gold seized customs India airport OR gold smuggling arrested India) when:2d',india:true}
 ].map(feed=>({
  category:feed.category,
- url:'https://news.google.com/rss/search?q='+encodeURIComponent(feed.query)+'&hl=en-US&gl=AE&ceid=AE:en'
+ url:'https://news.google.com/rss/search?q='+encodeURIComponent(feed.query)+(feed.india?'&hl=en-IN&gl=IN&ceid=IN:en':'&hl=en-US&gl=AE&ceid=AE:en')
 }));
 let newsItems=[],newsIndex=0,newsStarted=0,newsLoading=false;
 function cleanNewsText(s){
@@ -1554,7 +1559,7 @@ function showNewsEmpty(){
  newsItems=[];newsIndex=0;
  $('newsCategory').textContent='LATEST MARKET NEWS';
  $('newsHeadline').textContent='Waiting for the latest market headlines (last 48 hours).';
- $('newsSource').textContent='Gold · Silver · Oil · USD · Geopolitics · UAE';
+ $('newsSource').textContent='Gold · Silver · Oil · USD · UAE · India · Airport Customs';
  $('newsPosition').textContent='0 / 0';
  $('newsProgress').style.width='0%';
  newsStarted=Date.now();
