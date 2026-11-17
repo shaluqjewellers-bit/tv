@@ -99,9 +99,7 @@ header{
 }
 .slide.active{display:flex}
 .slide.video{padding:0;background:#000}
-.slide .promo-gif{
- width:100%;height:100%;object-fit:contain;background:#000;display:block
-}
+.slide.video .promo-hd{display:block;width:100%;height:100%;object-fit:contain;background:#000}
 .mini-logo{
  width:min(48%,370px);max-height:110px;object-fit:contain
 }
@@ -349,11 +347,12 @@ button{
 .mini-panel{display:flex;flex-direction:column}
 .mini-promo{position:relative;flex:1;min-height:0;overflow:hidden;background:#08090b}
 .mini-promo .slide{padding:12px 20px}
+/* Media fills the promotional panel without the text-slide padding. */
+.mini-promo .slide.video{padding:0}
 .mini-promo .mini-logo{max-height:38px;width:auto;max-width:45%}
 .mini-promo .eyebrow{font-size:11px;letter-spacing:1.5px}
 .mini-promo .headline{font-size:clamp(17px,2.0vw,30px);margin:6px 0;line-height:1.15}
 .mini-promo .sub{font-size:clamp(11px,1.1vw,16px);line-height:1.3}
-.mini-promo .slide .promo-gif{object-fit:contain}
 /* PRAYER PANEL */
 .prayers{
  padding:12px 15px;display:flex;flex-direction:column;
@@ -534,6 +533,21 @@ button{
  .logo{width:160px}
  .time{font-size:22px}
 }
+
+/* Weekday per-gram market cards. The weekend TradingView panel is unchanged. */
+.gram-rates{flex:1;height:auto;min-height:0;display:grid;grid-template-rows:1fr 1fr;gap:7px;padding:9px;box-sizing:border-box;background:#0b0c0f}
+.gram-rate-card{min-height:0;overflow:hidden;display:flex;flex-direction:column;justify-content:center;gap:5px;padding:10px 15px;border:1px solid #b99551;border-radius:12px;background:linear-gradient(115deg,#211b10,#0e1013 75%)}
+.gram-rate-card.silver{border-color:#888c99;background:linear-gradient(115deg,#1b2029,#0e1013 75%)}
+.gram-rate-heading{font:800 clamp(14px,1.2vw,20px) Manrope,Arial,sans-serif;letter-spacing:1.2px;color:#e5bd6a;display:flex;justify-content:space-between;gap:6px;align-items:center}
+.gram-rate-card.silver .gram-rate-heading{color:#e0e4ed}
+.gram-rate-heading span{font-size:10px;color:#b2ad9e;letter-spacing:.6px;text-align:right}
+.gram-rate-prices{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.gram-rate-prices>div{min-width:0}
+.gram-rate-prices small{display:block;color:#b2b4b9;font:800 10px Manrope,Arial,sans-serif;letter-spacing:.6px}
+.gram-rate-prices strong{display:block;color:#fff1cd;font:800 clamp(17px,1.7vw,28px) Manrope,Arial,sans-serif;white-space:nowrap;font-variant-numeric:tabular-nums}
+.gram-rate-card.silver .gram-rate-prices strong{color:#f1f3f7}
+.gram-rate-note{font:700 10px Manrope,Arial,sans-serif;color:#a8aaae;text-align:right}
+
 </style>
 </head>
 <body>
@@ -573,8 +587,8 @@ button{
   <button id="skip">Next slide ›</button>
  </div>
 
- <section class="slide video active" data-type="gif" data-duration="9000">
-  <img id="intro" class="promo-gif" src="s1.gif" alt="Shaluq introductory animation">
+ <section class="slide video active" data-type="video" data-duration="9000">
+  <video class="promo-hd" src="intro.mp4" muted playsinline preload="none"></video>
  </section>
  <section class="slide" data-duration="12000">
   <img class="mini-logo" src="logo.png" alt="Shaluq">
@@ -584,8 +598,8 @@ button{
   </div>
   <div class="sub">Wholesale Gold and Silver Bullion</div>
  </section>
- <section class="slide video" data-type="gif" data-duration="8000">
-  <img class="promo-gif" src="s2.gif" alt="Shaluq logo animation 2">
+ <section class="slide video" data-type="video" data-duration="8000">
+  <video class="promo-hd" src="S1%20LOGO.mp4" muted playsinline preload="none"></video>
  </section>
  <section class="slide" data-duration="14000">
   <div class="eyebrow">OUR PRODUCTS</div>
@@ -597,8 +611,8 @@ button{
    Silver Bullion · Raw Gold · Scrap Gold
   </div>
  </section>
- <section class="slide video" data-type="gif" data-duration="7000">
-  <img class="promo-gif" src="s3.gif" alt="Shaluq logo animation 3">
+ <section class="slide video" data-type="video" data-duration="7000">
+  <video class="promo-hd" src="S2%20LOGO.mp4" muted playsinline preload="none"></video>
  </section>
  <section class="slide" data-duration="14000">
   <div class="eyebrow">OUR SERVICES</div>
@@ -664,7 +678,18 @@ button{
   <span class="panel-title">GOLD & SILVER MARKET</span>
   <span class="panel-tag">USD / TROY OZ</span>
  </div>
- <div class="mini-promo" id="miniPromo" style="display:none"></div>
+ <div class="gram-rates" id="gramRates" aria-label="Gold and silver live prices per gram">
+  <div class="gram-rate-card">
+   <div class="gram-rate-heading">GOLD <span>24K SPOT · PER GRAM</span></div>
+   <div class="gram-rate-prices"><div><small>USD / GRAM</small><strong id="goldUsdGramRate">USD --</strong></div><div><small>AED / GRAM</small><strong id="goldGramRate">AED --</strong></div></div>
+   <div class="gram-rate-note" id="goldUpdateLine">Connecting live rate...</div>
+  </div>
+  <div class="gram-rate-card silver">
+   <div class="gram-rate-heading">SILVER <span>SPOT · PER GRAM</span></div>
+   <div class="gram-rate-prices"><div><small>USD / GRAM</small><strong id="silverUsdGramRate">USD --</strong></div><div><small>AED / GRAM</small><strong id="silverGramRate">AED --</strong></div></div>
+   <div class="gram-rate-note" id="silverUpdateLine">Connecting live rate...</div>
+  </div>
+ </div>
  <div class="market-area" id="marketArea">
   <div class="market-item">
    <div class="tradingview-widget-container">
@@ -978,27 +1003,54 @@ async function loadPrayer(){
  }finally{prayerLoading=false}
 }
 
-/* PROMOTIONAL SLIDES — GIF animations, no video decoding required.
-   s1.gif → Message 1 → s2.gif → Message 2 → s3.gif → Message 3.
-   Each GIF is reloaded when its slide becomes active so it starts at frame 1. */
+/* Weekend-only HD MP4 promotional playlist; no GIFs are used. */
 const slides=[...document.querySelectorAll('.slide')];
-const video=$('intro'); // Intro GIF image reference.
+const promoVideos=[...document.querySelectorAll('.promo-hd')];
 let slideIndex=0,slideTimer=null,slideDeadline=0;
+let promoSession=0,promoRetryTimer=null,promoWatchdog=null,promoRetries=0;
+let savedVideoPosition=0;
 function isSaturday(){
- return new Intl.DateTimeFormat('en-US',{
-  timeZone:TZ,weekday:'long'
- }).format(new Date())==='Saturday';
+ return new Intl.DateTimeFormat('en-US',{timeZone:TZ,weekday:'long'}).format(new Date())==='Saturday';
 }
-function activePromoVideo(){return null;} // GIFs are images, not video elements.
-function pauseAllPromoVideos(){} // No video decoder or playback to pause.
+function isWeekendDubai(){
+ const day=new Intl.DateTimeFormat('en-US',{timeZone:TZ,weekday:'short'}).format(new Date());
+ return day==='Sat'||day==='Sun';
+}
+function activePromoVideo(){
+ if(!isWeekendDubai())return null;
+ const slide=slides[slideIndex];
+ return slide&&slide.dataset.type==='video'?slide.querySelector('.promo-hd'):null;
+}
+function pauseAllPromoVideos(){
+ ++promoSession;
+ clearTimeout(promoRetryTimer);clearInterval(promoWatchdog);
+ promoVideos.forEach(v=>{try{v.pause()}catch(e){}});
+}
 function schedulePromoNext(ms){
  clearTimeout(slideTimer);
  slideDeadline=Date.now()+ms;
  slideTimer=setTimeout(nextSlide,ms);
 }
+function playHD(player,session){
+ if(session!==promoSession||azanPlaying||activePromoVideo()!==player)return;
+ player.muted=true;player.defaultMuted=true;
+ try{player.volume=0}catch(e){}
+ let result;
+ try{result=player.play()}catch(e){retryHD(player,session);return;}
+ if(result&&typeof result.catch==='function')result.catch(()=>retryHD(player,session));
+}
+function retryHD(player,session){
+ if(session!==promoSession||azanPlaying||activePromoVideo()!==player)return;
+ if(promoRetries++<1){
+  try{player.pause();player.load()}catch(e){}
+  clearTimeout(promoRetryTimer);
+  promoRetryTimer=setTimeout(()=>playHD(player,session),1200);
+ }else nextSlide();
+}
 function showSlide(i){
- if(azanPlaying)return;
+ if(azanPlaying||!isWeekendDubai())return;
  clearTimeout(slideTimer);
+ pauseAllPromoVideos();
  slides.forEach(slide=>slide.classList.remove('active'));
  let attempts=0;
  while(slides[i].id==='saturday'&&!isSaturday()&&attempts<slides.length){
@@ -1006,57 +1058,140 @@ function showSlide(i){
  }
  slideIndex=i;
  const slide=slides[i];
- if(slide.dataset.type==='gif'){
-  const img=slide.querySelector('.promo-gif');
-  if(img){
-   // Refresh image to restart animation; cache-busting is unnecessary.
-   const src=img.getAttribute('src');
-   if(src){img.removeAttribute('src');img.setAttribute('src',src);}
-  }
- }
  slide.classList.add('active');
- schedulePromoNext(Number(slide.dataset.duration)||12000);
+ if(slide.dataset.type==='video'){
+  const player=slide.querySelector('.promo-hd');
+  if(player){
+   const session=promoSession;
+   promoRetries=0;
+   try{player.currentTime=0}catch(e){}
+   schedulePromoNext(120000);
+   playHD(player,session);
+   let previous=-1,lastProgress=Date.now();
+   promoWatchdog=setInterval(()=>{
+    if(session!==promoSession||azanPlaying||activePromoVideo()!==player)return;
+    if(player.currentTime>previous+0.12){previous=player.currentTime;lastProgress=Date.now()}
+    if(Date.now()-lastProgress>8500){lastProgress=Date.now();retryHD(player,session)}
+   },2000);
+  }else schedulePromoNext(Number(slide.dataset.duration)||9000);
+ }else schedulePromoNext(Number(slide.dataset.duration)||12000);
 }
-function nextSlide(){
- if(!azanPlaying)showSlide((slideIndex+1)%slides.length);
-}
+function nextSlide(){if(!azanPlaying&&isWeekendDubai())showSlide((slideIndex+1)%slides.length)}
+promoVideos.forEach(player=>{
+ player.muted=true;player.defaultMuted=true;
+ player.setAttribute('muted','');player.setAttribute('playsinline','');
+ player.setAttribute('webkit-playsinline','');
+ player.addEventListener('ended',()=>{if(!azanPlaying&&activePromoVideo()===player)nextSlide()});
+ player.addEventListener('error',()=>{if(!azanPlaying&&activePromoVideo()===player)retryHD(player,promoSession)});
+});
 $('skip').addEventListener('click',nextSlide);
 
-/* Dubai-time weekday/weekend switching. No page reload. */
+/* Dubai weekday/weekend switching: rates in the small panel on weekdays,
+   TradingView in the small panel and HD promotions in the main stage on weekends. */
 let lastDisplayMode=null;
-function isWeekendDubai(){
- const day=new Intl.DateTimeFormat('en-US',{timeZone:TZ,weekday:'short'}).format(new Date());
- return day==='Sat'||day==='Sun';
-}
 function updateDisplayMode(){
  const weekend=isWeekendDubai();
- /* During Azan the small panel always shows TradingView, even on weekdays.
-    Keep the Samsung audio player and prayer overlay completely unchanged. */
  const showMarket=weekend||azanPlaying;
  const mode=(weekend?'weekend':'weekday')+(azanPlaying?'-azan':'');
  if(lastDisplayMode===mode)return;
+ const priorWeekend=lastDisplayMode&&lastDisplayMode.indexOf('weekend')===0;
  lastDisplayMode=mode;
-
- /* Move the single promo playlist only when the weekday changes.
-    Do not interrupt or restart the video simply because Azan begins. */
- const target=weekend?$('stage'):$('miniPromo');
- if(slides.length&&slides[0].parentElement!==target){
+ if(!weekend){
   clearTimeout(slideTimer);slideTimer=null;
   pauseAllPromoVideos();
   slides.forEach(slide=>slide.classList.remove('active'));
-  slides.forEach(slide=>target.appendChild(slide));
-  if(!azanPlaying)showSlide(0);
+ }else if(!priorWeekend&&!azanPlaying){
+  showSlide(0);
  }
  $('ratesEmbed').style.display=weekend?'none':'block';
  $('marketArea').style.display=showMarket?'grid':'none';
- $('miniPromo').style.display=showMarket?'none':'block';
+ $('gramRates').style.display=showMarket?'none':'grid';
  $('skip').style.display=weekend?'':'none';
  const marketPanel=$('marketArea').closest('.panel');
  const title=marketPanel.querySelector('.panel-title');
  const tag=marketPanel.querySelector('.panel-tag');
- if(title)title.textContent=showMarket?'GOLD & SILVER MARKET':'SHALUQ JEWELLERS · PROMOTIONS';
- if(tag)tag.textContent=showMarket?'USD / TROY OZ':'WHOLESALE BULLION';
+ if(title)title.textContent=showMarket?'GOLD & SILVER MARKET':'GOLD & SILVER · PER GRAM';
+ if(tag)tag.textContent=showMarket?'USD / TROY OZ':'LIVE USD / AED';
 }
+
+/* Gold and silver spot per-gram values, sourced from the supplied rate HTML. */
+const TROY_OUNCE_GRAMS=31.1035;
+const USD_TO_AED=3.674;
+const METAL_PRICE_API={
+ gold:['https://api.gold-api.com/price/XAU','https://forex-data-feed.swissquote.com/public-quotes/bboquotes/instrument/XAU/USD'],
+ silver:['https://api.gold-api.com/price/XAG','https://forex-data-feed.swissquote.com/public-quotes/bboquotes/instrument/XAG/USD']
+};
+function formatGramRate(currency,value){
+ return currency+' '+value.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+function metalSafeNumber(value){
+ if(typeof value==='number')return value;
+ if(typeof value==='string'){
+  const n=Number(value.replace(/[^0-9.-]/g,''));
+  return Number.isFinite(n)?n:NaN;
+ }
+ return NaN;
+}
+function extractOuncePrice(payload){
+ if(payload==null)return NaN;
+ if(typeof payload==='number'||typeof payload==='string')return metalSafeNumber(payload);
+ if(Array.isArray(payload)){
+  for(const item of payload){const n=extractOuncePrice(item);if(Number.isFinite(n)&&n>0)return n;}
+  return NaN;
+ }
+ const keys=['price','ask','bid','last','close','value','rate'];
+ for(const key of keys){
+  if(Object.prototype.hasOwnProperty.call(payload,key)){
+   const n=metalSafeNumber(payload[key]);if(Number.isFinite(n)&&n>0)return n;
+  }
+ }
+ for(const key of ['data','result','quote','quotes','prices','spreadProfilePrices']){
+  if(Object.prototype.hasOwnProperty.call(payload,key)){
+   const n=extractOuncePrice(payload[key]);if(Number.isFinite(n)&&n>0)return n;
+  }
+ }
+ return NaN;
+}
+function fetchMetalWithTimeout(url,timeoutMs){
+ const controller=new AbortController();
+ const timer=setTimeout(()=>controller.abort(),timeoutMs);
+ return fetch(url,{cache:'no-store',mode:'cors',signal:controller.signal}).finally(()=>clearTimeout(timer));
+}
+async function fetchMetalUsdPerOunce(urls){
+ let lastError=null;
+ for(const url of urls){
+  try{
+   const res=await fetchMetalWithTimeout(url,8500);
+   if(!res.ok)throw new Error('Metal price fetch failed');
+   const payload=await res.json();
+   const ouncePrice=extractOuncePrice(payload);
+   if(Number.isFinite(ouncePrice)&&ouncePrice>0)return ouncePrice;
+   throw new Error('Metal price unavailable');
+  }catch(err){lastError=err;}
+ }
+ throw lastError||new Error('Metal price unavailable');
+}
+async function updateMetalGramRate(metal){
+ const isGold=metal==='gold';
+ const prefix=isGold?'gold':'silver';
+ const note=$(prefix+'UpdateLine');
+ try{
+  const usdOunce=await fetchMetalUsdPerOunce(METAL_PRICE_API[metal]);
+  const usdGram=usdOunce/TROY_OUNCE_GRAMS;
+  $(prefix+'UsdGramRate').textContent=formatGramRate('USD',usdGram);
+  $(prefix+'GramRate').textContent=formatGramRate('AED',usdGram*USD_TO_AED);
+  note.textContent='Updated '+new Intl.DateTimeFormat('en-GB',{timeZone:TZ,hour:'2-digit',minute:'2-digit',hour12:true}).format(new Date())+' Dubai';
+ }catch(e){
+  /* Keep the last valid quote on temporary network failures, but label it stale. */
+  note.textContent='Connection unavailable · retrying';
+ }
+}
+function updateMetalGramRates(){
+ if(isWeekendDubai())return;
+ updateMetalGramRate('gold');updateMetalGramRate('silver');
+}
+updateMetalGramRates();
+setInterval(updateMetalGramRates,60000);
 
 /* AZAN — ENABLED BY DEFAULT. Samsung Tizen safe audio lifecycle. */
 const AZAN_PREF='shaluq-azan-enabled-v2';
@@ -1075,7 +1210,7 @@ let azanAudio=null;
 let audioEnabled=true;
 try{const saved=localStorage.getItem(AZAN_PREF);audioEnabled=saved===null?true:saved==='true';}catch(e){}
 let azanPlaying=false,azanBlocked=false,azanTimer=null;
-let savedVideoPosition=0,savedSlideRemaining=1000,pausedForAzan=false;
+let savedSlideRemaining=1000,pausedForAzan=false;
 let azanMode=null,azanAttempt=0,testPrayerIndex=0;
 let activePrayerKey=null,azanStopping=false,lastAudioStop=0;
 let memoryLocks={},completedPrayers={};
@@ -1137,24 +1272,23 @@ function stopAzan(){
  if(pausedForAzan){
   pausedForAzan=false;
   const player=activePromoVideo();
-  /* Restart GIF from its first frame after the Azan overlay closes. */
-   const activeSlide=slides[slideIndex];
-   if(activeSlide&&activeSlide.dataset.type==='gif'){
-    const img=activeSlide.querySelector('.promo-gif');
-    if(img){const src=img.getAttribute('src');if(src){img.removeAttribute('src');img.setAttribute('src',src);}}
-   }
+  if(player){
+   try{player.currentTime=savedVideoPosition}catch(e){}
+   player.muted=true;try{player.volume=0}catch(e){}
+   const p=player.play();if(p&&p.catch)p.catch(()=>{});
+  }
   clearTimeout(slideTimer);slideDeadline=Date.now()+savedSlideRemaining;
   slideTimer=setTimeout(nextSlide,savedSlideRemaining);
  }
  updateTestButtons();azanStopping=false;
  updateDisplayMode();
- if(!slideTimer)showSlide(0);
+ if(isWeekendDubai()&&!slideTimer)showSlide(0);
 }
 function pauseForAzan(){
  pausedForAzan=true;savedSlideRemaining=Math.max(1000,slideDeadline-Date.now());
  clearTimeout(slideTimer);
  const player=activePromoVideo();
- /* GIF animation is hidden by the Azan overlay. */
+ if(player){savedVideoPosition=player.currentTime||0;player.pause()}
 }
 function playAzan(prayer,isTest=false){
  if(azanPlaying||azanStopping||(!isTest&&!audioEnabled))return false;
@@ -1451,7 +1585,7 @@ updateHeader();
 updateAudioButton();
 updateTestButtons();
 updateDisplayMode();
-if(!azanPlaying)showSlide(0);
+if(!azanPlaying&&isWeekendDubai())showSlide(0);
 loadNews();
 
 function dashboardTick(){
