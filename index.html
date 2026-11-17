@@ -850,7 +850,7 @@ html.shaluq-phone #shaluq-mobile-notice{
 <script>
 'use strict';
 
-const TZ='Asia/Dubai'; // Dashboard and market clock stay in Dubai time.
+const TZ='Asia/Dubai'; // Dubai timezone for bullion-market scheduling; main clock follows selected location.
 const PRAYER_PRESETS={
  dubai:{city:'Dubai',country:'United Arab Emirates',countryCode:'AE',latitude:25.2048,longitude:55.2708,timezone:'Asia/Dubai',method:16},
  tanzania:{city:'Dar es Salaam',country:'Tanzania',countryCode:'TZ',latitude:-6.7924,longitude:39.2083,timezone:'Africa/Dar_es_Salaam',method:3},
@@ -931,13 +931,13 @@ function updateHeader(){
    timeZone:zone,hour:'numeric',minute:'2-digit',second:'2-digit',hour12:true
   }).format(now);
  }
- const p=dubaiNow();
+ const p=prayerNow();
  $('clock').textContent=
   `${Number(p.hour)%12||12}:${p.minute}:${p.second} `+
   `${Number(p.hour)>=12?'PM':'AM'}`;
  $('date').textContent=
   new Intl.DateTimeFormat('en-GB',{
-   timeZone:TZ,weekday:'long',day:'numeric',
+   timeZone:prayerLocation.timezone,weekday:'long',day:'numeric',
    month:'long',year:'numeric'
   }).format(new Date());
  if(dateKey(p)!==lastHeaderDate){
@@ -976,11 +976,11 @@ function updateHijri(){
     timeZone:zone,day:'numeric',month:'long',year:'numeric'
    }
   ).format(new Date());
-  // Keep the main Dubai clock header unchanged; prayer panel follows location.
-  $('hijriHeader').textContent=formatHijri(TZ)+' AH';
+  // Main header and prayer panel both follow the selected visitor location.
+  $('hijriHeader').textContent=formatHijri(prayerLocation.timezone)+' AH';
   $('hijriPanel').textContent=formatHijri(prayerLocation.timezone)+' AH';
  }catch(e){
-  $('hijriHeader').textContent='Dubai, UAE';
+  $('hijriHeader').textContent=prayerLocation.city+', '+prayerLocation.country;
   $('hijriPanel').textContent='';
  }
 }
@@ -1549,6 +1549,8 @@ function applyPrayerLocation(location,mode){
   $('currentName').textContent='Loading…';$('currentTime').textContent='--:--';
   $('nextName').textContent='Loading…';$('nextTime').textContent='--:--';
   $('countdown').textContent='--:--:--';
+  lastHeaderDate='';
+  updateHeader();
   updateHijri();
   loadPrayer();
  }
