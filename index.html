@@ -7,6 +7,19 @@
 <title>Shaluq TV | Bullion Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+/* Default to TV/desktop; activate mobile only for recognizable phones.
+   TV user agents sometimes contain Mobile or Android, so exclude TV identifiers first. */
+(function(){
+ var ua=navigator.userAgent||'';
+ var tv=/Tizen|SMART-TV|SmartTV|Smart-TV|HbbTV|Web0S|webOS|NetCast|BRAVIA|GoogleTV|Android TV|AFTB|AFTT|AFTM|Roku|CrKey|Chromecast|PhilipsTV|Viera|AppleTV|TV Safari/i.test(ua);
+ var phone=/iPhone|iPod|Windows Phone|BlackBerry|BB10|Opera Mini|IEMobile|Android.*Mobile|Mobile.*Android/i.test(ua);
+ var preference='';
+ try{preference=localStorage.getItem('shaluq-display-mode-v1')||'';}catch(e){}
+ var mobile=preference==='mobile'||(preference!=='tv'&&!tv&&phone);
+ if(mobile)document.documentElement.className+=' shaluq-mobile';
+})();
+</script>
 <style>
 :root{
  --gold:#e6bd64;--border:#66502c;
@@ -522,23 +535,38 @@ button{
  .countdown{font-size:15px}
  .source{font-size:9px}
 }
-@media(max-width:650px){
- html,body{overflow:auto}
- .screen{height:auto;min-height:100vh}
- header{grid-template-columns:1fr 1fr;gap:8px}
- .world-clocks{grid-column:1/-1}
- .header-center{grid-column:1/-1;grid-row:auto}
- .header-center{grid-column:1/-1;grid-row:2}
- .body{display:block}
- .left{
-  height:900px;margin-bottom:12px;
-  grid-template-rows:540px 348px
- }
- .prayers{min-height:590px}
- .bottom-panels{grid-template-columns:1fr}
- .logo{width:160px}
- .time{font-size:22px}
-}
+/* Phone layout is opt-in by phone identification or the view button.
+   Never apply it merely because a smart-TV browser reports a narrow viewport. */
+html.shaluq-mobile,html.shaluq-mobile body{overflow:auto;height:auto;min-height:100%;}
+html.shaluq-mobile .screen{height:auto;min-height:100vh;display:flex;flex-direction:column}
+html.shaluq-mobile header{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px}
+html.shaluq-mobile .logo{width:155px}
+html.shaluq-mobile .clock{text-align:right}
+html.shaluq-mobile .time{font-size:clamp(19px,5vw,25px)}
+html.shaluq-mobile .date{font-size:11px}
+html.shaluq-mobile .hijri-header{font-size:10px}
+html.shaluq-mobile .world-clocks{grid-column:1/-1;gap:6px}
+html.shaluq-mobile .header-center{grid-column:1/-1;grid-row:2}
+html.shaluq-mobile .body{display:flex;flex-direction:column;padding:10px;gap:12px}
+html.shaluq-mobile .left{display:flex;flex-direction:column;gap:12px;min-height:0}
+html.shaluq-mobile .stage{height:clamp(240px,65vw,420px);min-height:240px;flex:none}
+html.shaluq-mobile .bottom-panels{display:flex;flex-direction:column;gap:12px}
+html.shaluq-mobile .bottom-panels .mini-panel{height:275px;flex:none}
+html.shaluq-mobile .prayers{min-height:600px;flex:none;padding:13px}
+html.shaluq-mobile .prayer-row{padding:9px 7px}
+html.shaluq-mobile .news-headline{font-size:clamp(18px,4.8vw,25px)}
+html.shaluq-mobile .news-category{font-size:13px}
+html.shaluq-mobile .gram-rate-prices strong{font-size:clamp(17px,5vw,25px)}
+html.shaluq-mobile .gram-rate-card{padding:10px}
+html.shaluq-mobile .ticker{min-height:45px}
+html.shaluq-mobile .audio-controls{position:relative;right:auto;bottom:auto;justify-content:center;margin:8px auto 12px;z-index:110}
+/* Manual view switch: intentionally unobtrusive on TV, always available for override. */
+#shaluq-view-switch{position:fixed;left:8px;bottom:5px;z-index:120;opacity:.72;
+ background:#27221b;color:#f1d69b;border:1px solid #7a6038;border-radius:6px;
+ font:700 10px Manrope,Arial,sans-serif;padding:4px 7px;cursor:pointer}
+#shaluq-view-switch:focus,#shaluq-view-switch:hover{opacity:1}
+html.shaluq-mobile #shaluq-view-switch{bottom:6px;opacity:.9}
+
 
 /* Weekday per-gram market cards. The weekend TradingView panel is unchanged. */
 .gram-rates{flex:1;height:auto;min-height:0;display:grid;grid-template-rows:1fr 1fr;gap:7px;padding:9px;box-sizing:border-box;background:#0b0c0f}
@@ -558,6 +586,7 @@ button{
 </style>
 </head>
 <body>
+<button id="shaluq-view-switch" type="button" aria-label="Switch between mobile and TV dashboard">TV VIEW</button>
 <div class="screen">
 <header>
  <img class="logo" src="logo.png" alt="Shaluq Jewellers">
@@ -1586,6 +1615,8 @@ const NEWS_FEEDS=[
  {category:'USD & CURRENCIES',query:'(US dollar OR dollar index OR forex OR Federal Reserve OR USD AED) markets when:2d'},
  {category:'GEOPOLITICS',query:'(war OR conflict OR sanctions OR geopolitical) (oil OR gold OR markets OR economy) when:2d'},
  {category:'UAE GOLD MARKET',query:'(Dubai gold OR UAE gold OR Dubai Gold Souk OR UAE bullion) when:2d'},
+ {category:'TRADINGVIEW GOLD',query:'site:tradingview.com/news/ (XAUUSD OR gold OR bullion) when:2d'},
+ {category:'TRADINGVIEW SILVER',query:'site:tradingview.com/news/ (XAGUSD OR silver) when:2d'},
  {category:'INDIA GOLD NEWS',query:'(India gold price OR Indian gold market OR MCX gold OR gold import duty India) when:2d',india:true},
  {category:'INDIA SILVER NEWS',query:'(India silver price OR Indian silver market OR MCX silver OR silver demand India) when:2d',india:true},
  {category:'INDIA GOLD IMPORT DUTY',query:'(India gold import duty OR gold customs duty India OR gold import tax India OR CBIC gold duty) when:2d',india:true},
@@ -1661,7 +1692,7 @@ function showNewsEmpty(){
  newsItems=[];newsIndex=0;
  $('newsCategory').textContent='LATEST MARKET NEWS';
  $('newsHeadline').textContent='Waiting for the latest market headlines (last 48 hours).';
- $('newsSource').textContent='Gold · Silver · Oil · USD · UAE · India · Airport Customs';
+ $('newsSource').textContent='TradingView · Gold · Silver · Oil · USD · UAE · India · Airport Customs';
  $('newsPosition').textContent='0 / 0';
  $('newsProgress').style.width='0%';
  newsStarted=Date.now();
@@ -1722,6 +1753,21 @@ function fitRatesFrame(){
  frame.style.transform='scale('+scale+')';
 }
 window.addEventListener('resize',fitRatesFrame);setInterval(fitRatesFrame,5000);
+/* Display preference is device-local. Default is full TV view for unknown devices. */
+(function(){
+ var btn=document.getElementById('shaluq-view-switch');
+ function refresh(){
+  btn.textContent=document.documentElement.classList.contains('shaluq-mobile')?'TV / DESKTOP VIEW':'MOBILE VIEW';
+ }
+ btn.addEventListener('click',function(){
+  var mobile=!document.documentElement.classList.contains('shaluq-mobile');
+  document.documentElement.classList.toggle('shaluq-mobile',mobile);
+  try{localStorage.setItem('shaluq-display-mode-v1',mobile?'mobile':'tv');}catch(e){}
+  refresh();
+  setTimeout(fitRatesFrame,100);
+ });
+ refresh();
+})();
 /* INITIALIZE */
 fitRatesFrame();
 updateHeader();
