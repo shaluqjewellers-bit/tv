@@ -90,12 +90,12 @@ header{
 }
 .body{
  min-height:0;display:grid;
- grid-template-columns:minmax(0,1fr) 445px;
+ grid-template-columns:minmax(0,1fr) 345px;
  gap:12px;padding:12px
 }
 .left{
  min-height:0;display:grid;
- grid-template-rows:minmax(0,1fr) minmax(0,1fr);
+ grid-template-rows:minmax(0,3fr) minmax(0,2fr);
  gap:12px
 }
 .panel{
@@ -492,7 +492,7 @@ button{
 }
 @keyframes scroll{to{transform:translateX(-100%)}}
 @media(max-width:1100px){
- .body{grid-template-columns:minmax(0,1fr) 385px}
+ .body{grid-template-columns:minmax(0,1fr) 285px}
  .prayers{padding:9px}
  .prayers h2{font-size:18px}
  .prayer-row{font-size:14px;padding:7px 5px}
@@ -1743,7 +1743,7 @@ function fitRatesFrame(){
     rates header and two rows approximately 345px high. */
  const sourceWidth=1500, sidebarWidth=350;
  const visibleWidth=1150, visibleHeight=345;
- const scale=Math.min(w/visibleWidth,h/visibleHeight)*1.07; // Gentle 7% zoom of embedded bullion page only.
+ const scale=Math.min(w/visibleWidth,h/visibleHeight);
  const left=(w-visibleWidth*scale)/2-sidebarWidth*scale;
  const top=(h-visibleHeight*scale)/2;
  frame.style.width=sourceWidth+'px';
