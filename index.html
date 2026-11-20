@@ -1743,7 +1743,7 @@ function fitRatesFrame(){
     rates header and two rows approximately 345px high. */
  const sourceWidth=1500, sidebarWidth=350;
  const visibleWidth=1150, visibleHeight=345;
- const scale=Math.min(w/visibleWidth,h/visibleHeight)*1.12; // Slightly stronger 12% zoom of embedded bullion page only.
+ const scale=Math.min(w/visibleWidth,h/visibleHeight)*1.07; // Gentle 7% zoom of embedded bullion page only.
  const left=(w-visibleWidth*scale)/2-sidebarWidth*scale;
  const top=(h-visibleHeight*scale)/2;
  frame.style.width=sourceWidth+'px';
