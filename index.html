@@ -1702,34 +1702,94 @@ function rotateNews(){
  newsIndex=(newsIndex+1)%newsItems.length;
  showNews();
 }
+/* Keep the last successful headlines for feeds that temporarily fail.
+   Rotate across categories, not repeatedly through one prolific source. */
+const NEWS_PER_CATEGORY=5;
+const NEWS_CACHE_KEY='shaluq-news-category-cache-v2';
+let newsCategoryCache={};
+try{
+ const saved=JSON.parse(localStorage.getItem(NEWS_CACHE_KEY)||'{}');
+ for(const category of Object.keys(saved)){
+  if(!NEWS_FEEDS.some(feed=>feed.category===category))continue;
+  newsCategoryCache[category]=(saved[category]||[]).map(item=>({
+   title:item.title,category,source:item.source,date:new Date(item.date)
+  })).filter(item=>item.title&&validNewsDate(item.date));
+ }
+}catch(e){}
+function newsKey(item){
+ return String(item.title||'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
+}
+function buildBalancedNews(){
+ const seen=new Set(),groups=[];
+ for(const feed of NEWS_FEEDS){
+  const group=[];
+  for(const item of (newsCategoryCache[feed.category]||[]).sort((a,b)=>b.date-a.date)){
+   if(!validNewsDate(item.date))continue;
+   const key=newsKey(item);
+   if(!key||seen.has(key))continue;
+   seen.add(key);
+   group.push(item);
+   if(group.length>=NEWS_PER_CATEGORY)break;
+  }
+  if(group.length)groups.push(group);
+ }
+ const balanced=[];
+ // One headline from each available category per round.
+ while(groups.some(group=>group.length)){
+  for(const group of groups)if(group.length)balanced.push(group.shift());
+ }
+ return balanced;
+}
 async function loadNews(){
  if(newsLoading)return;
  newsLoading=true;
  $('newsStatus').textContent='UPDATING';
+ const currentItem=newsItems[newsIndex];
+ const previousKey=currentItem?newsKey(currentItem):'';
+ const previousStarted=newsStarted;
  try{
   const results=await Promise.allSettled(NEWS_FEEDS.map(fetchNewsFeed));
-  const incoming=results.filter(r=>r.status==='fulfilled').flatMap(r=>r.value);
-  const seen=new Set();
-  const unique=incoming.filter(item=>{
-   if(!validNewsDate(item.date))return false;
-   const key=item.title.toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
-   if(seen.has(key))return false;
-   seen.add(key);return true;
-  });
-  // Interleave categories so the screen does not show only gold headlines.
-  const grouped=NEWS_FEEDS.map(feed=>unique.filter(item=>item.category===feed.category).sort((a,b)=>b.date-a.date));
-  const balanced=[];
-  while(grouped.some(group=>group.length)){
-   for(const group of grouped)if(group.length)balanced.push(group.shift());
+  let workingFeeds=0;
+  for(let i=0;i<results.length;i++){
+   const result=results[i],category=NEWS_FEEDS[i].category;
+   if(result.status==='fulfilled'&&result.value.length){
+    workingFeeds++;
+    const seen=new Set();
+    newsCategoryCache[category]=result.value.filter(item=>{
+     const key=newsKey(item);
+     if(!key||seen.has(key)||!validNewsDate(item.date))return false;
+     seen.add(key);return true;
+    }).slice(0,NEWS_PER_CATEGORY);
+   }else{
+    // Keep still-fresh articles from the last successful retrieval.
+    newsCategoryCache[category]=(newsCategoryCache[category]||[])
+     .filter(item=>validNewsDate(item.date)).slice(0,NEWS_PER_CATEGORY);
+   }
   }
+  try{
+   localStorage.setItem(NEWS_CACHE_KEY,JSON.stringify(newsCategoryCache));
+  }catch(e){}
+  const balanced=buildBalancedNews();
+  const oldSignature=newsItems.map(newsKey).join('|');
+  const newSignature=balanced.map(newsKey).join('|');
   newsItems=balanced;
-  newsIndex=0;
-  $('newsStatus').textContent=balanced.length?'HEADLINES':'NO RECENT NEWS';
-  if(balanced.length)showNews();else showNewsEmpty();
+  const categoryCount=new Set(balanced.map(item=>item.category)).size;
+  $('newsStatus').textContent=!balanced.length?'NO RECENT NEWS':
+   categoryCount===1?'1 NEWS CATEGORY':categoryCount+' NEWS CATEGORIES';
+  if(!balanced.length){showNewsEmpty();return;}
+  const found=previousKey?balanced.findIndex(item=>newsKey(item)===previousKey):-1;
+  newsIndex=found>=0?found:Math.min(newsIndex,balanced.length-1);
+  // Do not restart a headline's 15-second timer every ten minutes.
+  if(oldSignature!==newSignature||found<0){showNews();}
+  else{
+   $('newsPosition').textContent=`${newsIndex+1} / ${newsItems.length}`;
+   newsStarted=previousStarted;
+  }
  }catch(e){
-  newsItems=newsItems.filter(item=>validNewsDate(item.date));
-  $('newsStatus').textContent='NEWS UNAVAILABLE';
-  if(newsItems.length)showNews();else showNewsEmpty();
+  newsItems=buildBalancedNews();
+  $('newsStatus').textContent=newsItems.length?'CACHED HEADLINES':'NEWS UNAVAILABLE';
+  if(newsItems.length){newsIndex=Math.min(newsIndex,newsItems.length-1);showNews();}
+  else showNewsEmpty();
  }finally{newsLoading=false;}
 }
 
