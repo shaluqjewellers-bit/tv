@@ -590,6 +590,11 @@ html.shaluq-mobile #shaluq-view-switch{bottom:6px;opacity:.9}
 #shaluq-opener.closing{opacity:0;pointer-events:none;}
 #shaluq-opener button{position:absolute;right:16px;bottom:16px;background:#222;color:#fff;border:1px solid #777;}
 
+/* Mobile-only alignment and portrait opener. */
+html.shaluq-mobile header .logo{grid-column:1/-1;justify-self:center;width:min(220px,75%);max-height:88px;object-position:center}
+html.shaluq-mobile header .clock{grid-column:1/-1;text-align:center;justify-self:stretch}
+html.shaluq-mobile .stage.mobile-rates-focus{height:var(--mobile-bullion-height,130px);min-height:0}
+@media (orientation:portrait){html.shaluq-mobile #shaluq-opener video{object-fit:cover;object-position:center}}
 </style>
 </head>
 <body>
@@ -1832,15 +1837,20 @@ async function loadNews(){
 function fitRatesFrame(){
  const box=$('ratesEmbed'),frame=$('ratesFrame');
  if(!box||!frame)return;
+ box.parentElement.classList.toggle('mobile-rates-focus',document.documentElement.classList.contains('shaluq-mobile')&&getComputedStyle(box).display!=='none');
  const w=box.clientWidth,h=box.clientHeight;
  if(!w||!h)return;
  /* Source screenshot: sidebar 350px, rates area 1150px wide,
     rates header and two rows approximately 345px high. */
  const sourceWidth=1500, sidebarWidth=350;
  const visibleWidth=1150, visibleHeight=345;
- const scale=Math.min(w/visibleWidth,h/visibleHeight);
- const left=(w-visibleWidth*scale)/2-sidebarWidth*scale;
- const top=(h-visibleHeight*scale)/2;
+ const mobile=document.documentElement.classList.contains('shaluq-mobile');
+ // On phones fit the entire spot table, including the day range.
+ const mobileWidth=920;
+ const scale=mobile?w/mobileWidth:Math.min(w/visibleWidth,h/visibleHeight);
+ const left=mobile?-(sidebarWidth+230)*scale:(w-visibleWidth*scale)/2-sidebarWidth*scale;
+ const top=mobile?-118*scale:(h-visibleHeight*scale)/2;
+ if(mobile)box.parentElement.style.setProperty('--mobile-bullion-height',Math.floor(220*scale)+'px');
  frame.style.width=sourceWidth+'px';
  frame.style.height='1000px';
  frame.style.left=left+'px';
