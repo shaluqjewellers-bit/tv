@@ -583,9 +583,41 @@ html.shaluq-mobile #shaluq-view-switch{bottom:6px;opacity:.9}
 .gram-rate-note{font:700 10px Manrope,Arial,sans-serif;color:#a8aaae;text-align:right}
 
 
+
+/* One-time opening video, independent of the dashboard. */
+#shaluq-opener{position:fixed;inset:0;z-index:10000;background:#000;display:flex;align-items:center;justify-content:center;opacity:1;transition:opacity .65s ease;}
+#shaluq-opener video{width:100%;height:100%;object-fit:contain;background:#000;}
+#shaluq-opener.closing{opacity:0;pointer-events:none;}
+#shaluq-opener button{position:absolute;right:16px;bottom:16px;background:#222;color:#fff;border:1px solid #777;}
+
 </style>
 </head>
 <body>
+<div id="shaluq-opener">
+ <video id="shaluq-opener-video" src="StevieOphera.mp4" autoplay muted playsinline webkit-playsinline preload="auto"></video>
+ <button id="shaluq-opener-skip" type="button">Skip intro</button>
+</div>
+<script>
+(function(){
+ var overlay=document.getElementById('shaluq-opener');
+ var video=document.getElementById('shaluq-opener-video');
+ var closed=false, timer=setTimeout(close,18000), stall;
+ function close(){
+  if(closed)return;closed=true;clearTimeout(timer);clearTimeout(stall);
+  try{video.pause();}catch(e){}
+  overlay.className='closing';
+  setTimeout(function(){if(overlay.parentNode)overlay.parentNode.removeChild(overlay);},700);
+ }
+ video.muted=true;video.defaultMuted=true;
+ video.addEventListener('ended',close);
+ video.addEventListener('error',close);
+ video.addEventListener('playing',function(){clearTimeout(stall);});
+ video.addEventListener('waiting',function(){clearTimeout(stall);stall=setTimeout(close,5000);});
+ document.getElementById('shaluq-opener-skip').addEventListener('click',close);
+ try{var playback=video.play();if(playback&&playback.catch)playback.catch(close);}catch(e){close();}
+})();
+</script>
+
 <button id="shaluq-view-switch" type="button" aria-label="Switch between mobile and TV dashboard">TV VIEW</button>
 <div class="screen">
 <header>
