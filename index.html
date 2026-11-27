@@ -1849,8 +1849,8 @@ function fitRatesFrame(){
  const mobileWidth=920;
  const scale=mobile?w/mobileWidth:Math.min(w/visibleWidth,h/visibleHeight);
  const left=mobile?-(sidebarWidth+230)*scale:(w-visibleWidth*scale)/2-sidebarWidth*scale;
- const top=mobile?-118*scale:(h-visibleHeight*scale)/2;
- if(mobile)box.parentElement.style.setProperty('--mobile-bullion-height',Math.floor(220*scale)+'px');
+ const top=mobile?-78*scale:(h-visibleHeight*scale)/2;
+ if(mobile)box.parentElement.style.setProperty('--mobile-bullion-height',Math.floor(260*scale)+'px');
  frame.style.width=sourceWidth+'px';
  frame.style.height='1000px';
  frame.style.left=left+'px';
