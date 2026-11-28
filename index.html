@@ -1120,7 +1120,16 @@ async function loadPrayer(){
 
 /* Weekend-only HD MP4 promotional playlist; no GIFs are used. */
 const slides=[...document.querySelectorAll('.slide')];
-const promoVideos=[...document.querySelectorAll('.promo-hd')];
+const promoSources=new Map();
+const promoPlayer=document.createElement('video');
+promoPlayer.className='promo-hd';promoPlayer.muted=true;promoPlayer.defaultMuted=true;
+promoPlayer.setAttribute('muted','');promoPlayer.setAttribute('playsinline','');promoPlayer.setAttribute('webkit-playsinline','');
+promoPlayer.preload='auto';
+slides.forEach(slide=>{const v=slide.querySelector('.promo-hd');if(v){promoSources.set(slide,{original:v.getAttribute('data-src'),tv:v.getAttribute('data-tv-src')});v.parentNode.removeChild(v)}});
+const promoVideos=[promoPlayer];
+let promoStartTimer=null;
+const promoEnable=document.createElement('button');promoEnable.textContent='PLAY VIDEO';promoEnable.style.cssText='position:absolute;bottom:12px;right:12px;z-index:9;display:none';$('stage').appendChild(promoEnable);
+promoEnable.onclick=function(){if(!azanPlaying&&activePromoVideo()){promoEnable.style.display='none';playHD(promoPlayer,promoSession)}};
 let slideIndex=0,slideTimer=null,slideDeadline=0;
 let promoSession=0,promoRetryTimer=null,promoWatchdog=null,promoRetries=0;
 let savedVideoPosition=0;
@@ -1138,8 +1147,8 @@ function activePromoVideo(){
 }
 function pauseAllPromoVideos(){
  ++promoSession;
- clearTimeout(promoRetryTimer);clearInterval(promoWatchdog);
- promoVideos.forEach(v=>{try{v.pause();v.removeAttribute("src");v.load()}catch(e){}});
+ clearTimeout(promoRetryTimer);promoRetryTimer=null;clearTimeout(promoStartTimer);clearInterval(promoWatchdog);promoEnable.style.display="none";
+ promoVideos.forEach(v=>{try{v.onended=null;v.onerror=null;v.pause();v.removeAttribute("src");v.load()}catch(e){}});
 }
 function schedulePromoNext(ms){
  clearTimeout(slideTimer);
@@ -1148,59 +1157,37 @@ function schedulePromoNext(ms){
 }
 function playHD(player,session){
  if(session!==promoSession||azanPlaying||activePromoVideo()!==player)return;
- player.muted=true;player.defaultMuted=true;
- try{player.volume=0}catch(e){}
- let result;
- try{result=player.play()}catch(e){retryHD(player,session);return;}
- if(result&&typeof result.catch==='function')result.catch(()=>retryHD(player,session));
+ player.muted=true;player.defaultMuted=true;try{player.volume=0}catch(e){}
+ function failed(e){if(session!==promoSession||azanPlaying)return;if(e&&e.name==='NotAllowedError'){promoEnable.style.display='block';return}retryHD(player,session)}
+ try{const p=player.play();if(p&&p.catch)p.catch(failed)}catch(e){failed(e)}
 }
 function retryHD(player,session){
- if(session!==promoSession||azanPlaying||activePromoVideo()!==player)return;
- if(promoRetries++<1){
-  if(player.getAttribute("data-tv-src")&&player.getAttribute("src")===player.getAttribute("data-tv-src"))player.src=player.getAttribute("data-src");
-  try{player.pause();player.load()}catch(e){}
-  clearTimeout(promoRetryTimer);
-  promoRetryTimer=setTimeout(()=>playHD(player,session),1200);
- }else nextSlide();
+ if(session!==promoSession||azanPlaying||activePromoVideo()!==player||promoRetryTimer)return;
+ if(promoRetries++>=2){nextSlide();return}
+ promoRetryTimer=setTimeout(()=>{promoRetryTimer=null;if(session!==promoSession||azanPlaying)return;try{player.load()}catch(e){}playHD(player,session)},1500);
 }
 function showSlide(i){
  if(azanPlaying||!isWeekendDubai()||window.shaluqIntroDone===false)return;
- clearTimeout(slideTimer);
- pauseAllPromoVideos();
+ clearTimeout(slideTimer);pauseAllPromoVideos();
  slides.forEach(slide=>slide.classList.remove('active'));
- let attempts=0;
- while(slides[i].id==='saturday'&&!isSaturday()&&attempts<slides.length){
-  i=(i+1)%slides.length;attempts++;
- }
- slideIndex=i;
- const slide=slides[i];
- slide.classList.add('active');
- if(slide.dataset.type==='video'){
-  const player=slide.querySelector('.promo-hd');
-  if(player){
-   const session=promoSession;
-   promoRetries=0;
-   player.src=(!document.documentElement.classList.contains("shaluq-mobile")&&player.getAttribute("data-tv-src"))||player.getAttribute("data-src");
-   try{player.load();player.currentTime=0}catch(e){}
-   schedulePromoNext(120000);
-   playHD(player,session);
-   let previous=-1,lastProgress=Date.now();
-   promoWatchdog=setInterval(()=>{
-    if(session!==promoSession||azanPlaying||activePromoVideo()!==player)return;
-    if(player.currentTime>previous+0.12){previous=player.currentTime;lastProgress=Date.now()}
-    if(Date.now()-lastProgress>8500){lastProgress=Date.now();retryHD(player,session)}
-   },2000);
-  }else schedulePromoNext(Number(slide.dataset.duration)||9000);
- }else schedulePromoNext(Number(slide.dataset.duration)||12000);
+ let attempts=0;while(slides[i].id==='saturday'&&!isSaturday()&&attempts<slides.length){i=(i+1)%slides.length;attempts++}
+ slideIndex=i;const slide=slides[i];slide.classList.add('active');
+ const source=promoSources.get(slide);
+ if(!source){schedulePromoNext(Number(slide.dataset.duration)||12000);return}
+ const session=promoSession;promoRetries=0;slide.appendChild(promoPlayer);
+ schedulePromoNext(120000);
+ promoStartTimer=setTimeout(()=>{
+  if(session!==promoSession||azanPlaying)return;
+  const player=promoPlayer;
+  player.onended=()=>{if(session===promoSession&&!azanPlaying)nextSlide()};
+  player.onerror=()=>{if(session===promoSession&&player.getAttribute('src'))retryHD(player,session)};
+  player.src=(!document.documentElement.classList.contains('shaluq-mobile')&&source.tv)||source.original;
+  try{player.load()}catch(e){}playHD(player,session);
+  let previous=-1,lastProgress=Date.now();
+  promoWatchdog=setInterval(()=>{if(session!==promoSession||azanPlaying)return;if(player.currentTime>previous+.12){previous=player.currentTime;lastProgress=Date.now();promoEnable.style.display='none'}if(promoEnable.style.display==='block')return;if(Date.now()-lastProgress>12000){lastProgress=Date.now();retryHD(player,session)}},2000);
+ },1000);
 }
 function nextSlide(){if(!azanPlaying&&isWeekendDubai())showSlide((slideIndex+1)%slides.length)}
-promoVideos.forEach(player=>{
- player.muted=true;player.defaultMuted=true;
- player.setAttribute('muted','');player.setAttribute('playsinline','');
- player.setAttribute('webkit-playsinline','');
- player.addEventListener('ended',()=>{if(!azanPlaying&&activePromoVideo()===player)nextSlide()});
- player.addEventListener('error',()=>{if(!azanPlaying&&player.getAttribute('src')&&activePromoVideo()===player)retryHD(player,promoSession)});
-});
 $('skip').addEventListener('click',nextSlide);
 
 /* Dubai weekday/weekend switching: rates in the small panel on weekdays,
